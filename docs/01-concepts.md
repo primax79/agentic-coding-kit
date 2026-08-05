@@ -1,8 +1,10 @@
 # 01 — Concepts: Skills, Agents, Commands, MCP
 
 This is the primer to read before touching anything else in this repo (or in
-`ai-architect-executor`, `kilo-mcp`, `gcube-ai-toolkit` — same vocabulary
-everywhere in this family of repos). It explains what each building block
+[`ai-architect-executor`](https://github.com/primax79/ai-architect-executor),
+[`kilo-mcp`](https://github.com/primax79/kilo-mcp),
+[`gcube-ai-toolkit`](https://github.com/primax79/gcube-ai-toolkit) — same
+vocabulary everywhere in this family of repos). It explains what each building block
 *is*, independent of any specific tool, then how Claude Code and Kilo Code
 each implement it — what's genuinely identical, what's just renamed, and
 what's a real difference.
@@ -32,7 +34,7 @@ what's a real difference.
 - **MCP (Model Context Protocol)** — a protocol for exposing *tools* (and
   optionally resources/prompts) from an external server to any MCP-capable
   client. This is how an AI gets capabilities beyond its built-in tool set —
-  e.g. `kilo-mcp` in this family of repos exposes `kilo_implement`,
+  e.g. [`kilo-mcp`](https://github.com/primax79/kilo-mcp) in this family of repos exposes `kilo_implement`,
   `kilo_rag_search`, etc. as MCP tools so any MCP client (Claude Code today)
   can delegate work to Kilo Code. Orthogonal to skills/agents/commands: MCP
   is about *what tools exist*, the other three are about *how the AI decides
@@ -41,7 +43,9 @@ what's a real difference.
   agents and/or commands), the unit you actually `install`/`uninstall`.
 - **Marketplace** — a repository (or, for Kilo, optionally just a URL
   serving an index) listing one or more plugins for discovery/installation.
-  This repo, `ai-architect-executor`, `kilo-mcp`, and `gcube-ai-toolkit` are
+  This repo, [`ai-architect-executor`](https://github.com/primax79/ai-architect-executor),
+  [`kilo-mcp`](https://github.com/primax79/kilo-mcp), and
+  [`gcube-ai-toolkit`](https://github.com/primax79/gcube-ai-toolkit) are
   each a marketplace.
 
 ## What's identical vs. tool-specific
@@ -53,7 +57,7 @@ what's a real difference.
 | Agent/mode frontmatter | Flat `tools: Bash, Read, ...` string | Structured `mode:`/`permissions:` map | **No** — incompatible, needs translation (see `kilo-claude-sync` in `agentic-coding-kit`'s own `kilo-claude-tools` plugin) |
 | Marketplace manifest | `.claude-plugin/marketplace.json` | No single native format — see below | Partial |
 | Install command | `/plugin install <name>@<marketplace>` | No single equivalent — see below | No |
-| MCP | Native client support | Kilo Code itself is not a general MCP *client* the way Claude Code is; used here mainly as the *server* side (`kilo-mcp`) | No — different role, see `ai-architect-executor` |
+| MCP | Native client support (`/plugin`-adjacent MCP config) | Also a full native MCP client — its own Settings UI has a dedicated MCP section, and `kilo.jsonc`'s `mcp: {}` block configures servers it connects to, same as Claude Code | **Yes** — both are full MCP clients. `kilo-mcp` in this family uses Kilo as the *server* side (exposed to an external orchestrator) by deliberate design for the Architect/Executor pattern, not because Kilo lacks client support — see [`ai-architect-executor`](https://github.com/primax79/ai-architect-executor) |
 
 ### Marketplace: three different mechanisms, not one
 
