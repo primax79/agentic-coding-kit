@@ -139,14 +139,25 @@ instance.
 embeddings used by the index — separate from whichever provider/key is
 authenticated for the model doing the actual coding (previous section).
 
-<!-- TODO(screenshots): docs/screenshots/kilo_rag_config.png (Settings UI,
-     indexing panel showing the fields above) and
-     docs/screenshots/kilo_rag_status.png (indexing status/progress
-     indicator once enabled) — see PR/commit that added this comment for
-     who's providing them. -->
+Or the same thing via the Settings UI (**Indexing** in the left sidebar) —
+this is also where the **Configuration scope** toggle lives (Global vs.
+Local, same distinction as the instruction-files/Skill-URLs gotchas
+elsewhere in this doc set, applied here to indexing specifically):
 
----
+![Kilo Indexing settings panel](screenshots/kilo_rag_configuration.png)
 
-Screenshots for this section go in `docs/screenshots/` (same convention as
-`kilo_skill_config.png` in `gcube-ai-toolkit`) — reference them here as
-`![...](screenshots/<filename>.png)` once added.
+A few fields beyond the `kilo.jsonc` snippet above, exposed only in the UI
+(equally settable in JSON, just not shown in the minimal example):
+
+| Field | Default seen | Purpose |
+| --- | --- | --- |
+| Embedding model | auto (provider default) | Override the embedding model instead of the provider's default. |
+| Vector dimension | `Auto` | Leave on auto-detect unless you know you need a specific dimension. |
+| File Extensions | built-in defaults | Comma-separated allowlist restricting what gets indexed (e.g. `.php, .js, .css`) — leave empty for the built-in default set. |
+| Search Min Score | `0.4` | Similarity threshold below which results are discarded. |
+| Search Max Results | `50` | Cap on results returned per search. |
+| Embedding Batch Size | `60` | How many chunks are embedded per API call during indexing. |
+| Scanner Max Batch Retries | `3` | Retry count for a failed embedding batch before the scanner gives up on it. |
+
+Status panel at the top ("File watcher started. Index up-to-date.") is the
+quickest way to confirm indexing is actually running, not just enabled.
