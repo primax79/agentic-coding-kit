@@ -1,0 +1,16 @@
+{
+  "skills": [
+    {
+      "name": "framework-skillset-generator",
+      "files": [
+        "SKILL.md",
+        "references/claim-grounding-rules.md",
+        "references/skill-shape-template.md",
+        "references/usage-analysis-format.md",
+        "scripts/check_citations.py",
+        "scripts/compare_skillsets.py",
+        "scripts/materialize_source.py"
+      ]
+    }
+  ]
+}
