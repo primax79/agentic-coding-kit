@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "name": "kilo-rag-index-manager",
+      "files": [
+        "SKILL.md",
+        "scripts/migrate-qdrant-collection.py"
+      ]
+    }
+  ]
+}
