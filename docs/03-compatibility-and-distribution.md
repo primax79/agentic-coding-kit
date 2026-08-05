@@ -101,14 +101,19 @@ Kilo's native Skill URLs mechanism:
    }
    ```
 
-3. Save, then `/reload` in Kilo chat.
+3. Save, then `/reload` in Kilo chat — required either way: without it the
+   new URL isn't picked up yet. Global Config (`~/.config/kilo/kilo.jsonc`)
+   works fine for this, same as Local — confirmed live, no scoping
+   restriction actually applies (an earlier version of this note claimed
+   global-scoped URLs were ignored during prompt sessions; that wasn't
+   true, or is no longer true, in current Kilo).
 
-> **Global vs. Local config, a real gotcha**: pasting a URL into the
-> Settings UI's graphical **Skill URLs** field writes to **Global Config**
-> (`~/.config/kilo/kilo.jsonc`) — but globally configured skill URLs are
-> currently **ignored during prompt sessions**. You must use **Local
-> Config** (the button, or editing `.kilo/kilo.jsonc` / `./kilo.json`
-> directly) for the URL to actually take effect.
+> **Note**: skills fetched via a Skill URL are cached under
+> `~/.cache/kilo/skills/<name>/` — a different location from
+> `~/.kilo/skills/`, where `kilo-plugin-manager`'s own `install` places
+> properly tracked installs. Don't be surprised seeing two different paths
+> for what looks like "the same skill" during the bootstrap step; the
+> cache one is just the temporary trampoline.
 
 ### `kilo-plugin-manager` command reference
 
@@ -137,7 +142,7 @@ Kilo's native Skill URLs mechanism:
 Once `kilo-plugin-manager` is bootstrapped, plain-language requests work
 too — Kilo runs the equivalent commands itself:
 
-> *"Use kilo-plugin-manager to add marketplace https://github.com/primax79/agentic-coding-kit.git with name agentic"*
+> *"Use kilo-plugin-manager to add marketplace `https://github.com/primax79/agentic-coding-kit.git` with name agentic"*
 > *"Install plugin common-tools"*
 
 ---
