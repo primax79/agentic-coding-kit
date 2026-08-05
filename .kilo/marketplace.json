@@ -1,0 +1,97 @@
+{
+  "name": "agentic-coding-kit",
+  "description": "Generic, project-agnostic AI coding tools and skills for Kilo Code",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "gitignore",
+      "description": "Creates or updates .gitignore files via gitignore.io API",
+      "source": "./plugins/common-tools/skills/gitignore"
+    },
+    {
+      "name": "macroplan-authoring",
+      "description": "Author and maintain durable development pipelines and macroplans",
+      "source": "./plugins/common-tools/skills/macroplan-authoring"
+    },
+    {
+      "name": "markdown-formatter",
+      "description": "Format markdown files using markdownlint",
+      "source": "./plugins/common-tools/skills/markdown-formatter"
+    },
+    {
+      "name": "framework-skillset-generator",
+      "description": "Generate reference skillsets for frameworks/libraries from source and docs",
+      "source": "./plugins/agent-tooling-meta/skills/framework-skillset-generator"
+    },
+    {
+      "name": "kilo-claude-sync",
+      "description": "Keep Kilo Code and Claude Code agent/skill definitions aligned",
+      "source": "./plugins/agent-tooling-meta/skills/kilo-claude-sync"
+    },
+    {
+      "name": "kilo-plugin-manager",
+      "description": "Install, update, and manage agent/skill plugins from git marketplaces",
+      "source": "./plugins/agent-tooling-meta/skills/kilo-plugin-manager"
+    },
+    {
+      "name": "kilo-scope-manager",
+      "description": "Manage Kilo customization scope between global and project levels",
+      "source": "./plugins/agent-tooling-meta/skills/kilo-scope-manager"
+    },
+    {
+      "name": "roocode-migrator",
+      "description": "Migrate skills and mode rules from roocode to kilocode format",
+      "source": "./plugins/agent-tooling-meta/skills/roocode-migrator"
+    },
+    {
+      "name": "agent-md-refactor",
+      "description": "Refactor monolithic agent instruction files following progressive disclosure",
+      "source": "./plugins/third-party/skills/agent-md-refactor"
+    },
+    {
+      "name": "changelog-generator",
+      "description": "Automatically create user-facing changelogs from git commits",
+      "source": "./plugins/third-party/skills/changelog-generator"
+    },
+    {
+      "name": "file-organizer",
+      "description": "Organize files and folders across your computer based on context",
+      "source": "./plugins/third-party/skills/file-organizer"
+    },
+    {
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend web interfaces",
+      "source": "./plugins/third-party/skills/frontend-design"
+    },
+    {
+      "name": "grill-me",
+      "description": "Stress-test plans and designs through relentless interviewing",
+      "source": "./plugins/third-party/skills/grill-me"
+    },
+    {
+      "name": "mcp-builder",
+      "description": "Guide for building Model Context Protocol (MCP) servers",
+      "source": "./plugins/third-party/skills/mcp-builder"
+    },
+    {
+      "name": "playwright",
+      "description": "Playwright MCP server integration for web testing and automation",
+      "source": "./plugins/third-party/skills/playwright"
+    },
+    {
+      "name": "skill-creator",
+      "description": "Create, modify, measure, and optimize skills",
+      "source": "./plugins/third-party/skills/skill-creator"
+    },
+    {
+      "name": "terraform",
+      "description": "Terraform IaC integration for infrastructure management",
+      "source": "./plugins/third-party/skills/terraform"
+    },
+    {
+      "name": "theme-factory",
+      "description": "Toolkit for styling artifacts with consistent themes",
+      "source": "./plugins/third-party/skills/theme-factory"
+    }
+  ]
+}
