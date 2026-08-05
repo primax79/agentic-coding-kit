@@ -314,19 +314,33 @@ def install_plugin(state, plugin, mp_name, info, project, copy, include_claude):
                 print(f'[skill] {sd.name} -> {dest}')
         ensure_claude_skills_symlink(roots)
 
-    kilo_agents_src = ppath / 'agents_kilo' if (ppath / 'agents_kilo').is_dir() else (ppath / 'agents' / 'kilo' if (ppath / 'agents' / 'kilo').is_dir() else ppath / 'agents')
-    if kilo_agents_src.is_dir():
-        for f in sorted(kilo_agents_src.glob('*.md')):
-            if f.is_file():
-                text = f.read_text()
-                fields, body = parse_fm(text)
-                name = fields.get('name', f.stem)
-                kilo_text = (text if is_kilo_shaped(fields)
-                             else to_kilo_agent(name, fields, body))
-                dest = roots['kilo_agents'] / f.name
-                if place_entry(dest, lambda d, t=kilo_text: d.write_text(t), 'file',
-                               prev_paths, recorded):
-                    print(f'[agent] {f.stem} -> {dest} (kilo)')
+    # Per-file fallback, not per-directory: a hand-written Kilo override in
+    # agents_kilo/ (or agents/kilo/) is used only for the agents that
+    # actually have one there; every other agent still falls back to
+    # auto-translating its plain agents/ source. Picking a whole directory
+    # (the old behavior) silently dropped Kilo generation for every agent
+    # *not* covered by a partial agents_kilo/ override.
+    kilo_override_dir = (ppath / 'agents_kilo' if (ppath / 'agents_kilo').is_dir()
+                          else (ppath / 'agents' / 'kilo' if (ppath / 'agents' / 'kilo').is_dir() else None))
+    claude_agents_dir = ppath / 'agents'
+    agent_names = set()
+    if kilo_override_dir:
+        agent_names |= {f.name for f in kilo_override_dir.glob('*.md') if f.is_file()}
+    if claude_agents_dir.is_dir():
+        agent_names |= {f.name for f in claude_agents_dir.glob('*.md') if f.is_file()}
+    for fname in sorted(agent_names):
+        override = kilo_override_dir / fname if kilo_override_dir else None
+        src = override if (override and override.is_file()) else claude_agents_dir / fname
+        if not src.is_file():
+            continue
+        text = src.read_text()
+        fields, body = parse_fm(text)
+        name = fields.get('name', src.stem)
+        kilo_text = text if is_kilo_shaped(fields) else to_kilo_agent(name, fields, body)
+        dest = roots['kilo_agents'] / fname
+        if place_entry(dest, lambda d, t=kilo_text: d.write_text(t), 'file',
+                       prev_paths, recorded):
+            print(f'[agent] {src.stem} -> {dest} (kilo)')
 
     claude_agents_src = ppath / 'agents'
     if include_claude and claude_agents_src.is_dir():
