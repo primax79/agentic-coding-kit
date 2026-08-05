@@ -58,6 +58,22 @@ to fetch `kilo-plugin-manager` itself):
 > `~/.kilo/skills/`, where step 3's proper install actually lands. Don't
 > be surprised seeing two different paths for what looks like "the same
 > skill".
+>
+> **This cache never refreshes itself.** Kilo's `skills.urls` downloader
+> skips any file that already exists at the destination — no ETag, no hash,
+> no version check (`discovery.ts`'s `download()`). Once
+> `kilo-plugin-manager` is pulled this way, it is frozen at that version
+> forever, and there's no supported way to remove it either — Kilo's own
+> skill-removal code explicitly refuses to touch anything under
+> `~/.cache/kilo/skills/` (`skill-remove.ts`: "remove URL-backed skills
+> from configuration" — i.e. only unlist the URL, don't expect a delete).
+> If you ever update `kilo-plugin-manager` in the marketplace repo and need
+> to re-bootstrap a machine, `rm -rf ~/.cache/kilo/skills/kilo-plugin-manager/`
+> first, or the trampoline will silently keep serving the stale copy. This
+> is exactly why step 1 is the *only* place this repo recommends the raw
+> `skills.urls` mechanism — everything else goes through `plugin_manager.py`,
+> which has none of these problems (tracked in `~/.kilo/plugin-manager.json`,
+> supports `update` and `uninstall` for real).
 
 From here on, use the installed copy: `~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py`.
 

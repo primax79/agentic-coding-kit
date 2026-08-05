@@ -9,6 +9,7 @@ know the difference between the three "marketplace" mechanisms it describes.
 - [Part 2: Kilo Code — `kilo-plugin-manager`](#part-2-kilo-code--kilo-plugin-manager)
 - [Kilo-native Skill URLs (`index.json`)](#kilo-native-skill-urls-indexjson)
 - [Official `Kilo-Org/kilo-marketplace` (community catalog, not used by this repo)](#official-kilo-orgkilo-marketplace-community-catalog-not-used-by-this-repo)
+- [Self-hosted official-format skill feed (`marketplace-skills.json`)](#self-hosted-official-format-skill-feed-marketplace-skillsjson)
 - [Release Workflow](#release-workflow)
 
 ---
@@ -113,7 +114,9 @@ Kilo's native Skill URLs mechanism:
 > `~/.kilo/skills/`, where `kilo-plugin-manager`'s own `install` places
 > properly tracked installs. Don't be surprised seeing two different paths
 > for what looks like "the same skill" during the bootstrap step; the
-> cache one is just the temporary trampoline.
+> cache one is just the temporary trampoline. See
+> [below](#kilo-native-skill-urls-indexjson) for why this trampoline should
+> never be used for anything beyond this one bootstrap step.
 
 ### `kilo-plugin-manager` command reference
 
@@ -173,6 +176,52 @@ added, removed, or renamed under `plugins/*/skills/` — they're generated,
 not hand-maintained, and go silently stale otherwise (a renamed/deleted
 skill stays listed; a new one doesn't show up).
 
+### Why this should only ever be used for the one-time bootstrap above
+
+It's tempting to use Skill URLs as a general lightweight distribution
+channel — no marketplace registration, no `kilo-plugin-manager` — but
+verified directly against Kilo's source
+(`packages/opencode/src/skill/discovery.ts` and `skill-remove.ts`), the
+mechanism has three properties that make it unsuitable for anything
+recurring:
+
+- **The cache never refreshes.** The downloader skips fetching a file
+  entirely if it already exists at the destination — no ETag, no hash, no
+  version check. A skill pulled this way is frozen at whatever version was
+  live at pull time, forever, even after the source repo changes and the
+  same URL is re-added.
+- **Cache keys are the skill's declared `name`, not the source URL.** Two
+  different marketplaces publishing a skill under the same name collide in
+  the same `~/.cache/kilo/skills/<name>/` folder.
+- **There is no supported removal.** Kilo's own skill-removal code
+  explicitly refuses to delete anything under `~/.cache/kilo/skills/`
+  (it throws "remove URL-backed skills from configuration") — dropping the
+  URL from config only stops future loading, it does not clean up or
+  invalidate the stale copy already on disk. Skills loaded this way are
+  also untrusted by design (`{file:}`/`{env:}` substitutions confined to
+  their own folder), appropriate for code of unknown provenance, not for
+  routine trusted installs.
+- **A stale cache entry silently wins over a correctly-installed skill of
+  the same name — it doesn't just sit there unused.** `discoverSkills`
+  scans sources in a fixed order (external dirs → config dirs, which is
+  where `~/.kilo/skills/` gets picked up → `skills.paths` →
+  **`skills.urls` last**), and `loadSkills`/`add()` walks the matches in
+  that same order doing `state.skills[name] = {...}` unconditionally — a
+  name collision only logs a warning, never skips the overwrite. Because
+  the cache is scanned last, an old cached copy of a skill you've since
+  properly reinstalled via `kilo-plugin-manager` shadows the new one, with
+  only an easy-to-miss log line as evidence. See
+  [`references/kilo-skill-url-cache-bug-summary.md`](../references/kilo-skill-url-cache-bug-summary.md)
+  for a real incident this caused.
+
+If you ever update a skill distributed this way and need to re-bootstrap a
+machine, `rm -rf ~/.cache/kilo/skills/<name>/` first, or the trampoline
+silently keeps serving the stale copy. Past this repo's one-time
+`kilo-plugin-manager` bootstrap, every install/update/uninstall should go
+through `kilo-plugin-manager` instead, which has none of these failure
+modes (tracked in `~/.kilo/plugin-manager.json`, real `update`/`uninstall`,
+symlinked so updates propagate).
+
 ---
 
 ## Official `Kilo-Org/kilo-marketplace` (community catalog, not used by this repo)
@@ -188,6 +237,37 @@ mechanisms above is a fully independent, equally valid distribution path,
 just a different audience (your own team / anyone with the repo URL, vs.
 Kilo's own curated public catalog).
 
+We don't submit to their catalog, but we do generate a feed in the *same
+shape* their client already knows how to consume — see the next section.
+
+---
+
+## Self-hosted official-format skill feed (`marketplace-skills.json`)
+
+Kilo's own Marketplace UI (the standalone panel, and the Settings tab where
+embedded) talks to `api.kilo.ai`, which serves skills as
+`{id, description, category, githubUrl, content}` — where `content` is a
+**tarball URL**, fetched and extracted directly by Kilo's installer. That's
+a third, incompatible shape on top of the two above: not raw files +
+`index.json` (Skill URLs), not a git-clone-and-symlink install
+(`kilo-plugin-manager`).
+
+Rather than invent this packaging step, `kilo-plugin-manager` ports the
+*exact* toolchain `Kilo-Org/kilo-marketplace` uses to build its own official
+feed (`bin/generate-skill-marketplace.ts` +
+`.github/workflows/package-skills.yml` — tar each skill, publish to a GitHub
+Release, generate the JSON pointing at those release URLs) — see
+[`kilo-plugin-manager/SKILL.md` §4](../plugins/agent-tooling-meta/skills/kilo-plugin-manager/SKILL.md)
+for the two scripts and the constraints (no per-item version field — the
+official installer has no update-in-place logic to read one anyway; Skills
+only, Agents/MCPs need a smaller follow-up; and nothing in Kilo fetches this
+file yet, since `MarketplaceApiClient` is still hardcoded to one source —
+that's the still-open multi-marketplace work on `kilocode-dev`).
+
+`marketplace-skills.json` is generated and published for this repo,
+`ai-architect-executor`, and `kilo-mcp` — correct, ready to be consumed the
+moment Kilo supports pointing its Marketplace UI at more than one source.
+
 ---
 
 ## Release Workflow
@@ -197,6 +277,9 @@ Kilo's own curated public catalog).
    [`02-authoring-and-maintenance.md`](02-authoring-and-maintenance.md#managing-releases--updates)).
 2. `python3 scripts/generate_skill_indices.py` if any skill changed.
 3. `python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py` if any agent changed.
-4. `git add . && git commit && git push origin main`.
-5. Consumers update: `/plugin update` (Claude Code) or
+4. If any skill was added/removed/renamed, also regenerate the official-format
+   feed: `python3 .../kilo-plugin-manager/scripts/package_and_publish_skills.py .`
+   then `.../generate_skill_marketplace.py .` (see the section above).
+5. `git add . && git commit && git push origin main`.
+6. Consumers update: `/plugin update` (Claude Code) or
    `python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py update` (Kilo Code).

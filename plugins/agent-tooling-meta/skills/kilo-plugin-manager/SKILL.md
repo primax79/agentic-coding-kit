@@ -39,6 +39,8 @@ Depending on how `kilo-plugin-manager` was installed on your machine, run the sc
 | Show marketplaces, HEAD commits, installs   | `status`                                          |
 | Convert one agent file Claude↔Kilo         | `convert <file.md> --to kilo\|claude [-o out.md]` |
 | Scaffold a new marketplace repo             | `init-marketplace <path> [--name N]`              |
+| Generate an official-format skill feed      | `python3 generate_skill_marketplace.py <repo>`    |
+| Package + publish skill tarballs to GitHub  | `python3 package_and_publish_skills.py <repo>`    |
 
 ## How installs work (for explaining to the user, not for re-implementing)
 
@@ -109,3 +111,72 @@ Therefore, we must continue to use `kilo-plugin-manager` to:
 - Globally or project-locally install **Agents** from the marketplace.
 - Bidirectionally synchronize and translate agent definitions between Claude Code (`.claude/agents/`) and Kilo Code (`.kilo/agent/`).
 - Copy or symlink assets that require local integration or persistent synchronization.
+
+### 3. Why `urls` Should Never Be Used Beyond the Initial Bootstrap (The Caching Limitation)
+
+Even scoped to skills alone, `skills.urls` is unsuitable for anything recurring — verified directly against Kilo's source (`packages/opencode/src/skill/discovery.ts` and `skill-remove.ts`):
+
+- **The cache never refreshes.** `download()` skips fetching entirely if the destination file already exists — no ETag, no hash, no version comparison. A skill pulled this way is frozen at whatever version was live at pull time, forever, even if the source repo is updated and the same URL is re-added.
+- **Cache keys are the skill's declared `name`, not the source URL.** Two different marketplaces publishing a skill with the same name would collide in the same `~/.cache/kilo/skills/<name>/` folder.
+- **There is no supported removal.** Kilo's own skill-removal path explicitly refuses to delete anything under `~/.cache/kilo/skills/` (throws "remove URL-backed skills from configuration") — removing the URL from config only stops future loading, it does not clean up or invalidate the stale copy already on disk.
+- **It's untrusted by design.** Skills pulled via `urls` are loaded without the `trusted` flag, so their `{file:}`/`{env:}` substitutions are confined to their own downloaded folder — a deliberate constraint for code of unknown provenance, not something to route routine, trusted installs through.
+- **A stale cache entry silently wins over a correctly-installed skill of the same name.** `discoverSkills` scans external dirs → config dirs (where `~/.kilo/skills/` is picked up) → `skills.paths` → `skills.urls` **last**, and `add()` overwrites `state.skills[name]` unconditionally on a match — a duplicate name only logs a warning, it never skips the overwrite. So an old cached copy doesn't just linger unused: it shadows whatever you've since properly reinstalled via `kilo-plugin-manager`, with only that easy-to-miss warning as a clue. See `references/kilo-skill-url-cache-bug-summary.md` in this repo for a real incident.
+
+Net effect: `urls` is a one-shot trampoline, good exactly once per machine to fetch `kilo-plugin-manager` itself (see §1) before any tracked mechanism exists yet. Every install/update/uninstall after that must go through `kilo-plugin-manager`, which has none of these failure modes (tracked in `~/.kilo/plugin-manager.json`, real `update`/`uninstall`, symlinked so updates propagate). If `kilo-plugin-manager` itself is ever updated in the marketplace and a machine needs to re-bootstrap, `rm -rf ~/.cache/kilo/skills/kilo-plugin-manager/` first — otherwise the trampoline silently re-serves the stale cached copy.
+
+## 4. Generating an official-format skill feed (`generate_skill_marketplace.py`)
+
+Kilo's official marketplace UI (the standalone "Kilo Marketplace" panel and,
+where embedded, the Settings tab) consumes skills from `api.kilo.ai` in a
+specific shape — `{id, description, category, githubUrl, content}`, where
+`content` is a **tarball URL**, not raw source files. That's a different
+mechanism from both `skills.urls` (§1-3, raw files + `index.json`) and
+`kilo-plugin-manager`'s own git-clone-and-symlink install: it can't consume
+either directly. `Kilo-Org/kilo-marketplace`'s own repo generates this shape
+from plain skill directories via a small toolchain
+(`bin/generate-skill-marketplace.ts` + a GitHub Actions workflow that tars
+each skill and publishes it to a GitHub Release) — `generate_skill_marketplace.py`
+and `package_and_publish_skills.py` are a Python port of that same toolchain,
+adapted for this family of repos' `plugins/<plugin>/skills/<skill>/` layout
+(the official repo has a flat `skills/` root; these are multi-plugin, so
+`category` is derived from the plugin directory name).
+
+```bash
+# 1. Package every skill under plugins/*/skills/ and publish tarballs to a
+#    GitHub Release on this repo (dual-tagged: a dated+sha snapshot kept
+#    forever, plus a rolling `skills-latest` the feed points at). Requires
+#    `gh` authenticated with push access (`gh auth status`).
+python3 package_and_publish_skills.py <repo-root> [--dry-run]
+
+# 2. Generate the feed itself (writes <repo-root>/marketplace-skills.json,
+#    JSON not YAML — the client's parseResponse() tries JSON.parse() first).
+python3 generate_skill_marketplace.py <repo-root>
+```
+
+Re-run both after adding/removing/renaming a skill, same discipline as
+`scripts/generate_skill_indices.py`.
+
+**Constraints worth knowing before relying on this:**
+
+- **No per-item version field, deliberately.** Neither `SkillMarketplaceItem`
+  nor Kilo's `installSkill()` reads one — the official installer has no
+  update-in-place logic at all (a skill that's already installed just
+  refuses reinstall until manually uninstalled first). Adding a `version`
+  field to the generated feed would be inert data nobody consumes. Real
+  history instead lives at the release level: every publish creates an
+  immutable dated+sha-tagged release alongside the rolling `skills-latest`
+  one, browsable/restorable on GitHub.
+- **This only covers Skills.** Agents need no packaging (their `content` is
+  inline structured JSON parsed from `.md` frontmatter — see
+  `Kilo-Org/kilo-marketplace/bin/generate-agents-marketplace.ts` for the
+  pattern if this gets ported later) and MCPs need a per-entry `MCP.yaml`
+  descriptor this family of repos doesn't currently author. Both are smaller
+  follow-ups, not done here.
+- **Nothing in Kilo actually fetches `marketplace-skills.json` yet.** The
+  generated file matches the shape `MarketplaceApiClient` already knows how
+  to parse, but that client is still hardcoded to a single `api.kilo.ai`
+  `BASE_URL` — pointing it at additional sources (this file among them) is
+  unbuilt multi-marketplace work, tracked separately against
+  `kilocode-dev`'s `feature/multi-repo-marketplace` branch. Until then,
+  `marketplace-skills.json` is a correct, ready-to-consume artifact with no
+  consumer yet.

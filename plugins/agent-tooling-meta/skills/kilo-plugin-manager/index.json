@@ -4,6 +4,8 @@
       "name": "kilo-plugin-manager",
       "files": [
         "SKILL.md",
+        "scripts/generate_skill_marketplace.py",
+        "scripts/package_and_publish_skills.py",
         "scripts/plugin_manager.py"
       ]
     }

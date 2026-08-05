@@ -1,0 +1,137 @@
+{
+  "items": [
+    {
+      "id": "framework-skillset-generator",
+      "description": "Use when asked to generate a reference skillset for a framework or library from its source code, official docs, a formal spec (OpenAPI/JSON Schema/proto), and/or a real project that uses it \u2014 \"build skills for X like we did for ADK\", \"turn this library's docs into skills\", \"point a skill-generator at this framework\". Produces a set of grounded, citation-checked SKILL.md files plus a hub/index skill, staged for review before anything is written into a real repo. Not for writing one ad-hoc skill from a task description \u2014 that's kilo-customizer.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/framework-skillset-generator",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/framework-skillset-generator.tar.gz"
+    },
+    {
+      "id": "kilo-claude-sync",
+      "description": "Keeps Kilo Code and Claude Code agent/skill definitions aligned, both per-project (.kilo vs .claude) and globally (~/.kilo vs ~/.claude). Use whenever an agent .md file or a SKILL.md is added or edited under .kilo/agent, .kilo/skills, .claude/agents, or .claude/skills, before committing or ending the session.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-claude-sync",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-claude-sync.tar.gz"
+    },
+    {
+      "id": "kilo-plugin-manager",
+      "description": "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace, and translate agent definitions between Claude and Kilo frontmatter. Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, or convert an agent file between Claude Code and Kilo Code formats.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-plugin-manager",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-plugin-manager.tar.gz"
+    },
+    {
+      "id": "kilo-rag-index-manager",
+      "description": "Administers Kilo's own semantic codebase index (Qdrant collections, embedding config) independently of any orchestrator - primarily migrating the index across a workspace move/rename without a full re-embed. Use when a Kilo-indexed project directory is moved/renamed and the index needs to follow it, or when inspecting/cleaning up Qdrant collections created by Kilo's indexing feature.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-rag-index-manager",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-rag-index-manager.tar.gz"
+    },
+    {
+      "id": "kilo-scope-manager",
+      "description": "Moves or copies Kilo customization items - skills, agents, and commands/workflows - between global scope (~/.kilo, ~/.config/kilo) and project-local scope (.kilo), handling name shadowing, duplicate global directories, and Claude Code mirroring. Also covers maintaining and fixing global definitions. Use when the user asks to promote an item to global, localize a global item, resolve duplicate copies, or update global agents/skills.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-scope-manager",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-scope-manager.tar.gz"
+    },
+    {
+      "id": "roocode-migrator",
+      "description": "Migrates skills and mode rules from roocode (.roo) to kilocode (.kilo / ~/.config/kilo) configuration, converting XML rules to Markdown agents.",
+      "category": "agent-tooling-meta",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/roocode-migrator",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/roocode-migrator.tar.gz"
+    },
+    {
+      "id": "gitignore",
+      "description": "Creates or updates a project's .gitignore file using the gitignore.io (Toptal) API and local custom templates (AI agents, gCube, local env), preserving custom rules at the head of the file and optionally re-indexing git cache.",
+      "category": "common-tools",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/common-tools/skills/gitignore",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/gitignore.tar.gz"
+    },
+    {
+      "id": "macroplan-authoring",
+      "description": "Author and maintain a durable, resumable development pipeline as a `task/` tree \u2014 raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change \u2014 use a normal plan for that.",
+      "category": "common-tools",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/common-tools/skills/macroplan-authoring",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/macroplan-authoring.tar.gz"
+    },
+    {
+      "id": "markdown-formatter",
+      "description": "Use this skill to format Markdown (`.md`) files in the workspace. This skill strictly delegates all formatting tasks to David Anson's `markdownlint` library (via `markdownlint --fix` or `npx --yes markdownlint-cli --fix`). The agent MUST NOT spend time performing manual formatting edits.",
+      "category": "common-tools",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/common-tools/skills/markdown-formatter",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/markdown-formatter.tar.gz"
+    },
+    {
+      "id": "agent-md-refactor",
+      "description": ">-\n  Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to\n  follow progressive disclosure principles. Splits monolithic files into\n  organized, linked documentation.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/agent-md-refactor",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/agent-md-refactor.tar.gz"
+    },
+    {
+      "id": "changelog-generator",
+      "description": ">-\n  Automatically creates user-facing changelogs from git commits by analyzing\n  commit history, categorizing changes, and transforming technical commits into\n  clear, customer-friendly release notes. Turns hours of manual changelog\n  writing into minutes of automated generation.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/changelog-generator",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/changelog-generator.tar.gz"
+    },
+    {
+      "id": "file-organizer",
+      "description": ">-\n  Intelligently organizes your files and folders across your computer by\n  understanding context, finding duplicates, suggesting better structures, and\n  automating cleanup tasks. Reduces cognitive load and keeps your digital\n  workspace tidy without manual effort.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/file-organizer",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/file-organizer.tar.gz"
+    },
+    {
+      "id": "frontend-design",
+      "description": ">-\n  Create distinctive, production-grade frontend interfaces with high design\n  quality. Use this skill when the user asks to build web components, pages,\n  artifacts, posters, or applications (examples include websites, landing pages,\n  dashboards, React components, HTML/CSS layouts, or when styling/beautifying\n  any web UI). Generates creative, polished code and UI design that avoids\n  generic AI aesthetics.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/frontend-design",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/frontend-design.tar.gz"
+    },
+    {
+      "id": "grill-me",
+      "description": ">-\n  Interview the user relentlessly about a plan or design until reaching shared\n  understanding, resolving each branch of the decision tree. Use when user wants\n  to stress-test a plan, get grilled on their design, or mentions \"grill me\".",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/grill-me",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/grill-me.tar.gz"
+    },
+    {
+      "id": "mcp-builder",
+      "description": ">-\n  Guide for creating high-quality MCP (Model Context Protocol) servers that\n  enable LLMs to interact with external services through well-designed tools.\n  Use when building MCP servers to integrate external APIs or services, whether\n  in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/mcp-builder",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/mcp-builder.tar.gz"
+    },
+    {
+      "id": "playwright",
+      "description": "Playwright MCP server integration for browser automation, web testing, and page scraping.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/playwright",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/playwright.tar.gz"
+    },
+    {
+      "id": "skill-creator",
+      "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/skill-creator",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/skill-creator.tar.gz"
+    },
+    {
+      "id": "terraform",
+      "description": "HashiCorp Terraform MCP server integration for authoring, validating, and managing Infrastructure as Code (IaC) configurations.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/terraform",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/terraform.tar.gz"
+    },
+    {
+      "id": "theme-factory",
+      "description": ">-\n  Toolkit for styling artifacts with a theme. These artifacts can be slides,\n  docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with\n  colors/fonts that you can apply to any artifact that has been creating, or can\n  generate a new theme on-the-fly.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/theme-factory",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/theme-factory.tar.gz"
+    }
+  ]
+}
