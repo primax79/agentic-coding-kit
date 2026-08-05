@@ -141,42 +141,68 @@ adapted for this family of repos' `plugins/<plugin>/skills/<skill>/` layout
 (the official repo has a flat `skills/` root; these are multi-plugin, so
 `category` is derived from the plugin directory name).
 
-```bash
-# 1. Package every skill under plugins/*/skills/ and publish tarballs to a
-#    GitHub Release on this repo (dual-tagged: a dated+sha snapshot kept
-#    forever, plus a rolling `skills-latest` the feed points at). Requires
-#    `gh` authenticated with push access (`gh auth status`).
-python3 package_and_publish_skills.py <repo-root> [--dry-run]
+Two output modes, matching the two install paths `kilocode-dev`'s
+`installer.ts` now supports for a skill item (`installSkill()` dispatches on
+which field is present):
 
-# 2. Generate the feed itself (writes <repo-root>/marketplace-skills.json,
-#    JSON not YAML — the client's parseResponse() tries JSON.parse() first).
-python3 generate_skill_marketplace.py <repo-root>
-```
+- **`--mode tarball` (default)** — matches the official `api.kilo.ai` shape
+  exactly. Needs a publish step:
 
-Re-run both after adding/removing/renaming a skill, same discipline as
-`scripts/generate_skill_indices.py`.
+  ```bash
+  # 1. Package every skill under plugins/*/skills/ and publish tarballs to a
+  #    GitHub Release on this repo (dual-tagged: a dated+sha snapshot kept
+  #    forever, plus a rolling `skills-latest` the feed points at). Requires
+  #    `gh` authenticated with push access (`gh auth status`).
+  python3 package_and_publish_skills.py <repo-root> [--dry-run]
+
+  # 2. Generate the feed (writes <repo-root>/marketplace-skills.json, JSON
+  #    not YAML — the client's parseResponse() tries JSON.parse() first).
+  python3 generate_skill_marketplace.py <repo-root>
+  ```
+
+- **`--mode files`** — no packaging, no `gh`, no release step at all. Each
+  item lists its files as plain relative paths instead of a tarball URL;
+  Kilo fetches them individually from `raw.githubusercontent.com` once
+  pushed. Simpler to author (nothing to run before pushing except the
+  generator itself), at the cost of N small requests per install instead of
+  one compressed download:
+
+  ```bash
+  python3 generate_skill_marketplace.py <repo-root> --mode files
+  ```
+
+  This is *not* the same mechanism as `skills.urls` (§1-3) despite both
+  fetching raw files — it does not go through `discovery.ts`'s broken
+  write-once cache. `installer.ts`'s `downloadSkillFiles()` is a separate,
+  fresh code path with the same explicit-refuse-on-reinstall and
+  real-`rm`-on-remove semantics as the tarball path.
+
+Re-run after adding/removing/renaming a skill, same discipline as
+`scripts/generate_skill_indices.py`. This repo, `ai-architect-executor`, and
+`kilo-mcp` currently publish `--mode tarball` feeds — `--mode files` is
+available and verified working, not yet applied to any of them.
 
 **Constraints worth knowing before relying on this:**
 
-- **No per-item version field, deliberately.** Neither `SkillMarketplaceItem`
-  nor Kilo's `installSkill()` reads one — the official installer has no
-  update-in-place logic at all (a skill that's already installed just
-  refuses reinstall until manually uninstalled first). Adding a `version`
-  field to the generated feed would be inert data nobody consumes. Real
-  history instead lives at the release level: every publish creates an
-  immutable dated+sha-tagged release alongside the rolling `skills-latest`
-  one, browsable/restorable on GitHub.
+- **No per-item version field, deliberately, in either mode.** Neither
+  `SkillMarketplaceItem` nor `installSkill()` reads one — no install path has
+  update-in-place logic (a skill that's already installed just refuses
+  reinstall until manually uninstalled first). Adding a `version` field to
+  the generated feed would be inert data nobody consumes. For `--mode
+  tarball`, real history instead lives at the release level: every publish
+  creates an immutable dated+sha-tagged release alongside the rolling
+  `skills-latest` one, browsable/restorable on GitHub. `--mode files` has no
+  equivalent history mechanism — it's just whatever's on `main` right now.
 - **This only covers Skills.** Agents need no packaging (their `content` is
   inline structured JSON parsed from `.md` frontmatter — see
   `Kilo-Org/kilo-marketplace/bin/generate-agents-marketplace.ts` for the
   pattern if this gets ported later) and MCPs need a per-entry `MCP.yaml`
   descriptor this family of repos doesn't currently author. Both are smaller
   follow-ups, not done here.
-- **Nothing in Kilo actually fetches `marketplace-skills.json` yet.** The
-  generated file matches the shape `MarketplaceApiClient` already knows how
-  to parse, but that client is still hardcoded to a single `api.kilo.ai`
-  `BASE_URL` — pointing it at additional sources (this file among them) is
-  unbuilt multi-marketplace work, tracked separately against
-  `kilocode-dev`'s `feature/multi-repo-marketplace` branch. Until then,
-  `marketplace-skills.json` is a correct, ready-to-consume artifact with no
-  consumer yet.
+- **Kilo now does fetch `marketplace-skills.json`.** `fetchMarketplaceData()`
+  (`kilocode-dev`'s `services/marketplace/actions.ts`) fetches every
+  configured source's feed via a plain HTTP GET (URL derived from its git
+  remote) and merges the items in — this was the missing piece when this
+  section was first written; it's since been built and typechecked clean.
+  Still only reachable from a `kilocode-dev` build, not a released Kilo
+  version.

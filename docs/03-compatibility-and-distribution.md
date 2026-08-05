@@ -256,17 +256,23 @@ Rather than invent this packaging step, `kilo-plugin-manager` ports the
 *exact* toolchain `Kilo-Org/kilo-marketplace` uses to build its own official
 feed (`bin/generate-skill-marketplace.ts` +
 `.github/workflows/package-skills.yml` — tar each skill, publish to a GitHub
-Release, generate the JSON pointing at those release URLs) — see
-[`kilo-plugin-manager/SKILL.md` §4](../plugins/agent-tooling-meta/skills/kilo-plugin-manager/SKILL.md)
-for the two scripts and the constraints (no per-item version field — the
-official installer has no update-in-place logic to read one anyway; Skills
-only, Agents/MCPs need a smaller follow-up; and nothing in Kilo fetches this
-file yet, since `MarketplaceApiClient` is still hardcoded to one source —
-that's the still-open multi-marketplace work on `kilocode-dev`).
+Release, generate the JSON pointing at those release URLs). A second,
+packaging-free mode (`--mode files`) was added alongside it: each item lists
+its files as plain paths instead of a tarball URL, fetched individually from
+`raw.githubusercontent.com` — no `gh release` step, at the cost of N small
+requests per install instead of one. Both modes are supported by
+`kilocode-dev`'s installer (dispatched on which field the item carries) —
+see [`kilo-plugin-manager/SKILL.md` §4](../plugins/agent-tooling-meta/skills/kilo-plugin-manager/SKILL.md)
+for both scripts and the constraints (no per-item version field in either
+mode — no install path has update-in-place logic to read one anyway; Skills
+only, Agents/MCPs need a smaller follow-up).
 
-`marketplace-skills.json` is generated and published for this repo,
-`ai-architect-executor`, and `kilo-mcp` — correct, ready to be consumed the
-moment Kilo supports pointing its Marketplace UI at more than one source.
+`marketplace-skills.json` is generated and published (in `--mode tarball`)
+for this repo, `ai-architect-executor`, and `kilo-mcp`. As of `kilocode-dev`,
+`fetchMarketplaceData()` does fetch it — every configured source's feed is
+pulled via a plain HTTP GET and merged into the Marketplace UI's item list.
+That's only reachable from a `kilocode-dev` build for now, not a released
+Kilo version.
 
 ---
 
