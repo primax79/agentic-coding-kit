@@ -25,13 +25,37 @@ which kilo
 
 ## 1. Bootstrap `kilo-plugin-manager`
 
-```bash
-git clone https://github.com/primax79/agentic-coding-kit.git /tmp/acp-bootstrap
-PM=/tmp/acp-bootstrap/plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py
-python3 "$PM" add https://github.com/primax79/agentic-coding-kit.git --name acp
-python3 "$PM" install agent-tooling-meta@acp --no-claude
-rm -rf /tmp/acp-bootstrap
-```
+No manual download needed — it bootstraps itself via Kilo's **native Skill
+URLs** mechanism (zero extra tooling, skills-only, which is exactly enough
+to fetch `kilo-plugin-manager` itself):
+
+1. Edit **Local Config** (`.kilo/kilo.jsonc` in the current
+   directory — not Global Config, see the gotcha below) and add:
+
+   ```jsonc
+   {
+     "skills": {
+       "urls": [
+         "https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/agent-tooling-meta/skills/kilo-plugin-manager/"
+       ]
+     }
+   }
+   ```
+
+2. Save, then `/reload` in Kilo chat.
+3. Ask Kilo to use it — *"Use kilo-plugin-manager to add marketplace
+   `https://github.com/primax79/agentic-coding-kit.git` with name acp, then
+   install agent-tooling-meta@acp"* — which performs a **proper, globally
+   tracked** install (recorded in `~/.kilo/plugin-manager.json`), unlike the
+   bootstrap fetch itself. You can drop the Skill URL from local config
+   afterward; it was only a one-time trampoline.
+
+> **Global vs. Local config gotcha**: pasting a URL into the Settings UI's
+> graphical Skill URLs field writes to **Global Config**
+> (`~/.config/kilo/kilo.jsonc`) — but globally configured skill URLs are
+> currently **ignored during prompt sessions**. Use **Local Config** (the
+> Settings UI's "Local Config" button, or edit `.kilo/kilo.jsonc` /
+> `./kilo.json` directly) for the URL to actually take effect.
 
 From here on, use the installed copy: `~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py`.
 
