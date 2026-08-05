@@ -18,7 +18,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PLUGIN_SKILL_MAPPINGS = [
     ('plugins/common-tools', 'skills'),
-    ('plugins/kilo-claude-tools', 'skills'),
+    ('plugins/agent-tooling-meta', 'skills'),
     ('plugins/third-party', 'skills'),
 ]
 

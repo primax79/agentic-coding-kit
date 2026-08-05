@@ -27,7 +27,7 @@ This repo's root `.claude-plugin/marketplace.json`:
   "owner": { "name": "Alfredo Oliviero" },
   "plugins": [
     { "name": "common-tools", "source": "./plugins/common-tools", "description": "..." },
-    { "name": "kilo-claude-tools", "source": "./plugins/kilo-claude-tools", "description": "..." },
+    { "name": "agent-tooling-meta", "source": "./plugins/agent-tooling-meta", "description": "..." },
     { "name": "third-party-skills", "source": "./plugins/third-party", "description": "..." }
   ]
 }
@@ -46,7 +46,7 @@ Then, **global scope** (every project on the machine):
 
 ```text
 /plugin install common-tools
-/plugin install kilo-claude-tools
+/plugin install agent-tooling-meta
 /plugin install third-party-skills
 ```
 
@@ -77,7 +77,7 @@ Or **workspace scope** (this repo checkout only, saved to `.claude/settings.json
 
 Kilo Code has no single native equivalent of `/plugin marketplace add` that
 also handles **agents** (its native Skill URLs mechanism, below, only
-covers skills). `kilo-plugin-manager` (this repo's own `kilo-claude-tools`
+covers skills). `kilo-plugin-manager` (this repo's own `agent-tooling-meta`
 plugin) fills that gap: it reads the *same* `.claude-plugin/marketplace.json`
 Claude Code uses and installs both skills and agents from it, translating
 agent frontmatter on the way in.
@@ -95,7 +95,7 @@ Kilo's native Skill URLs mechanism:
    {
      "skills": {
        "urls": [
-         "https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/kilo-claude-tools/skills/kilo-plugin-manager/"
+         "https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/agent-tooling-meta/skills/kilo-plugin-manager/"
        ]
      }
    }
@@ -157,10 +157,10 @@ field at any of the three, it resolves the same set either way):
 python3 scripts/generate_skill_indices.py
 ```
 
-Example, for the whole `kilo-claude-tools` plugin:
+Example, for the whole `agent-tooling-meta` plugin:
 
 ```text
-https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/kilo-claude-tools/skills/
+https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/agent-tooling-meta/skills/
 ```
 
 **Re-run the script and commit the regenerated files** any time a skill is
@@ -191,7 +191,7 @@ Kilo's own curated public catalog).
    (manual for now — see the note in
    [`02-authoring-and-maintenance.md`](02-authoring-and-maintenance.md#managing-releases--updates)).
 2. `python3 scripts/generate_skill_indices.py` if any skill changed.
-3. `python3 plugins/kilo-claude-tools/skills/kilo-claude-sync/scripts/sync.py` if any agent changed.
+3. `python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py` if any agent changed.
 4. `git add . && git commit && git push origin main`.
 5. Consumers update: `/plugin update` (Claude Code) or
    `python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py update` (Kilo Code).

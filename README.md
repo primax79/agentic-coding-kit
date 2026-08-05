@@ -30,7 +30,7 @@ from scratch.
 | Plugin | Contains | Concern |
 | --- | --- | --- |
 | [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling |
-| [`kilo-claude-tools`](plugins/kilo-claude-tools) | `kilo-plugin-manager`, `kilo-scope-manager`, `kilo-claude-sync`, `roocode-migrator` (skills); `skill-writer`, `mode-writer`, `kilo-customizer`, `roocode-migrator` (agents) | Managing Kilo Code/Claude Code themselves — installing, syncing, authoring, migrating their configuration. Not delegation — see relationship section below. |
+| [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-plugin-manager`, `kilo-scope-manager`, `kilo-claude-sync`, `roocode-migrator`, `framework-skillset-generator` (skills); `skill-writer`, `mode-writer`, `kilo-customizer`, `roocode-migrator`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves — installing, syncing, authoring, migrating their configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation — see relationship section below. |
 | [`third-party`](plugins/third-party) | 10 curated external skills (`frontend-design`, `mcp-builder`, `skill-creator`, `theme-factory`, `agent-md-refactor`, `file-organizer`, `changelog-generator`, `grill-me`, `terraform`, `playwright`) | Vetted, license-preserved imports |
 
 Full concepts/authoring/distribution documentation: [`docs/00-INDEX.md`](docs/00-INDEX.md).
@@ -50,7 +50,7 @@ claude plugin marketplace add https://github.com/primax79/agentic-coding-kit.git
 
 ```text
 /plugin install common-tools
-/plugin install kilo-claude-tools
+/plugin install agent-tooling-meta
 /plugin install third-party-skills
 ```
 
@@ -92,7 +92,7 @@ scope-management commands: [`docs/03-compatibility-and-distribution.md`](docs/03
 - **[`ai-architect-executor`](https://github.com/primax79/ai-architect-executor)** —
   no dependency either way. Its content is about *delegating* work to
   another AI/agent (the Architect/Executor pattern); this repo's
-  `kilo-claude-tools` is about *configuring* Kilo/Claude as installed tools.
+  `agent-tooling-meta` is about *configuring* Kilo/Claude as installed tools.
   Related domain (both are "meta" to actual application code), genuinely
   different concern — see
   [`docs/01-concepts.md`](docs/01-concepts.md) if the boundary isn't

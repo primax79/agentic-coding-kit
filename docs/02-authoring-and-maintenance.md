@@ -21,7 +21,7 @@ Read [`01-concepts.md`](01-concepts.md) first if the vocabulary here
 
 1. **Choose (or create) a destination plugin directory** — group by concern,
    not by convenience. In this repo: `plugins/common-tools/` (generic,
-   no Kilo/Claude-config coupling), `plugins/kilo-claude-tools/` (manages
+   no Kilo/Claude-config coupling), `plugins/agent-tooling-meta/` (manages
    Kilo/Claude's own configuration), `plugins/third-party/` (imported
    external skills). A genuinely new concern gets its own plugin folder
    rather than being wedged into an existing one — see
@@ -117,7 +117,7 @@ This is the actual mechanics behind every repo in this family
 
 3. **That's the whole Claude Code side.** For Kilo Code, you get it two ways
    simultaneously, no extra manifest format to author:
-   - `kilo-plugin-manager` (this repo's own `kilo-claude-tools` plugin)
+   - `kilo-plugin-manager` (this repo's own `agent-tooling-meta` plugin)
      reads the *same* `.claude-plugin/marketplace.json` and translates
      agent frontmatter on install — nothing to write twice.
    - Kilo's native Skill URLs mechanism needs `index.json` files, which are
@@ -226,7 +226,7 @@ Run the sync script whenever an agent changes, so both variants stay
 identical on everything except the frontmatter shape:
 
 ```bash
-python3 plugins/kilo-claude-tools/skills/kilo-claude-sync/scripts/sync.py
+python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py
 ```
 
 It keeps `name:` identical across variants and mirrors files between the
@@ -271,7 +271,7 @@ Once installed to `~/.config/kilo/command/<name>.md`, it's available as
 3. **Sync agents** (if any agent frontmatter changed):
 
    ```bash
-   python3 plugins/kilo-claude-tools/skills/kilo-claude-sync/scripts/sync.py
+   python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py
    ```
 
 4. **Commit and push.**

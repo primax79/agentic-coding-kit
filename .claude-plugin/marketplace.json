@@ -16,13 +16,13 @@
       "source": "./plugins/common-tools"
     },
     {
-      "name": "kilo-claude-tools",
-      "description": "Kilo/Claude ecosystem meta-tooling - manage, sync, author and migrate Kilo Code and Claude Code's own configuration (plugin installs, skill/agent authoring, cross-tool sync, Roocode migration). Not about delegating work - see ai-architect-executor/kilo-mcp for that.",
+      "name": "agent-tooling-meta",
+      "description": "Kilo/Claude ecosystem meta-tooling - manage, sync, author and migrate Kilo Code and Claude Code's own configuration (plugin installs, skill/agent authoring, cross-tool sync, Roocode migration, generating a grounded reference skillset for a framework/library from its source/docs/spec via /generate-skillset). Not about delegating work - see ai-architect-executor/kilo-mcp for that.",
       "author": {
         "name": "Alfredo Oliviero"
       },
       "category": "development",
-      "source": "./plugins/kilo-claude-tools"
+      "source": "./plugins/agent-tooling-meta"
     },
     {
       "name": "third-party-skills",
