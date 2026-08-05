@@ -1,0 +1,192 @@
+{
+  "mandatory_base_templates": [
+    "visualstudiocode",
+    "emacs",
+    "macos",
+    "windows",
+    "linux"
+  ],
+  "default_custom_keys": [
+    "kilo",
+    "claude",
+    "roocode",
+    "cursor",
+    "gcube",
+    "local-env"
+  ],
+  "additional_rules": [],
+  "removed_rules": [],
+  "custom_templates": {
+    "kilo": {
+      "title": "Kilo Code",
+      "category": "ai-agents",
+      "detect_paths": [".kilo"],
+      "rules": [
+        ".kilo/worktrees/",
+        "agent-manager.json"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "claude": {
+      "title": "Claude Code",
+      "category": "ai-agents",
+      "detect_paths": [".claude"],
+      "rules": [
+        ".claude/worktrees/",
+        ".claude/settings.local.json"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "roocode": {
+      "title": "Roo Code",
+      "category": "ai-agents",
+      "detect_paths": [".roo"],
+      "rules": [
+        ".roo/tasks/",
+        ".roo/db/"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "cursor": {
+      "title": "Cursor",
+      "category": "ai-agents",
+      "detect_paths": [".cursor"],
+      "rules": [
+        ".cursor/rules/*.local"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "copilot": {
+      "title": "GitHub Copilot",
+      "category": "ai-agents",
+      "detect_paths": [".copilot"],
+      "rules": [
+        ".copilot/"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "gcube": {
+      "title": "gCube Ecosystem",
+      "category": "gcube",
+      "detect_paths": ["gcube", "gcube-app.xml"],
+      "rules": [
+        "token.properties",
+        "local-config.properties",
+        "gcube/extra-resources/local*",
+        "*.war.failed"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "local-env": {
+      "title": "Local Environment Overrides",
+      "category": "environment",
+      "rules": [
+        "*.local",
+        ".env.local",
+        ".env.*.local"
+      ],
+      "additional_rules": [],
+      "removed_rules": []
+    }
+  },
+  "standard_templates_detection": {
+    "java": {
+      "detect_paths": ["pom.xml", "build.gradle", "gradlew"],
+      "detect_extensions": [".java", ".class", ".jar"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "maven": {
+      "detect_paths": ["pom.xml", ".mvn"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "gradle": {
+      "detect_paths": ["build.gradle", "build.gradle.kts", "gradlew"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "node": {
+      "detect_paths": ["package.json", "node_modules", "package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "angular": {
+      "detect_paths": ["angular.json"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "react": {
+      "detect_paths": ["src/App.tsx", "src/App.jsx"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "vue": {
+      "detect_paths": ["vue.config.js"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "nextjs": {
+      "detect_paths": ["next.config.js", "next.config.mjs"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "typescript": {
+      "detect_paths": ["tsconfig.json"],
+      "detect_extensions": [".ts", ".tsx"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "python": {
+      "detect_paths": ["requirements.txt", "pyproject.toml", "Pipfile", "setup.py", ".venv", "venv"],
+      "detect_extensions": [".py"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "go": {
+      "detect_paths": ["go.mod", "go.sum"],
+      "detect_extensions": [".go"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "rust": {
+      "detect_paths": ["Cargo.toml", "Cargo.lock"],
+      "detect_extensions": [".rs"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "c": {
+      "detect_paths": ["CMakeLists.txt", "Makefile"],
+      "detect_extensions": [".c", ".h"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "c++": {
+      "detect_paths": ["CMakeLists.txt"],
+      "detect_extensions": [".cpp", ".hpp", ".cc", ".cxx"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "csharp": {
+      "detect_extensions": [".csproj", ".sln"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "visualstudio": {
+      "detect_extensions": [".sln"],
+      "additional_rules": [],
+      "removed_rules": []
+    },
+    "intellij": {
+      "detect_paths": [".idea"],
+      "additional_rules": [],
+      "removed_rules": []
+    }
+  }
+}

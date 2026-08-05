@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "name": "markdown-formatter",
+      "files": [
+        "Rules.md",
+        "SKILL.md",
+        "scripts/format-tables.js",
+        "scripts/update-toc.js"
+      ]
+    }
+  ]
+}

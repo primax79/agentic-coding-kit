@@ -1,0 +1,37 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "agentic-coding-kit",
+  "description": "Generic, project-agnostic skills and tools for AI-assisted software development for Claude Code and Kilo Code",
+  "owner": {
+    "name": "Alfredo Oliviero"
+  },
+  "plugins": [
+    {
+      "name": "common-tools",
+      "description": "Common Utilities Suite - Cross-platform development tools for Claude & Kilo (gitignore, markdown-formatter, macroplan-authoring, merge-resolver)",
+      "author": {
+        "name": "Alfredo Oliviero"
+      },
+      "category": "productivity",
+      "source": "./plugins/common-tools"
+    },
+    {
+      "name": "kilo-claude-tools",
+      "description": "Kilo/Claude ecosystem meta-tooling - manage, sync, author and migrate Kilo Code and Claude Code's own configuration (plugin installs, skill/agent authoring, cross-tool sync, Roocode migration). Not about delegating work - see ai-architect-executor/kilo-mcp for that.",
+      "author": {
+        "name": "Alfredo Oliviero"
+      },
+      "category": "development",
+      "source": "./plugins/kilo-claude-tools"
+    },
+    {
+      "name": "third-party-skills",
+      "description": "Bundled Third-Party Suite - Curated external skills (Anthropic, RooCode, Community)",
+      "author": {
+        "name": "Alfredo Oliviero"
+      },
+      "category": "productivity",
+      "source": "./plugins/third-party"
+    }
+  ]
+}

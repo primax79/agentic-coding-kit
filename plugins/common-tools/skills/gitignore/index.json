@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "gitignore",
+      "files": [
+        "SKILL.md",
+        "config/templates.json",
+        "scripts/generate_gitignore.py"
+      ]
+    }
+  ]
+}

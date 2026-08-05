@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "name": "kilo-plugin-manager",
+      "files": [
+        "SKILL.md",
+        "scripts/plugin_manager.py"
+      ]
+    }
+  ]
+}

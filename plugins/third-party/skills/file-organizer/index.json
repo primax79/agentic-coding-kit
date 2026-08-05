@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "name": "file-organizer",
+      "files": [
+        "SKILL.md",
+        "local.patch"
+      ]
+    }
+  ]
+}

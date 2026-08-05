@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {
+      "name": "changelog-generator",
+      "files": [
+        "SKILL.md"
+      ]
+    }
+  ]
+}

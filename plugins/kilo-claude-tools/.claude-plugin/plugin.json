@@ -1,0 +1,8 @@
+{
+  "name": "kilo-claude-tools",
+  "version": "0.1.0",
+  "description": "Kilo/Claude ecosystem meta-tooling - plugin management, cross-tool sync, scope management, skill/mode/agent authoring, Roocode migration",
+  "author": {
+    "name": "Alfredo Oliviero"
+  }
+}

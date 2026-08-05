@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "name": "agent-md-refactor",
+      "files": [
+        "LICENSE",
+        "README.md",
+        "SKILL.md",
+        "local.patch"
+      ]
+    }
+  ]
+}

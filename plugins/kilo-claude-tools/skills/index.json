@@ -1,0 +1,33 @@
+{
+  "skills": [
+    {
+      "name": "kilo-claude-sync",
+      "files": [
+        "SKILL.md",
+        "scripts/sync.py"
+      ]
+    },
+    {
+      "name": "kilo-plugin-manager",
+      "files": [
+        "SKILL.md",
+        "scripts/plugin_manager.py"
+      ]
+    },
+    {
+      "name": "kilo-scope-manager",
+      "files": [
+        "SKILL.md",
+        "scripts/move_item.py"
+      ]
+    },
+    {
+      "name": "roocode-migrator",
+      "files": [
+        "README.md",
+        "SKILL.md",
+        "scripts/migrate.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "third-party-skills",
+  "version": "0.1.0",
+  "description": "Bundled Third-Party Suite - Curated external skills (Anthropic, RooCode, Community)",
+  "author": {
+    "name": "Alfredo Oliviero"
+  }
+}

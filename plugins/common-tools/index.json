@@ -1,0 +1,28 @@
+{
+  "skills": [
+    {
+      "name": "skills/gitignore",
+      "files": [
+        "SKILL.md",
+        "config/templates.json",
+        "scripts/generate_gitignore.py"
+      ]
+    },
+    {
+      "name": "skills/macroplan-authoring",
+      "files": [
+        "SKILL.md",
+        "references/template.md"
+      ]
+    },
+    {
+      "name": "skills/markdown-formatter",
+      "files": [
+        "Rules.md",
+        "SKILL.md",
+        "scripts/format-tables.js",
+        "scripts/update-toc.js"
+      ]
+    }
+  ]
+}

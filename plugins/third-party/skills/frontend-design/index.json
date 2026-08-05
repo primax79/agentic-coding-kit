@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "name": "frontend-design",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "local.patch"
+      ]
+    }
+  ]
+}

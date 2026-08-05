@@ -1,0 +1,16 @@
+{
+  "skills": [
+    {
+      "name": "skill-creator",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "local.patch",
+        "scripts/init_skill.py",
+        "scripts/package_skill.py",
+        "scripts/quick_validate.py"
+      ]
+    }
+  ]
+}

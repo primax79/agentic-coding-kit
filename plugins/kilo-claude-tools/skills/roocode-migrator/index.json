@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "roocode-migrator",
+      "files": [
+        "README.md",
+        "SKILL.md",
+        "scripts/migrate.js"
+      ]
+    }
+  ]
+}

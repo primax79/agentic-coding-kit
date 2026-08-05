@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {
+      "name": "terraform",
+      "files": [
+        "SKILL.md"
+      ]
+    }
+  ]
+}

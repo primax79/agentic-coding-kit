@@ -1,0 +1,20 @@
+{
+  "skills": [
+    {
+      "name": "mcp-builder",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "reference/evaluation.md",
+        "reference/mcp_best_practices.md",
+        "reference/node_mcp_server.md",
+        "reference/python_mcp_server.md",
+        "scripts/connections.py",
+        "scripts/evaluation.py",
+        "scripts/example_evaluation.xml",
+        "scripts/requirements.txt"
+      ]
+    }
+  ]
+}

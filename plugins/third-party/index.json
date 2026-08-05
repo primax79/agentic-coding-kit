@@ -1,0 +1,100 @@
+{
+  "skills": [
+    {
+      "name": "skills/agent-md-refactor",
+      "files": [
+        "LICENSE",
+        "README.md",
+        "SKILL.md",
+        "local.patch"
+      ]
+    },
+    {
+      "name": "skills/changelog-generator",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "skills/file-organizer",
+      "files": [
+        "SKILL.md",
+        "local.patch"
+      ]
+    },
+    {
+      "name": "skills/frontend-design",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "local.patch"
+      ]
+    },
+    {
+      "name": "skills/grill-me",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "skills/mcp-builder",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "reference/evaluation.md",
+        "reference/mcp_best_practices.md",
+        "reference/node_mcp_server.md",
+        "reference/python_mcp_server.md",
+        "scripts/connections.py",
+        "scripts/evaluation.py",
+        "scripts/example_evaluation.xml",
+        "scripts/requirements.txt"
+      ]
+    },
+    {
+      "name": "skills/playwright",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "skills/skill-creator",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "local.patch",
+        "scripts/init_skill.py",
+        "scripts/package_skill.py",
+        "scripts/quick_validate.py"
+      ]
+    },
+    {
+      "name": "skills/terraform",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "skills/theme-factory",
+      "files": [
+        "LICENSE",
+        "LICENSE.txt",
+        "SKILL.md",
+        "theme-showcase.pdf",
+        "themes/arctic-frost.md",
+        "themes/botanical-garden.md",
+        "themes/desert-rose.md",
+        "themes/forest-canopy.md",
+        "themes/golden-hour.md",
+        "themes/midnight-galaxy.md",
+        "themes/modern-minimalist.md",
+        "themes/ocean-depths.md",
+        "themes/sunset-boulevard.md",
+        "themes/tech-innovation.md"
+      ]
+    }
+  ]
+}
