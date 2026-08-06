@@ -7,9 +7,9 @@ agents are generated bidirectionally with per-side frontmatter preserved).
 import argparse
 import hashlib
 import json
-import os
 import pathlib
 import re
+import shutil
 import sys
 
 FRONTMATTER_RE = re.compile(r'^---\n(.*?)\n---\n?(.*)$', re.DOTALL)
@@ -26,7 +26,12 @@ def find_git_root(start):
     return None
 
 
-# ---------- skills: single source of truth via symlink ----------
+# ---------- skills: bidirectional copy with tree-hash drift detection ----------
+#
+# Each <name>/ under .kilo/skills and .claude/skills can hold more than
+# SKILL.md (scripts/, references/, assets/), so the unit of sync is the
+# whole directory tree, hashed and copied wholesale — same conflict model
+# as sync_agents(), generalized from one file to a tree.
 
 def add_missing_frontmatter(skills_dir):
     for skill_md in sorted(skills_dir.glob('*/SKILL.md')):
@@ -50,48 +55,91 @@ def add_missing_frontmatter(skills_dir):
         print(f'[skills] added frontmatter to {skill_md}')
 
 
-def ensure_skills_symlink(root):
+def tree_hash(dir_path):
+    if not dir_path.is_dir():
+        return None
+    h = hashlib.sha256()
+    for f in sorted(p for p in dir_path.rglob('*') if p.is_file()):
+        h.update(f.relative_to(dir_path).as_posix().encode() + b'\x00')
+        h.update(f.read_bytes())
+    return h.hexdigest()
+
+
+def copy_tree(src, dst):
+    if dst.exists():
+        shutil.rmtree(dst)
+    shutil.copytree(src, dst)
+
+
+def migrate_legacy_symlink(dir_path):
+    if dir_path.is_symlink():
+        target = dir_path.resolve()
+        dir_path.unlink()
+        print(f'[skills] migrated legacy symlink {dir_path} (was -> {target}) to a real directory')
+
+
+def sync_skills(root):
     kilo_singular = root / '.kilo' / 'skill'
     kilo_dir = root / '.kilo' / 'skills'
     if kilo_singular.is_dir() and not kilo_singular.is_symlink() and not kilo_dir.exists():
         kilo_singular.rename(kilo_dir)
         print(f'[skills] renamed {kilo_singular} -> {kilo_dir}')
 
-    claude_parent = root / '.claude'
-    claude_dir = claude_parent / 'skills'
+    claude_dir = root / '.claude' / 'skills'
+    migrate_legacy_symlink(claude_dir)
+    migrate_legacy_symlink(kilo_dir)
 
-    if claude_dir.is_symlink():
-        if claude_dir.resolve() == kilo_dir.resolve():
-            add_missing_frontmatter(kilo_dir)
-            return
-        claude_dir.unlink()
-
-    if claude_dir.is_dir():
-        kilo_dir.mkdir(parents=True, exist_ok=True)
-        for entry in list(claude_dir.iterdir()):
-            if entry.is_symlink():
-                entry.unlink()
-                continue
-            target = kilo_dir / entry.name
-            if target.exists():
-                print(f"[skills] WARNING: '{entry.name}' exists on both sides, keeping {target}, "
-                      f"leaving {entry} in place for manual merge")
-                continue
-            entry.rename(target)
-        remaining = list(claude_dir.iterdir())
-        if remaining:
-            print(f'[skills] WARNING: {claude_dir} not fully merged ({len(remaining)} conflicting '
-                  f'entries left); symlink NOT created')
-            return
-        claude_dir.rmdir()
-
-    if not kilo_dir.exists():
+    if not kilo_dir.exists() and not claude_dir.exists():
         return
-    add_missing_frontmatter(kilo_dir)
-    claude_parent.mkdir(parents=True, exist_ok=True)
-    rel = os.path.relpath(kilo_dir, claude_parent)
-    claude_dir.symlink_to(rel, target_is_directory=True)
-    print(f'[skills] linked {claude_dir} -> {kilo_dir}')
+
+    if kilo_dir.exists():
+        add_missing_frontmatter(kilo_dir)
+    if claude_dir.exists():
+        add_missing_frontmatter(claude_dir)
+
+    state_path = root / '.kilo-claude-sync-state.json'
+    state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    skills_state = state.setdefault('skills', {})
+    dirty = False
+
+    names = set()
+    if kilo_dir.exists():
+        names |= {p.name for p in kilo_dir.iterdir() if p.is_dir()}
+    if claude_dir.exists():
+        names |= {p.name for p in claude_dir.iterdir() if p.is_dir()}
+
+    for name in sorted(names):
+        kpath, cpath = kilo_dir / name, claude_dir / name
+        k_hash, c_hash = tree_hash(kpath), tree_hash(cpath)
+        st = skills_state.get(name, {})
+        k_changed = k_hash is not None and st.get('kilo_hash') != k_hash
+        c_changed = c_hash is not None and st.get('claude_hash') != c_hash
+
+        if k_hash is not None and c_hash is None:
+            copy_tree(kpath, cpath)
+            print(f"[skills] created '{name}' claude <- kilo")
+        elif c_hash is not None and k_hash is None:
+            copy_tree(cpath, kpath)
+            print(f"[skills] created '{name}' kilo <- claude")
+        elif k_changed and c_changed:
+            if k_hash != c_hash:
+                print(f"[skills] CONFLICT: '{name}' edited on both sides since last sync — resolve "
+                      f'manually, then re-run.')
+                continue
+        elif k_changed:
+            copy_tree(kpath, cpath)
+            print(f"[skills] synced '{name}' kilo -> claude")
+        elif c_changed:
+            copy_tree(cpath, kpath)
+            print(f"[skills] synced '{name}' claude -> kilo")
+        else:
+            continue
+
+        skills_state[name] = {'kilo_hash': tree_hash(kpath), 'claude_hash': tree_hash(cpath)}
+        dirty = True
+
+    if dirty:
+        state_path.write_text(json.dumps(state, indent=2) + '\n')
 
 
 # ---------- agents: bidirectional generation with hash-based drift detection ----------
@@ -205,7 +253,7 @@ def main():
 
     for label, root in roots:
         print(f'== {label}: {root} ==')
-        ensure_skills_symlink(root)
+        sync_skills(root)
         sync_agents(root)
 
 
