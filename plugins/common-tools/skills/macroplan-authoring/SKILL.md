@@ -197,14 +197,13 @@ When delegating:
 - If the delegated agent's environment isn't isolated (no dedicated worktree),
   treat concurrent-writer races as a real risk, not a formality.
 
-See `kilo-task-delegation` for writing the *content* of individual Kilo tasks
-and calibrating verification depth.
+See `task-spec-authoring` (in `ai-architect-executor`) for writing the *content*
+of individual Kilo tasks and calibrating verification depth.
 
 ## Reference
 
 See [`references/template.md`](references/template.md) for copy-paste skeletons
 of every file kind (`CONTEXT.md`, `00-INDEX.md`, `specs/<slug>.md`, `plan.md`
-inline and expanded, `NN.T-<name>.md`, `summary.md`). For a real, in-use
-example, see the `task/` tree in the **is-gui** project (Resource Registry GUI):
-specs driving initiatives, completed initiatives under `done/`, and an `_inbox/`
-with analyzed provenance.
+inline and expanded, `NN.T-<name>.md`, `summary.md`). A real, in-use `task/`
+tree looks like: specs driving initiatives, completed initiatives under
+`done/`, and an `_inbox/` with analyzed provenance.
