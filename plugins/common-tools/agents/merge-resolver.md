@@ -1,6 +1,6 @@
 ---
 name: merge-resolver
-description: Migrated Roocode Mode rules for merge-resolver
+description: "Migrated Roocode Mode rules for merge-resolver"
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

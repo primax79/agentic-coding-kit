@@ -1,6 +1,6 @@
 ---
 name: terraform
-description: HashiCorp Terraform MCP server integration for authoring, validating, and managing Infrastructure as Code (IaC) configurations.
+description: "HashiCorp Terraform MCP server integration for authoring, validating, and managing Infrastructure as Code (IaC) configurations."
 ---
 
 # Skill: terraform

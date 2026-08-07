@@ -1,6 +1,6 @@
 ---
 name: skill-writer
-description: Migrated Roocode Mode rules for skill-writer
+description: "Migrated Roocode Mode rules for skill-writer"
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

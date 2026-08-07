@@ -1,6 +1,6 @@
 ---
 name: playwright
-description: Playwright MCP server integration for browser automation, web testing, and page scraping.
+description: "Playwright MCP server integration for browser automation, web testing, and page scraping."
 ---
 
 # Skill: playwright

@@ -1,6 +1,6 @@
 ---
 name: gitignore
-description: Creates or updates a project's .gitignore file using the gitignore.io (Toptal) API and local custom templates (AI agents, gCube, local env), preserving custom rules at the head of the file and optionally re-indexing git cache.
+description: "Creates or updates a project's .gitignore file using the gitignore.io (Toptal) API and local custom templates (AI agents, gCube, local env), preserving custom rules at the head of the file and optionally re-indexing git cache."
 ---
 
 # Skill: gitignore

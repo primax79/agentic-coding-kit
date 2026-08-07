@@ -1,6 +1,6 @@
 ---
 name: roocode-migrator
-description: Expert agent for migrating roocode custom modes and skills to kilocode configuration format.
+description: "Expert agent for migrating roocode custom modes and skills to kilocode configuration format."
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

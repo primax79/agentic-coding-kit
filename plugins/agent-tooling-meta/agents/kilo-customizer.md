@@ -1,6 +1,6 @@
 ---
 name: kilo-customizer
-description: Designs and generates Kilo Code customizations from a task description - decides whether a capability should be an agent, a skill, a workflow/command, a rule, or AGENTS.md content, then writes the files with correct locations, frontmatter, and permissions.
+description: "Designs and generates Kilo Code customizations from a task description - decides whether a capability should be an agent, a skill, a workflow/command, a rule, or AGENTS.md content, then writes the files with correct locations, frontmatter, and permissions."
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

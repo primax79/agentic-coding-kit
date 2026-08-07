@@ -1,6 +1,6 @@
 ---
 name: framework-topic-drafter
-description: Drafts one candidate reference skill for one scoped topic of a framework/library being turned into a skillset by framework-skillset-generator. Dispatch one per planned topic, in parallel, from the /generate-skillset command or the framework-skillset-generator skill.
+description: "Drafts one candidate reference skill for one scoped topic of a framework/library being turned into a skillset by framework-skillset-generator. Dispatch one per planned topic, in parallel, from the /generate-skillset command or the framework-skillset-generator skill."
 tools: Bash, Read, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

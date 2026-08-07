@@ -1,6 +1,6 @@
 ---
 name: kilo-plugin-manager
-description: Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace, and translate agent definitions between Claude and Kilo frontmatter. Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, or convert an agent file between Claude Code and Kilo Code formats.
+description: "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace, and translate agent definitions between Claude and Kilo frontmatter. Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, or convert an agent file between Claude Code and Kilo Code formats."
 ---
 
 # Kilo plugin manager

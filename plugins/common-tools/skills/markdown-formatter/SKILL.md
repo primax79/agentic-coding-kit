@@ -1,6 +1,6 @@
 ---
 name: markdown-formatter
-description: Use this skill to format Markdown (`.md`) files in the workspace. This skill strictly delegates all formatting tasks to David Anson's `markdownlint` library (via `markdownlint --fix` or `npx --yes markdownlint-cli --fix`). The agent MUST NOT spend time performing manual formatting edits.
+description: "Use this skill to format Markdown (`.md`) files in the workspace. This skill strictly delegates all formatting tasks to David Anson's `markdownlint` library (via `markdownlint --fix` or `npx --yes markdownlint-cli --fix`). The agent MUST NOT spend time performing manual formatting edits."
 ---
 
 # Skill: markdown-formatter

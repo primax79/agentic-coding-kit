@@ -1,6 +1,6 @@
 ---
 name: macroplan-authoring
-description: Author and maintain a durable, resumable development pipeline as a `task/` tree — raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change — use a normal plan for that.
+description: "Author and maintain a durable, resumable development pipeline as a `task/` tree — raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change — use a normal plan for that."
 ---
 
 # Task pipeline authoring (`task/` tree)

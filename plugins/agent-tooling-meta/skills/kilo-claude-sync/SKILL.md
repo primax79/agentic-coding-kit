@@ -1,6 +1,6 @@
 ---
 name: kilo-claude-sync
-description: Keeps Kilo Code and Claude Code agent/skill definitions aligned, both per-project (.kilo vs .claude) and globally (~/.kilo vs ~/.claude). Use whenever an agent .md file or a SKILL.md is added or edited under .kilo/agent, .kilo/skills, .claude/agents, or .claude/skills, before committing or ending the session.
+description: "Keeps Kilo Code and Claude Code agent/skill definitions aligned, both per-project (.kilo vs .claude) and globally (~/.kilo vs ~/.claude). Use whenever an agent .md file or a SKILL.md is added or edited under .kilo/agent, .kilo/skills, .claude/agents, or .claude/skills, before committing or ending the session."
 ---
 
 # Kilo Code <-> Claude Code agent/skill sync

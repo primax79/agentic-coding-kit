@@ -1,6 +1,6 @@
 ---
 name: kilo-scope-manager
-description: Moves or copies Kilo customization items - skills, agents, and commands/workflows - between global scope (~/.kilo, ~/.config/kilo) and project-local scope (.kilo), handling name shadowing, duplicate global directories, and Claude Code mirroring. Also covers maintaining and fixing global definitions. Use when the user asks to promote an item to global, localize a global item, resolve duplicate copies, or update global agents/skills.
+description: "Moves or copies Kilo customization items - skills, agents, and commands/workflows - between global scope (~/.kilo, ~/.config/kilo) and project-local scope (.kilo), handling name shadowing, duplicate global directories, and Claude Code mirroring. Also covers maintaining and fixing global definitions. Use when the user asks to promote an item to global, localize a global item, resolve duplicate copies, or update global agents/skills."
 ---
 
 # Skill: kilo-scope-manager

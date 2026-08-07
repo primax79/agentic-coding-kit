@@ -123,16 +123,27 @@ def tools_to_permissions(tools_val):
     return perms or set(DEFAULT_KILO_PERMISSIONS)
 
 
+def sanitize_yaml_val(val):
+    if not val:
+        return '""'
+    val = val.strip()
+    if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")) or val in ['>-', '>', '|']:
+        return val
+    escaped = val.replace('"', '\\"')
+    return f'"{escaped}"'
+
+
 def to_kilo_agent(name, fields, body, mark=True):
     if 'tools' in fields:
         perms = tools_to_permissions(fields['tools'])
     else:
         perms = set(DEFAULT_KILO_PERMISSIONS)
+    desc = sanitize_yaml_val(fields.get('description', ''))
     lines = ['---']
     if mark:
         lines.append(GENERATED_MARK)
     lines += [f'name: {name}',
-              f"description: {fields.get('description', '')}",
+              f"description: {desc}",
               f"mode: {fields.get('mode', 'primary').split(chr(10))[0] or 'primary'}",
               'permission:']
     lines += [f'  {p}: allow' for p in KILO_PERMISSION_ORDER if p in perms]
@@ -149,11 +160,12 @@ def to_claude_agent(name, fields, body, mark=True):
                 tools += names
     if not tools:
         tools = [t for names in PERMISSION_TOOL_MAP.values() for t in names]
+    desc = sanitize_yaml_val(fields.get('description', ''))
     lines = ['---']
     if mark:
         lines.append(GENERATED_MARK)
     lines += [f'name: {name}',
-              f"description: {fields.get('description', '')}",
+              f"description: {desc}",
               f"tools: {', '.join(tools)}",
               '---']
     return '\n'.join(lines) + '\n' + body

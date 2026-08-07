@@ -1,6 +1,6 @@
 ---
 name: kilo-rag-index-manager
-description: Administers Kilo's own semantic codebase index (Qdrant collections, embedding config) independently of any orchestrator - primarily migrating the index across a workspace move/rename without a full re-embed. Use when a Kilo-indexed project directory is moved/renamed and the index needs to follow it, or when inspecting/cleaning up Qdrant collections created by Kilo's indexing feature.
+description: "Administers Kilo's own semantic codebase index (Qdrant collections, embedding config) independently of any orchestrator - primarily migrating the index across a workspace move/rename without a full re-embed. Use when a Kilo-indexed project directory is moved/renamed and the index needs to follow it, or when inspecting/cleaning up Qdrant collections created by Kilo's indexing feature."
 ---
 
 # Skill: kilo-rag-index-manager

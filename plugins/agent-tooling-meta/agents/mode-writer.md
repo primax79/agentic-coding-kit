@@ -1,6 +1,6 @@
 ---
 name: mode-writer
-description: Migrated Roocode Mode rules for mode-writer
+description: "Migrated Roocode Mode rules for mode-writer"
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, WebSearch
 ---
 

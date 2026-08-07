@@ -1,6 +1,6 @@
 ---
 name: roocode-migrator
-description: Migrates skills and mode rules from roocode (.roo) to kilocode (.kilo / ~/.config/kilo) configuration, converting XML rules to Markdown agents.
+description: "Migrates skills and mode rules from roocode (.roo) to kilocode (.kilo / ~/.config/kilo) configuration, converting XML rules to Markdown agents."
 ---
 
 # When to use
