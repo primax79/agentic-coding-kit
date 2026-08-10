@@ -27,12 +27,16 @@ from scratch.
 
 ## What's in each plugin
 
-| Plugin | Contains | Concern |
-| --- | --- | --- |
-| [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling |
-| [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-plugin-manager`, `kilo-scope-manager`, `kilo-claude-sync`, `roocode-migrator`, `framework-skillset-generator` (skills); `skill-writer`, `mode-writer`, `kilo-customizer`, `roocode-migrator`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves — installing, syncing, authoring, migrating their configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation — see relationship section below. |
-| [`third-party`](plugins/third-party) | 10 curated external skills (`frontend-design`, `mcp-builder`, `skill-creator`, `theme-factory`, `agent-md-refactor`, `file-organizer`, `changelog-generator`, `grill-me`, `terraform`, `playwright`) | Vetted, license-preserved imports |
-| [`angular-dev-kit`](plugins/angular-dev-kit) | `angular-library` (ours: authoring/packaging a publishable Angular library, `provideX()`/ng-packagr); 10 vendored references — `angular-component`, `-di`, `-directives`, `-forms`, `-http`, `-routing`, `-signals`, `-ssr`, `-testing`, `-tooling` — from [analogjs/angular-skills](https://github.com/analogjs/angular-skills) (MIT, Brandon Roberts) | Angular v20+ knowledge, library-authoring and application-side kept distinct — see the plugin's own README for which is which |
+| Plugin | Contains | Concern | Recommended scope |
+| --- | --- | --- | --- |
+| [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling | Global |
+| [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-plugin-manager`, `kilo-scope-manager`, `kilo-claude-sync`, `roocode-migrator`, `framework-skillset-generator` (skills); `skill-writer`, `mode-writer`, `kilo-customizer`, `roocode-migrator`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves — installing, syncing, authoring, migrating their configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation — see relationship section below. | Global |
+| [`third-party`](plugins/third-party) | 10 curated external skills (`frontend-design`, `mcp-builder`, `skill-creator`, `theme-factory`, `agent-md-refactor`, `file-organizer`, `changelog-generator`, `grill-me`, `terraform`, `playwright`) | Vetted, license-preserved imports | Global |
+| [`angular-dev-kit`](plugins/angular-dev-kit) | `angular-library` (ours: authoring/packaging a publishable Angular library, `provideX()`/ng-packagr); 10 vendored references — `angular-component`, `-di`, `-directives`, `-forms`, `-http`, `-routing`, `-signals`, `-ssr`, `-testing`, `-tooling` — from [analogjs/angular-skills](https://github.com/analogjs/angular-skills) (MIT, Brandon Roberts) | Angular v20+ knowledge, library-authoring and application-side kept distinct — see the plugin's own README for which is which | **Project** — Angular-only and version-specific; see [scope guidance](docs/03-compatibility-and-distribution.md#choosing-scope-not-just-install-everywhere-for-convenience) |
+
+Framework/language-specific plugins go project-scoped, not global — a
+version-specific claim is only true on the project it was written for. Full
+reasoning: [`docs/03`](docs/03-compatibility-and-distribution.md#choosing-scope-not-just-install-everywhere-for-convenience).
 
 Full concepts/authoring/distribution documentation: [`docs/00-INDEX.md`](docs/00-INDEX.md).
 

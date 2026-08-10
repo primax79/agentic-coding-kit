@@ -43,20 +43,51 @@ no `kilo-plugin-manager` or any other tooling involved for the Claude side.
 claude plugin marketplace add https://github.com/primax79/agentic-coding-kit.git
 ```
 
-Then, **global scope** (every project on the machine):
+Then, **global scope** (every project on the machine — appropriate for
+plugins with no stack/version dependency):
 
 ```text
 /plugin install common-tools
 /plugin install agent-tooling-meta
 /plugin install third-party-skills
-/plugin install angular-dev-kit
 ```
 
-Or **workspace scope** (this repo checkout only, saved to `.claude/settings.json`):
+Or **workspace scope** (this repo checkout only, saved to `.claude/settings.json`
+— required for anything that only applies to, or asserts facts specific to,
+one project's stack):
 
 ```text
-/plugin install common-tools --scope project
+/plugin install angular-dev-kit --scope project
 ```
+
+### Choosing scope: not just "install everywhere for convenience"
+
+Global scope means "loaded into context on every project this machine
+touches." That's fine for a plugin with no opinion about what stack the
+current project uses — `common-tools`, `agent-tooling-meta`, and most of
+`third-party-skills` genuinely don't care. It's the wrong default for a
+plugin that asserts version- or framework-specific facts, because those
+facts are only true some of the time:
+
+- **Framework/language reference skills** (`angular-dev-kit` today; the
+  pattern generalizes to any future `<framework>-dev-kit`) — install
+  **project-scoped**, only in repos that use that framework. Installed
+  globally, `angular-di` or `angular-forms` would trigger and offer guidance
+  on a Vue or backend repo where it's simply noise, and worse, offer
+  version-specific guidance (a skill written against Angular 20 or 21) on
+  an Angular project running a different major — actively wrong rather than
+  just irrelevant. See each skill's own `metadata.category`/description for
+  what it assumes before treating it as a global default.
+- **Meta-tooling and generic utilities** (`common-tools`,
+  `agent-tooling-meta`, most of `third-party-skills`) — global is the
+  sensible default; they operate on the AI tooling itself or on concerns
+  (gitignore, markdown formatting, PDF/DOCX handling) that don't vary by
+  project stack.
+
+If a plugin's usefulness depends on "is this project built with X", assume
+project scope until told otherwise — asserted facts that are project-specific
+still are once the plugin is loaded globally, and there's no runtime check to
+catch a stale one.
 
 ### Command reference
 
