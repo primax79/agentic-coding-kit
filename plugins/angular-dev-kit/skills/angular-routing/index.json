@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-routing",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/routing-patterns.md"
+      ]
+    }
+  ]
+}

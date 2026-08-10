@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "name": "angular-testing",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/testing-patterns.md",
+        "references/vitest-migration.md"
+      ]
+    }
+  ]
+}

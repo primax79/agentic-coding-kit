@@ -1,0 +1,13 @@
+{
+  "skills": [
+    {
+      "name": "angular-forms",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/form-patterns.md",
+        "references/formvalueControl-patterns.md"
+      ]
+    }
+  ]
+}

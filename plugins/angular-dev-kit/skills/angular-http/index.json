@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-http",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/http-patterns.md"
+      ]
+    }
+  ]
+}

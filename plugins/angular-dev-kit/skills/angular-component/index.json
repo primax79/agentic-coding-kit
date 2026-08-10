@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-component",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/component-patterns.md"
+      ]
+    }
+  ]
+}

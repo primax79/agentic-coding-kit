@@ -92,6 +92,61 @@
       "name": "theme-factory",
       "description": "Toolkit for styling artifacts with consistent themes",
       "source": "./plugins/third-party/skills/theme-factory"
+    },
+    {
+      "name": "angular-library",
+      "description": "Author and package a publishable Angular library with ng-packagr - provideX()/EnvironmentProviders, peerDependencies, public-api.ts, release loop",
+      "source": "./plugins/angular-dev-kit/skills/angular-library"
+    },
+    {
+      "name": "angular-component",
+      "description": "Angular v20+ standalone components - signal-based inputs/outputs, OnPush, host bindings, content projection (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-component"
+    },
+    {
+      "name": "angular-di",
+      "description": "Angular v20+ dependency injection - inject(), injection tokens, provider scopes (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-di"
+    },
+    {
+      "name": "angular-directives",
+      "description": "Angular v20+ custom directives - attribute/structural/host directives (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-directives"
+    },
+    {
+      "name": "angular-forms",
+      "description": "Angular signal-based Forms API (v21, experimental) - form(), schema validation, field state (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-forms"
+    },
+    {
+      "name": "angular-http",
+      "description": "Angular v20+ HTTP - resource(), httpResource(), HttpClient, interceptors (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-http"
+    },
+    {
+      "name": "angular-routing",
+      "description": "Angular v20+ routing - lazy loading, functional guards/resolvers, route params (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-routing"
+    },
+    {
+      "name": "angular-signals",
+      "description": "Angular v20+ signals - signal(), computed(), linkedSignal(), effect() (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-signals"
+    },
+    {
+      "name": "angular-ssr",
+      "description": "Angular v20+ SSR and hydration - @angular/ssr, prerendering, browser-only APIs (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-ssr"
+    },
+    {
+      "name": "angular-testing",
+      "description": "Angular v20+ testing - Vitest/Jasmine, TestBed, signal-based components (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-testing"
+    },
+    {
+      "name": "angular-tooling",
+      "description": "Angular CLI - project setup, code generation, build/test configuration (vendored, analogjs/angular-skills)",
+      "source": "./plugins/angular-dev-kit/skills/angular-tooling"
     }
   ]
 }

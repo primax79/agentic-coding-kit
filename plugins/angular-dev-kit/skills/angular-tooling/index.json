@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-tooling",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/tooling-patterns.md"
+      ]
+    }
+  ]
+}

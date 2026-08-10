@@ -49,6 +49,7 @@ Then, **global scope** (every project on the machine):
 /plugin install common-tools
 /plugin install agent-tooling-meta
 /plugin install third-party-skills
+/plugin install angular-dev-kit
 ```
 
 Or **workspace scope** (this repo checkout only, saved to `.claude/settings.json`):

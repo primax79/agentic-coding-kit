@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-signals",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/signal-patterns.md"
+      ]
+    }
+  ]
+}

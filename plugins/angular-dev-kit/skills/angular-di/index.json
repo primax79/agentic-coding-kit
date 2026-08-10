@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-di",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/di-patterns.md"
+      ]
+    }
+  ]
+}

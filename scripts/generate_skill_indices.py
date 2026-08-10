@@ -20,6 +20,7 @@ PLUGIN_SKILL_MAPPINGS = [
     ('plugins/common-tools', 'skills'),
     ('plugins/agent-tooling-meta', 'skills'),
     ('plugins/third-party', 'skills'),
+    ('plugins/angular-dev-kit', 'skills'),
 ]
 
 def generate_indices():

@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-ssr",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/ssr-patterns.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-library",
+      "files": [
+        "SKILL.md",
+        "references/configuration-api.md",
+        "references/packaging.md"
+      ]
+    }
+  ]
+}

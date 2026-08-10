@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "angular-directives",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/directive-patterns.md"
+      ]
+    }
+  ]
+}

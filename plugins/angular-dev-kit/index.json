@@ -1,0 +1,94 @@
+{
+  "skills": [
+    {
+      "name": "skills/angular-component",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/component-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-di",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/di-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-directives",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/directive-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-forms",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/form-patterns.md",
+        "references/formvalueControl-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-http",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/http-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-library",
+      "files": [
+        "SKILL.md",
+        "references/configuration-api.md",
+        "references/packaging.md"
+      ]
+    },
+    {
+      "name": "skills/angular-routing",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/routing-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-signals",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/signal-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-ssr",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/ssr-patterns.md"
+      ]
+    },
+    {
+      "name": "skills/angular-testing",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/testing-patterns.md",
+        "references/vitest-migration.md"
+      ]
+    },
+    {
+      "name": "skills/angular-tooling",
+      "files": [
+        "LICENSE",
+        "SKILL.md",
+        "references/tooling-patterns.md"
+      ]
+    }
+  ]
+}
