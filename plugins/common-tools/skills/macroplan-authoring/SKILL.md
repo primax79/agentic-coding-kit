@@ -1,9 +1,9 @@
 ---
 name: macroplan-authoring
-description: "Author and maintain a durable, resumable development pipeline as a `task/` tree — raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change — use a normal plan for that."
+description: "Author and maintain a durable, resumable development pipeline as a `tasks/` tree — raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change — use a normal plan for that."
 ---
 
-# Task pipeline authoring (`task/` tree)
+# Task pipeline authoring (`tasks/` tree)
 
 ## Purpose
 
@@ -63,7 +63,7 @@ task/
 ```
 
 Three terminal states, folder-visible (name/id preserved, only the path prefix
-changes): **active** (`task/NN-<slug>/`) → **`done/`** (implemented + verified on
+changes): **active** (`tasks/NN-<slug>/`) → **`done/`** (implemented + verified on
 its branch, `summary.md` written, not yet merged) → **`merged/`** (branch merged
 into the integration branch, e.g. `development`). Completion delegated to
 another agent lands in `done/`; the orchestrator promotes it to `merged/` after
@@ -159,7 +159,7 @@ grows. Whichever form, keep each task's **Verification** section with it.
   governs.
 - **Numbering is stable; completion is visible.** `NN` ids never get reused or
   renumbered once work starts — append. A shipped initiative moves to `done/`
-  unchanged (id preserved, only a `done/` path prefix added), so `task/`'s
+  unchanged (id preserved, only a `done/` path prefix added), so `tasks/`'s
   listing separates active vs done at a glance.
 
 ## Workflow to produce/extend one
@@ -177,7 +177,7 @@ grows. Whichever form, keep each task's **Verification** section with it.
 5. Register/refresh the initiative row in `00-INDEX.md` (priority, status,
    spec map). Keep Status current — it is the source of truth for "what's left"
    when picking up cold.
-6. When a project first adopts this, drop a `task/AGENTS.md` capturing this
+6. When a project first adopts this, drop a `tasks/AGENTS.md` capturing this
    convention so the repo is self-contained for agents/teammates who don't have
    this skill.
 
@@ -191,7 +191,7 @@ When delegating:
 - Point the agent at that **one** task (the `NN.T` section or its
   `NN.T-<name>.md` file), plus the owning `spec.md` (for **Locked-in decisions**
   it must not contradict) and `CONTEXT.md` (global facts) — not the whole
-  `task/` tree, to keep its context tight.
+  `tasks/` tree, to keep its context tight.
 - After its report, verify against that task's own **Verification** section
   specifically (not a vibe check), then update `00-INDEX.md` status.
 - If the delegated agent's environment isn't isolated (no dedicated worktree),
@@ -204,6 +204,6 @@ of individual Kilo tasks and calibrating verification depth.
 
 See [`references/template.md`](references/template.md) for copy-paste skeletons
 of every file kind (`CONTEXT.md`, `00-INDEX.md`, `specs/<slug>.md`, `plan.md`
-inline and expanded, `NN.T-<name>.md`, `summary.md`). A real, in-use `task/`
+inline and expanded, `NN.T-<name>.md`, `summary.md`). A real, in-use `tasks/`
 tree looks like: specs driving initiatives, completed initiatives under
 `done/`, and an `_inbox/` with analyzed provenance.

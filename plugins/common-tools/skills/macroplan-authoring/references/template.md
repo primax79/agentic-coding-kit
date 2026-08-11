@@ -1,4 +1,4 @@
-# Templates — `task/` pipeline file skeletons
+# Templates — `tasks/` pipeline file skeletons
 
 Copy-paste skeletons for every file kind. Keep the cross-links (`Drives` /
 `Derived from`) current, and apply progressive disclosure — don't repeat
@@ -6,7 +6,7 @@ shared-context content inside a spec or task.
 
 ---
 
-## `task/AGENTS.md` (the convention, dropped once per project)
+## `tasks/AGENTS.md` (the convention, dropped once per project)
 
 A project-local copy of the task-management convention so the repo is
 self-contained for agents/teammates without this skill. Mirror the
@@ -17,7 +17,7 @@ state and `CONTEXT.md` for project facts.
 
 ---
 
-## `task/CONTEXT.md` (shared, project-wide durable context — read first)
+## `tasks/CONTEXT.md` (shared, project-wide durable context — read first)
 
 ```markdown
 # Project context (shared)
@@ -44,7 +44,7 @@ drifts between sessions.
 
 ---
 
-## `task/00-INDEX.md` (live registry)
+## `tasks/00-INDEX.md` (live registry)
 
 ```markdown
 # Task Index
@@ -82,7 +82,7 @@ Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](
 
 ---
 
-## `task/specs/<slug>.md` (structured spec — the *what & why*)
+## `tasks/specs/<slug>.md` (structured spec — the *what & why*)
 
 ```markdown
 # <Title> (spec & context)
@@ -106,7 +106,7 @@ code/data, don't describe it abstractly>
 
 ---
 
-## `task/NN-<slug>/plan.md` — INLINE form (small/medium initiative)
+## `tasks/NN-<slug>/plan.md` — INLINE form (small/medium initiative)
 
 ```markdown
 # <Title> — Implementation plan
@@ -128,7 +128,7 @@ Verification: <runnable check; specific inputs/outputs or command>.
 
 ---
 
-## `task/NN-<slug>/plan.md` — EXPANDED form (large / delegated initiative)
+## `tasks/NN-<slug>/plan.md` — EXPANDED form (large / delegated initiative)
 
 `plan.md` becomes the index; each task is its own file.
 
@@ -146,7 +146,7 @@ Shared decisions for this initiative that every task must honour:
 - <initiative-local locked-in decision — *why*>
 ```
 
-### `task/NN-<slug>/NN.T-<name>.md` (one expanded task)
+### `tasks/NN-<slug>/NN.T-<name>.md` (one expanded task)
 
 ```markdown
 # NN.T — <task name>
@@ -164,7 +164,7 @@ Verification: <runnable check>.
 
 ---
 
-## `task/NN-<slug>/summary.md` (completion record)
+## `tasks/NN-<slug>/summary.md` (completion record)
 
 ```markdown
 # NN — <Title> (completion summary)
