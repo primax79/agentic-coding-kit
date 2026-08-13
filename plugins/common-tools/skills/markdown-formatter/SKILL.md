@@ -80,7 +80,7 @@ It regenerates the list ONLY between `<!-- toc -->` and `<!-- /toc -->` markers
 (creating the closing marker if missing); files without a `<!-- toc -->` marker are
 left untouched. GitHub-compatible anchor slugs, duplicate `-1`/`-2` suffixes,
 skips code fences, and honours `<!-- omit in toc -->` on a heading. Default levels
-are H2–H6 (pass `--levels 1-6` to include the H1 title).
+are H2-H6 (pass `--levels 1-6` to include the H1 title).
 
 ### 5. Full pipeline
 

@@ -109,7 +109,7 @@ independently-verifiable unit = one commit**):
   inside the single `plan.md`. Compact, read in one pass.
 - **Expanded (large / delegated).** Each task `NN.T` becomes its own
   `NN.T-<name>.md` file; `plan.md` becomes the initiative index (goal, shared
-  decisions, links to each task file). Use this when tasks exceed ~5–6, when a
+  decisions, links to each task file). Use this when tasks exceed ~5-6, when a
   single task's grounding/steps/verification is too big to sit inline, or when
   tasks will be delegated one-by-one to separate agents/worktrees (one file =
   one task = one hand-off = one commit).
@@ -147,7 +147,7 @@ grows. Whichever form, keep each task's **Verification** section with it.
   with concrete, runnable checks. "Done" must be objectively checkable, and
   it's exactly what makes a task safe to hand to another agent.
 - **Task granularity = one independently-verifiable unit.** Split an initiative
-  into as many tasks as it has verification checkpoints - typically 2–6.
+  into as many tasks as it has verification checkpoints - typically 2-6.
   Don't split finer (interdependent sub-steps stay inline in one task) or
   bundle unrelated checkpoints.
 - **Progressive disclosure everywhere.** Convention in `AGENTS.md`; shared
