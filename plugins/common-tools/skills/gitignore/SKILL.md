@@ -23,7 +23,7 @@ Automatically generate or update a project's `.gitignore` file using the officia
 To inspect candidate templates detected by the script, run:
 
 ```bash
-python3 /Users/Alfredo/works/gcube-ai-toolkit/skills/gitignore/scripts/generate_gitignore.py --dir . --suggest
+python3 ~/.kilo/skills/gitignore/scripts/generate_gitignore.py --dir . --suggest
 ```
 
 The script returns a JSON payload with candidate tags (`base_templates`, `custom_templates`, `api_templates`).
@@ -41,7 +41,7 @@ The AI agent executing this skill evaluates the suggested tags alongside project
 Run the script passing the final comma-separated list of tags chosen by the Skill:
 
 ```bash
-python3 /Users/Alfredo/works/gcube-ai-toolkit/skills/gitignore/scripts/generate_gitignore.py --dir . --templates "visualstudiocode,emacs,macos,windows,linux,kilo,claude,gcube,java,maven"
+python3 ~/.kilo/skills/gitignore/scripts/generate_gitignore.py --dir . --templates "visualstudiocode,emacs,macos,windows,linux,kilo,claude,gcube,java,maven"
 ```
 
 ### 4. Extensible Configuration (`config/templates.json`)

@@ -38,7 +38,7 @@ skill's own** `.markdownlint.json` - never write one into the workspace
 being formatted:
 
 ```bash
-npx --yes markdownlint-cli --fix --config /Users/Alfredo/.kilo/skills/markdown-formatter/.markdownlint.json <file_paths>
+npx --yes markdownlint-cli --fix --config ~/.kilo/skills/markdown-formatter/.markdownlint.json <file_paths>
 ```
 
 ### 2. Delegate Formatting to markdownlint

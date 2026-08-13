@@ -183,8 +183,8 @@ ${compiledPrompt.trim()}
 }
 
 // Global migration
-const globalSource = path.join(process.env.HOME || '/Users/Alfredo', '.roo');
-const globalTarget = path.join(process.env.HOME || '/Users/Alfredo', '.config', 'kilo');
+const globalSource = path.join(process.env.HOME || require('os').homedir(), '.roo');
+const globalTarget = path.join(process.env.HOME || require('os').homedir(), '.config', 'kilo');
 migrate(globalSource, globalTarget, true);
 
 // Local migration
