@@ -1,6 +1,6 @@
 ---
 name: framework-skillset-generator
-description: "Use when asked to generate a reference skillset for a framework or library from its source code, official docs, a formal spec (OpenAPI/JSON Schema/proto), and/or a real project that uses it - "build skills for X like we did for ADK", "turn this library's docs into skills", "point a skill-generator at this framework". Produces a set of grounded, citation-checked SKILL.md files plus a hub/index skill, staged for review before anything is written into a real repo. Not for writing one ad-hoc skill from a task description - that's kilo-customizer."
+description: "Use when asked to generate a reference skillset for a framework or library from its source code, official docs, a formal spec (OpenAPI/JSON Schema/proto), and/or a real project that uses it - `build skills for X like we did for ADK`, `turn this library's docs into skills`, `point a skill-generator at this framework`. Produces a set of grounded, citation-checked SKILL.md files plus a hub/index skill, staged for review before anything is written into a real repo. Not for writing one ad-hoc skill from a task description - that's kilo-customizer."
 ---
 
 # Framework skillset generator
