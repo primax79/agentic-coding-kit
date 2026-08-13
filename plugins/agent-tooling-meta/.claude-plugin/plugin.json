@@ -1,7 +1,7 @@
 {
   "name": "agent-tooling-meta",
   "version": "0.1.0",
-  "description": "Kilo/Claude ecosystem meta-tooling - plugin management, cross-tool sync, scope management, skill/mode/agent authoring, Roocode migration, framework-to-skillset generation",
+  "description": "Kilo/Claude ecosystem meta-tooling - plugin management from git marketplaces, scope management, agent alignment across the two hosts, RAG index maintenance, configuration authoring, framework-to-skillset generation",
   "author": {
     "name": "Alfredo Oliviero"
   }

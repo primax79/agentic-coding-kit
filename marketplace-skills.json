@@ -2,21 +2,14 @@
   "items": [
     {
       "id": "framework-skillset-generator",
-      "description": "Use when asked to generate a reference skillset for a framework or library from its source code, official docs, a formal spec (OpenAPI/JSON Schema/proto), and/or a real project that uses it \u2014 \"build skills for X like we did for ADK\", \"turn this library's docs into skills\", \"point a skill-generator at this framework\". Produces a set of grounded, citation-checked SKILL.md files plus a hub/index skill, staged for review before anything is written into a real repo. Not for writing one ad-hoc skill from a task description \u2014 that's kilo-customizer.",
+      "description": "Use when asked to generate a reference skillset for a framework or library from its source code, official docs, a formal spec (OpenAPI/JSON Schema/proto), and/or a real project that uses it - `build skills for X like we did for ADK`, `turn this library's docs into skills`, `point a skill-generator at this framework`. Produces a set of grounded, citation-checked SKILL.md files plus a hub/index skill, staged for review before anything is written into a real repo. Not for writing one ad-hoc skill from a task description - that's kilo-customizer.",
       "category": "agent-tooling-meta",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/framework-skillset-generator",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/framework-skillset-generator.tar.gz"
     },
     {
-      "id": "kilo-claude-sync",
-      "description": "Keeps Kilo Code and Claude Code agent/skill definitions aligned, both per-project (.kilo vs .claude) and globally (~/.kilo vs ~/.claude). Use whenever an agent .md file or a SKILL.md is added or edited under .kilo/agent, .kilo/skills, .claude/agents, or .claude/skills, before committing or ending the session.",
-      "category": "agent-tooling-meta",
-      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-claude-sync",
-      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-claude-sync.tar.gz"
-    },
-    {
       "id": "kilo-plugin-manager",
-      "description": "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace, and translate agent definitions between Claude and Kilo frontmatter. Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, or convert an agent file between Claude Code and Kilo Code formats.",
+      "description": "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace. Also owns everything else that touches those directories: translating agent definitions between Claude and Kilo frontmatter, keeping the two hosts' agents aligned (`sync-agents`), and moving a hand-authored skill, agent or command between global and project scope (`move`). Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, convert or re-align an agent file between Claude Code and Kilo Code, or promote/localise a customization item.",
       "category": "agent-tooling-meta",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-plugin-manager",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-plugin-manager.tar.gz"
@@ -29,18 +22,88 @@
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-rag-index-manager.tar.gz"
     },
     {
-      "id": "kilo-scope-manager",
-      "description": "Moves or copies Kilo customization items - skills, agents, and commands/workflows - between global scope (~/.kilo, ~/.config/kilo) and project-local scope (.kilo), handling name shadowing, duplicate global directories, and Claude Code mirroring. Also covers maintaining and fixing global definitions. Use when the user asks to promote an item to global, localize a global item, resolve duplicate copies, or update global agents/skills.",
-      "category": "agent-tooling-meta",
-      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-scope-manager",
-      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-scope-manager.tar.gz"
+      "id": "angular-component",
+      "description": "Create modern Angular standalone components following v20+ best practices. Use for building UI components with signal-based inputs/outputs, OnPush change detection, host bindings, content projection, and lifecycle hooks. Triggers on component creation, refactoring class-based inputs to signals, adding host bindings, or implementing accessible interactive components.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-component",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-component.tar.gz"
     },
     {
-      "id": "roocode-migrator",
-      "description": "Migrates skills and mode rules from roocode (.roo) to kilocode (.kilo / ~/.config/kilo) configuration, converting XML rules to Markdown agents.",
-      "category": "agent-tooling-meta",
-      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/roocode-migrator",
-      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/roocode-migrator.tar.gz"
+      "id": "angular-di",
+      "description": "Implement dependency injection in Angular v20+ using inject(), injection tokens, and provider configuration. Use for service architecture, providing dependencies at different levels, creating injectable tokens, and managing singleton vs scoped services. Triggers on service creation, configuring providers, using injection tokens, or understanding DI hierarchy.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-di",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-di.tar.gz"
+    },
+    {
+      "id": "angular-directives",
+      "description": "Create custom directives in Angular v20+ for DOM manipulation and behavior extension. Use for attribute directives that modify element behavior/appearance, structural directives for portals/overlays, and host directives for composition. Triggers on creating reusable DOM behaviors, extending element functionality, or composing behaviors across components. Note - use native @if/@for/@switch for control flow, not custom structural directives.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-directives",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-directives.tar.gz"
+    },
+    {
+      "id": "angular-forms",
+      "description": "Build signal-based forms in Angular v21+ using the new Signal Forms API. Use for form creation with automatic two-way binding, schema-based validation, field state management, and dynamic forms. Triggers on form implementation, adding validation, creating multi-step forms, or building forms with conditional fields. Signal Forms are experimental but recommended for new Angular projects. Don't use for template-driven forms without signals or third-party form libraries like Formly or ngx-formly.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-forms",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-forms.tar.gz"
+    },
+    {
+      "id": "angular-http",
+      "description": "Implement HTTP data fetching in Angular v20+ using resource(), httpResource(), and HttpClient. Use for API calls, data loading with signals, request/response handling, and interceptors. Triggers on data fetching, API integration, loading states, error handling, or converting Observable-based HTTP to signal-based patterns.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-http",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-http.tar.gz"
+    },
+    {
+      "id": "angular-icons-lucide",
+      "description": "Use Lucide icons in an Angular v20+ application or library: which of the two similarly named packages to install (@lucide/angular, not lucide-angular), the application pattern (provideLucideIcons plus <svg [lucideIcon]>) versus the library pattern (per-icon standalone components, never the app registry), sizing icons so they match the surrounding text, rendering a filled on/off state, and driving icon names from configuration. Also covers migrating away from an icon font (Bootstrap Icons, Font Awesome), where the failures are silent: a missing directive import renders an empty <svg> with no build error, conditional and interpolated class forms survive a naive grep, CSS written on the `i` selector goes orphaned, and filled/outline glyph pairs collapse onto one name. Triggers on lucide, @lucide/angular, lucide-angular, lucideIcon, provideLucideIcons, LucideDynamicIcon, `add an icon`, `the icons are too big/small`, `the icon does not show`, an empty or blank icon, or replacing bootstrap-icons / font-awesome / an icon font.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-icons-lucide",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-icons-lucide.tar.gz"
+    },
+    {
+      "id": "angular-library",
+      "description": "Author and package a reusable Angular library (v20+) shipped as an npm package built with ng-packagr. Covers the configuration surface a library exposes (provideX() returning EnvironmentProviders), peerDependencies vs dependencies, what belongs in public-api.ts, secondary entry points, environment-safe code, the build-from-dist release loop, and how an application develops against a local build of the library (npm link, and why not tsconfig paths). Use this whenever the code being written lives in a library project rather than an application - creating a library, adding or changing anything consumers can import, deciding whether something should be configurable, resolving an ng-packagr build failure, preparing a release - or when an application needs to consume a library that is being developed alongside it. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies errors, `make this configurable`, provideX/makeEnvironmentProviders, breaking changes, publishing to an npm registry, `npm link`, `use the local version of the library`, or a stale/duplicate-Angular error from a linked package. For application-side wiring and CLI usage see the sibling angular-di and angular-tooling skills instead.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-library",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-library.tar.gz"
+    },
+    {
+      "id": "angular-routing",
+      "description": "Implement routing in Angular v20+ applications with lazy loading, functional guards, resolvers, and route parameters. Use for navigation setup, protected routes, route-based data loading, and nested routing. Triggers on route configuration, adding authentication guards, implementing lazy loading, or reading route parameters with signals.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-routing",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-routing.tar.gz"
+    },
+    {
+      "id": "angular-signals",
+      "description": "Implement signal-based reactive state management in Angular v20+. Use for creating reactive state with signal(), derived state with computed(), dependent state with linkedSignal(), and side effects with effect(). Triggers on state management questions, converting from BehaviorSubject/Observable patterns to signals, or implementing reactive data flows.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-signals",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-signals.tar.gz"
+    },
+    {
+      "id": "angular-ssr",
+      "description": "Implement server-side rendering and hydration in Angular v20+ using @angular/ssr. Use for SSR setup, hydration strategies, prerendering static pages, and handling browser-only APIs. Triggers on SSR configuration, fixing hydration mismatches, prerendering routes, or making code SSR-compatible.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-ssr",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-ssr.tar.gz"
+    },
+    {
+      "id": "angular-testing",
+      "description": "Write unit and integration tests for Angular v20+ applications using Vitest or Jasmine with TestBed and modern testing patterns. Use for testing components with signals, OnPush change detection, services with inject(), and HTTP interactions. Triggers on test creation, testing signal-based components, mocking dependencies, or setting up test infrastructure. Don't use for E2E testing with Cypress or Playwright, or for testing non-Angular JavaScript/TypeScript code.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-testing",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-testing.tar.gz"
+    },
+    {
+      "id": "angular-tooling",
+      "description": "Use Angular CLI and development tools effectively in Angular v20+ projects. Use for project setup, code generation, building, testing, and configuration. Triggers on creating new projects, generating components/services/modules, configuring builds, running tests, or optimizing production builds. Don't use for Nx workspace commands, custom Webpack configurations, or non-Angular CLI build systems like Vite standalone or esbuild direct usage.",
+      "category": "angular-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/angular-dev-kit/skills/angular-tooling",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/angular-tooling.tar.gz"
     },
     {
       "id": "gitignore",
@@ -51,7 +114,7 @@
     },
     {
       "id": "macroplan-authoring",
-      "description": "Author and maintain a durable, resumable development pipeline as a `task/` tree \u2014 raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change \u2014 use a normal plan for that.",
+      "description": "Author and maintain a durable, resumable development pipeline as a `tasks/` tree - raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change - use a normal plan for that.",
       "category": "common-tools",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/common-tools/skills/macroplan-authoring",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/macroplan-authoring.tar.gz"
@@ -65,45 +128,52 @@
     },
     {
       "id": "agent-md-refactor",
-      "description": ">-\n  Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to\n  follow progressive disclosure principles. Splits monolithic files into\n  organized, linked documentation.",
+      "description": "Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to follow progressive disclosure principles. Splits monolithic files into organized, linked documentation.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/agent-md-refactor",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/agent-md-refactor.tar.gz"
     },
     {
       "id": "changelog-generator",
-      "description": ">-\n  Automatically creates user-facing changelogs from git commits by analyzing\n  commit history, categorizing changes, and transforming technical commits into\n  clear, customer-friendly release notes. Turns hours of manual changelog\n  writing into minutes of automated generation.",
+      "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/changelog-generator",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/changelog-generator.tar.gz"
     },
     {
       "id": "file-organizer",
-      "description": ">-\n  Intelligently organizes your files and folders across your computer by\n  understanding context, finding duplicates, suggesting better structures, and\n  automating cleanup tasks. Reduces cognitive load and keeps your digital\n  workspace tidy without manual effort.",
+      "description": "Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks. Reduces cognitive load and keeps your digital workspace tidy without manual effort.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/file-organizer",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/file-organizer.tar.gz"
     },
     {
       "id": "frontend-design",
-      "description": ">-\n  Create distinctive, production-grade frontend interfaces with high design\n  quality. Use this skill when the user asks to build web components, pages,\n  artifacts, posters, or applications (examples include websites, landing pages,\n  dashboards, React components, HTML/CSS layouts, or when styling/beautifying\n  any web UI). Generates creative, polished code and UI design that avoids\n  generic AI aesthetics.",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/frontend-design",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/frontend-design.tar.gz"
     },
     {
       "id": "grill-me",
-      "description": ">-\n  Interview the user relentlessly about a plan or design until reaching shared\n  understanding, resolving each branch of the decision tree. Use when user wants\n  to stress-test a plan, get grilled on their design, or mentions \"grill me\".",
+      "description": "Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions `grill me`.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/grill-me",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/grill-me.tar.gz"
     },
     {
       "id": "mcp-builder",
-      "description": ">-\n  Guide for creating high-quality MCP (Model Context Protocol) servers that\n  enable LLMs to interact with external services through well-designed tools.\n  Use when building MCP servers to integrate external APIs or services, whether\n  in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/mcp-builder",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/mcp-builder.tar.gz"
+    },
+    {
+      "id": "mcp-redmine",
+      "description": "Redmine MCP server integration for managing issues, tracking bugs, and interacting with Redmine ticket workflows via the Model Context Protocol.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/mcp-redmine",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/mcp-redmine.tar.gz"
     },
     {
       "id": "playwright",
@@ -111,6 +181,13 @@
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/playwright",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/playwright.tar.gz"
+    },
+    {
+      "id": "redmine-rest-helper",
+      "description": "Generic fallback skill for interacting with a Redmine issue tracker via its REST API and curl when an MCP server is not available. Provides instructions on how to fetch, read, and comment on Redmine tickets using HTTP requests.",
+      "category": "third-party",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/redmine-rest-helper",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/redmine-rest-helper.tar.gz"
     },
     {
       "id": "skill-creator",
@@ -128,7 +205,7 @@
     },
     {
       "id": "theme-factory",
-      "description": ">-\n  Toolkit for styling artifacts with a theme. These artifacts can be slides,\n  docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with\n  colors/fonts that you can apply to any artifact that has been creating, or can\n  generate a new theme on-the-fly.",
+      "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
       "category": "third-party",
       "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/third-party/skills/theme-factory",
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/theme-factory.tar.gz"

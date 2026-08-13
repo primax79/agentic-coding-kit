@@ -24,6 +24,7 @@ ever overwritten or removed; anything else is warned about and left alone.
 Set KILO_PM_ROOT to relocate ~ for testing.
 """
 import argparse
+import hashlib
 import json
 import os
 import pathlib
@@ -609,6 +610,202 @@ def cmd_init_marketplace(args, state):
     print(f'[scaffold] marketplace {name} created at {root}')
 
 
+# ---------- agent sync between the two hosts ----------
+#
+# Absorbed from the former kilo-claude-sync skill. Agents are the one thing that
+# genuinely needs a bridge: each host demands its own frontmatter shape, so the
+# shared description and body have to exist twice. Skills do not - both hosts
+# install those natively (see the note above install_plugin).
+#
+# The translation itself reuses to_kilo_agent()/to_claude_agent() above, which is
+# why this lives here now: two copies of one frontmatter translator is how they
+# drift apart.
+
+def agent_read(path):
+    if not path.exists():
+        return None
+    fields, body = parse_fm(path.read_text())
+    other = [f'{k}: {v}' for k, v in fields.items() if k not in ('name', 'description')]
+    return {'description': fields.get('description', ''), 'body': body,
+            'fields': fields, 'other_lines': other}
+
+
+def agent_hash(parsed):
+    """Hashes only what the two sides share, so a change to one host's own
+    frontmatter never reads as drift."""
+    if parsed is None:
+        return None
+    return hashlib.sha256((parsed['description'] + '\x00' + parsed['body']).encode()).hexdigest()
+
+
+def agent_write(path, name_field, description, other_lines, body):
+    fm = ([f'name: {name_field}'] if name_field else []) \
+        + [f'description: {sanitize_yaml_val(description)}'] + other_lines
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('---\n' + '\n'.join(fm) + '\n---\n' + body)
+
+
+def sync_agents_root(root):
+    kilo_dir, claude_dir = root / '.kilo' / 'agent', root / '.claude' / 'agents'
+    if not kilo_dir.exists() and not claude_dir.exists():
+        return
+
+    state_path = root / '.kilo-agent-sync-state.json'
+    state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    dirty = False
+
+    names = set()
+    for d in (kilo_dir, claude_dir):
+        if d.exists():
+            names |= {p.stem for p in d.glob('*.md')}
+
+    for name in sorted(names):
+        kpath, cpath = kilo_dir / f'{name}.md', claude_dir / f'{name}.md'
+        k, c = agent_read(kpath), agent_read(cpath)
+        st = state.get(name, {})
+        kh, ch = agent_hash(k), agent_hash(c)
+        k_changed = k is not None and st.get('kilo') != kh
+        c_changed = c is not None and st.get('claude') != ch
+
+        if k and not c:
+            cpath.parent.mkdir(parents=True, exist_ok=True)
+            cpath.write_text(to_claude_agent(name, k['fields'], k['body'], mark=False))
+            print(f'[agents] created {cpath} from {kpath}')
+        elif c and not k:
+            kpath.parent.mkdir(parents=True, exist_ok=True)
+            kpath.write_text(to_kilo_agent(name, c['fields'], c['body'], mark=False))
+            print(f'[agents] created {kpath} from {cpath}')
+        elif k_changed and c_changed:
+            if kh != ch:
+                print(f"[agents] CONFLICT: '{name}' edited on both sides since the last sync - "
+                      'resolve by hand, then re-run.')
+                continue
+            # Identical on both sides (e.g. both just installed): only record state.
+        elif k_changed:
+            # Regenerate the stale side but keep ITS own frontmatter: a hand-tuned
+            # tools: line on the Claude file is not the Kilo file's business.
+            agent_write(cpath, name, k['description'], c['other_lines'], k['body'])
+            print(f"[agents] synced '{name}' kilo -> claude")
+        elif c_changed:
+            agent_write(kpath, None, c['description'], k['other_lines'], c['body'])
+            print(f"[agents] synced '{name}' claude -> kilo")
+        else:
+            continue
+
+        k, c = agent_read(kpath), agent_read(cpath)
+        state[name] = {'kilo': agent_hash(k), 'claude': agent_hash(c)}
+        dirty = True
+
+    if dirty:
+        state_path.write_text(json.dumps(state, indent=2) + '\n')
+
+
+def find_git_root(start):
+    p = pathlib.Path(start).resolve()
+    for parent in [p] + list(p.parents):
+        if (parent / '.git').exists():
+            return parent
+    return None
+
+
+def cmd_sync_agents(args, state):
+    roots = []
+    if args.scope in ('local', 'both'):
+        git_root = find_git_root(args.repo)
+        if git_root:
+            roots.append(('local', git_root))
+        else:
+            print(f'no git repo found at {args.repo}, skipping local scope', file=sys.stderr)
+    if args.scope in ('global', 'both'):
+        roots.append(('global', ROOT))
+    for label, root in roots:
+        print(f'== {label}: {root} ==')
+        sync_agents_root(root)
+
+
+# ---------- moving hand-authored items between global and project scope ----------
+#
+# Absorbed from the former kilo-scope-manager skill. It is here rather than in its
+# own tool because it needs the same knowledge this file already encodes: where
+# each kind of item lives on disk. Two tables that must agree about that is one
+# table too many.
+#
+# The `~/.config/kilo` locations below are the reason this is not just a `mv`:
+# Kilo reads agents and commands from there, skills from ~/.kilo, and a twin left
+# in the other location silently shadows the one being edited.
+
+MOVE_KINDS = {
+    'skill': {'local': lambda repo: repo / '.kilo' / 'skills',
+              'global': ROOT / '.kilo' / 'skills',
+              'other_globals': [ROOT / '.config' / 'kilo' / 'skills'],
+              'is_dir': True},
+    'agent': {'local': lambda repo: repo / '.kilo' / 'agent',
+              'global': ROOT / '.config' / 'kilo' / 'agent',
+              'other_globals': [ROOT / '.kilo' / 'agent'],
+              'is_dir': False},
+    'command': {'local': lambda repo: repo / '.kilo' / 'command',
+                'global': ROOT / '.config' / 'kilo' / 'command',
+                'other_globals': [ROOT / '.kilo' / 'command'],
+                'is_dir': False},
+}
+
+
+def move_item_path(base, name, is_dir):
+    return base / name if is_dir else base / f'{name}.md'
+
+
+def move_validate(kind, path, is_dir):
+    md = path / 'SKILL.md' if is_dir else path
+    if not md.is_file():
+        die(f"{path} is not a valid {kind} ({'no SKILL.md' if is_dir else 'file missing'})")
+    head = md.read_text(encoding='utf-8', errors='replace').splitlines()[:12]
+    if kind == 'skill' and not any(l.startswith('name:') for l in head):
+        print(f"WARNING: {md} has no 'name:' frontmatter (required for skill discovery)")
+    if kind in ('agent', 'command') and not any(l.startswith('description:') for l in head):
+        print(f"WARNING: {md} has no 'description:' frontmatter")
+
+
+def cmd_move(args, state):
+    cfg = MOVE_KINDS[args.kind]
+    repo = find_git_root(args.repo) or pathlib.Path(args.repo).resolve()
+    local_base, global_base = cfg['local'](repo), cfg['global']
+    src_base, dst_base = ((global_base, local_base) if args.direction == 'to-local'
+                          else (local_base, global_base))
+    src = move_item_path(src_base, args.name, cfg['is_dir'])
+    dst = move_item_path(dst_base, args.name, cfg['is_dir'])
+
+    if not (src.is_dir() if cfg['is_dir'] else src.is_file()):
+        die(f'source {args.kind} not found: {src}')
+    move_validate(args.kind, src, cfg['is_dir'])
+
+    if dst.exists():
+        if not args.force:
+            die(f'destination already exists: {dst} (use --force to overwrite)')
+        shutil.rmtree(dst) if dst.is_dir() else dst.unlink()
+
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if args.copy:
+        shutil.copytree(src, dst, symlinks=True) if cfg['is_dir'] else shutil.copy2(src, dst)
+        action = 'copied'
+    else:
+        shutil.move(str(src), str(dst))
+        action = 'moved'
+    print(f'OK: {action} {src} -> {dst}')
+
+    if args.copy and args.direction == 'to-local':
+        print('NOTE: the local copy shadows the global item of the same name (project wins).')
+    for og in cfg['other_globals']:
+        twin = move_item_path(og, args.name, cfg['is_dir'])
+        if twin.exists():
+            print(f'WARNING: another copy exists at {twin} - check which one your Kilo version '
+                  'loads and remove the stale twin.')
+    if args.kind in ('agent', 'command'):
+        print("NOTE: agents are mirrored to Claude Code - run 'sync-agents' for the affected scope.")
+    else:
+        print('NOTE: Claude Code is unaffected - it installs skills through its own marketplace.')
+    print('Run /reload in Kilo to pick up the change in the current session.')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -653,6 +850,20 @@ def main():
     p.add_argument('--to', choices=['kilo', 'claude'], required=True)
     p.add_argument('-o', '--output')
     p.set_defaults(fn=cmd_convert)
+
+    p = sub.add_parser('move', help='move/copy a hand-authored item between global and local scope')
+    p.add_argument('kind', choices=sorted(MOVE_KINDS))
+    p.add_argument('direction', choices=['to-local', 'to-global'])
+    p.add_argument('name', help='skill directory name, or agent/command filename without .md')
+    p.add_argument('--repo', default='.', help='project path (default: cwd, resolved to git root)')
+    p.add_argument('--copy', action='store_true', help='copy instead of move')
+    p.add_argument('--force', action='store_true', help='overwrite the destination if it exists')
+    p.set_defaults(fn=cmd_move)
+
+    p = sub.add_parser('sync-agents', help='align .kilo/agent and .claude/agents (agents only)')
+    p.add_argument('--scope', choices=['local', 'global', 'both'], default='both')
+    p.add_argument('--repo', default='.')
+    p.set_defaults(fn=cmd_sync_agents)
 
     p = sub.add_parser('init-marketplace', help='scaffold a new marketplace repo')
     p.add_argument('path')

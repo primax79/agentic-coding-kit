@@ -54,7 +54,7 @@ what's a real difference.
 | --- | --- | --- | --- |
 | Skill format | `SKILL.md`, Agent Skills spec | `SKILL.md`, same spec | **Yes** — same file works unmodified in both |
 | Skill loading | On-demand by description match | On-demand by description match | Yes, same model |
-| Agent/mode frontmatter | Flat `tools: Bash, Read, ...` string | Structured `mode:`/`permissions:` map | **No** — incompatible, needs translation (see `kilo-claude-sync` in `agentic-coding-kit`'s own `agent-tooling-meta` plugin) |
+| Agent/mode frontmatter | Flat `tools: Bash, Read, ...` string | Structured `mode:`/`permissions:` map | **No** — incompatible, needs translation (see `kilo-plugin-manager`'s `sync-agents`/`convert` in `agentic-coding-kit`'s own `agent-tooling-meta` plugin) |
 | Marketplace manifest | `.claude-plugin/marketplace.json` | No single native format — see below | Partial |
 | Install command | `/plugin install <name>@<marketplace>` | No single equivalent — see below | No |
 | MCP | Native client support (`/plugin`-adjacent MCP config) | Also a full native MCP client — its own Settings UI has a dedicated MCP section, and `kilo.jsonc`'s `mcp: {}` block configures servers it connects to, same as Claude Code | **Yes** — both are full MCP clients. `kilo-mcp` in this family uses Kilo as the *server* side (exposed to an external orchestrator) by deliberate design for the Architect/Executor pattern, not because Kilo lacks client support — see [`ai-architect-executor`](https://github.com/primax79/ai-architect-executor) |

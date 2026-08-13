@@ -1,15 +1,21 @@
 ---
 name: kilo-plugin-manager
-description: "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace, and translate agent definitions between Claude and Kilo frontmatter. Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, or convert an agent file between Claude Code and Kilo Code formats."
+description: "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace. Also owns everything else that touches those directories: translating agent definitions between Claude and Kilo frontmatter, keeping the two hosts' agents aligned (`sync-agents`), and moving a hand-authored skill, agent or command between global and project scope (`move`). Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, convert or re-align an agent file between Claude Code and Kilo Code, or promote/localise a customization item."
 ---
 
 # Kilo plugin manager
 
-Emulates Claude Code's plugin-marketplace mechanism for Kilo Code (and keeps
-Claude Code in sync on the same machine). A marketplace is a git repo in Claude
-Code's plugin layout (`.claude-plugin/marketplace.json` + plugins with
-`skills/`, `agents/`, `commands/`), so one repo serves Claude Code users
-natively and everyone else through this skill.
+Emulates Claude Code's plugin-marketplace mechanism for Kilo Code. A marketplace
+is a git repo in Claude Code's plugin layout (`.claude-plugin/marketplace.json` +
+plugins with `skills/`, `agents/`, `commands/`), so one repo serves Claude Code
+users natively and everyone else through this skill.
+
+This is the single tool for anything that touches Kilo's customization
+directories. Two smaller skills were folded into it — `kilo-claude-sync` became
+`sync-agents`, `kilo-scope-manager` became `move` — because each had grown its
+own copy of knowledge this script already held: how to translate an agent's
+frontmatter, and where each kind of item lives on disk. Two copies of either is
+how they drift apart.
 
 **Everything is done by the bundled script - never perform these steps by
 hand (no manual git clone, symlinking, or frontmatter editing).**
@@ -38,6 +44,8 @@ Depending on how `kilo-plugin-manager` was installed on your machine, run the sc
 | Remove a plugin's files                     | `uninstall <plugin> [--project <repo-path>]`      |
 | Show marketplaces, HEAD commits, installs   | `status`                                          |
 | Convert one agent file Claude↔Kilo         | `convert <file.md> --to kilo\|claude [-o out.md]` |
+| Align agents across both hosts              | `sync-agents [--scope local\|global\|both] [--repo P]` |
+| Move a hand-authored item between scopes    | `move <skill\|agent\|command> to-local\|to-global <name> [--repo P] [--copy] [--force]` |
 | Scaffold a new marketplace repo             | `init-marketplace <path> [--name N]`              |
 | Generate an official-format skill feed      | `python3 generate_skill_marketplace.py <repo>`    |
 | Package + publish skill tarballs to GitHub  | `python3 package_and_publish_skills.py <repo>`    |

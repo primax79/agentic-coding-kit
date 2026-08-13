@@ -226,7 +226,7 @@ Run the sync script whenever an agent changes, so both variants stay
 identical on everything except the frontmatter shape:
 
 ```bash
-python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py
+python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents
 ```
 
 It keeps `name:` identical across variants and mirrors files between the
@@ -271,7 +271,7 @@ Once installed to `~/.config/kilo/command/<name>.md`, it's available as
 3. **Sync agents** (if any agent frontmatter changed):
 
    ```bash
-   python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py
+   python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents
    ```
 
 4. **Commit and push.**

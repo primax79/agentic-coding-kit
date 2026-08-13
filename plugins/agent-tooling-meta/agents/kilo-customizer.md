@@ -52,9 +52,9 @@ Apply these tests IN ORDER; the first that matches wins. When in doubt, prefer t
 
 ## Moving items between global and local scope (skills, agents, workflows)
 
-Every customization kind exists at two scopes — local `<repo>/.kilo/{skills,agents,command}` (wins on name collisions) and global `~/.kilo/{skills,agent}` (commands' global location unconfirmed — see File conventions above; `~/.config/kilo/{agent,command}` was not found in effect on this machine, do not assume it). When the user asks to promote an item to global, localize a global one, or fix duplicated copies, use the **`kilo-scope-manager`** skill — its `scripts/move_item.py <skill|agent|command> <to-local|to-global> <name>` performs the move/copy deterministically (frontmatter validation, no clobber without `--force`, warnings for stale twins in the alternate global dirs `~/.config/kilo/skills` and `~/.kilo/{agent,command}`).
+Every customization kind exists at two scopes — local `<repo>/.kilo/{skills,agents,command}` (wins on name collisions) and global `~/.kilo/{skills,agent}` (commands' global location unconfirmed — see File conventions above; `~/.config/kilo/{agent,command}` was not found in effect on this machine, do not assume it). When the user asks to promote an item to global, localize a global one, or fix duplicated copies, use the **`kilo-plugin-manager`** skill — its `plugin_manager.py move <skill|agent|command> <to-local|to-global> <name>` performs the move/copy deterministically (frontmatter validation, no clobber without `--force`, warnings for stale twins in the alternate global dirs `~/.config/kilo/skills` and `~/.kilo/{agent,command}`).
 
-Decision rules: project-agnostic → global; project-specific → local; project-specific *variant* of a global item → local copy (shadowing) or better a renamed fork. **An agent must live in the same scope as the skills it references** — a global agent pointing at project-local skills breaks everywhere else; before promoting, convert repo-relative references in the body to absolute paths or promote the referenced skills too. After any move: `/reload`, re-run kilo-claude-sync for the affected scope, and grep agents/commands for dangling name references.
+Decision rules: project-agnostic → global; project-specific → local; project-specific *variant* of a global item → local copy (shadowing) or better a renamed fork. **An agent must live in the same scope as the skills it references** — a global agent pointing at project-local skills breaks everywhere else; before promoting, convert repo-relative references in the body to absolute paths or promote the referenced skills too. After any move: `/reload`, re-run `plugin_manager.py sync-agents` for the affected scope if an agent moved, and grep agents/commands for dangling name references.
 
 ## Maintaining and fixing GLOBAL definitions
 
@@ -63,7 +63,7 @@ You are also responsible for keeping `~/.kilo/` and `~/.config/kilo/` healthy (t
 1. **Inventory + collision map**: compare global dirs with the project `.kilo/`; for every name collision the local copy shadows the global one inside the project, but every OTHER repo still gets the global — so a fix applied only locally leaves the global copy poisoning other projects.
 2. **Diff and align twins**: pick the authoritative side (usually the most recently fixed), align the other via `move_item.py --copy --force` or direct edit. Apply the same quality bar as local files (verified API names/paths, valid frontmatter, English).
 3. **Retire, don't delete**: global dirs are not version-controlled — move superseded definitions to `~/.config/kilo/_attic/` / `~/.kilo/_attic/` (the attic is the only undo).
-4. **Re-mirror Claude Code**: `python3 ~/.kilo/skills/kilo-claude-sync/scripts/sync.py --scope global` after touching global agents or skills; then `/reload`.
+4. **Re-mirror Claude Code agents**: `python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents --scope global` after touching global *agents*; then `/reload`. Skills need nothing — Claude Code installs those through its own marketplace and `enabledPlugins`, and the two hosts' skill directories must never be bridged.
 
 ## Generation workflow
 
@@ -73,7 +73,7 @@ You are also responsible for keeping `~/.kilo/` and `~/.config/kilo/` healthy (t
 4. **Ground every technical claim**: class names, file paths, versions and commands must be verified against the actual codebase or documentation — never invent API names (this config previously contained mappings to classes that do not exist; that class of error is your top thing to prevent).
 5. **Wire the pieces**: command → agent → skills cross-references by exact name; update any index/registry the project keeps.
 6. **Verify**: frontmatter parses (yaml), skill `name` matches its directory, referenced agents/skills exist, `/reload` picks them up.
-7. If the project also mirrors definitions for Claude Code (`.claude/`), remind the user to run the sync (e.g. the `kilo-claude-sync` skill) rather than editing both by hand.
+7. If the project also carries agents for Claude Code (`.claude/agents/`), remind the user to run `plugin_manager.py sync-agents` rather than editing both by hand. Skills are not synced: each host installs them natively.
 
 ## Style constraints for generated artifacts
 

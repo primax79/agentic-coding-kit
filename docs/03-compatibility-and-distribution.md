@@ -163,14 +163,14 @@ Kilo's native Skill URLs mechanism:
 | Update everything installed | `... plugin_manager.py update` |
 | Uninstall (global / project) | `... plugin_manager.py uninstall common-tools@agentic-coding-kit [--project .]` |
 
-### Moving items between scopes (`kilo-scope-manager`)
+### Moving items between scopes (`kilo-plugin-manager move`)
 
 | Action | Command |
 | --- | --- |
-| Promote skill, local → global | `python3 ~/.kilo/skills/kilo-scope-manager/scripts/move_item.py promote --type skill --name <name>` |
-| Promote agent, local → global | `... move_item.py promote --type agent --name <name>` |
-| Localize skill, global → local | `... move_item.py localize --type skill --name <name>` |
-| Localize agent, global → local | `... move_item.py localize --type agent --name <name>` |
+| Promote skill, local → global | `python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py move skill to-global <name>` |
+| Promote agent, local → global | `... plugin_manager.py move agent to-global <name>` |
+| Localize skill, global → local | `... plugin_manager.py move skill to-local <name>` |
+| Localize agent, global → local | `... plugin_manager.py move agent to-local <name>` |
 
 ### Ask Kilo directly
 
@@ -314,7 +314,7 @@ Kilo version.
    (manual for now — see the note in
    [`02-authoring-and-maintenance.md`](02-authoring-and-maintenance.md#managing-releases--updates)).
 2. `python3 scripts/generate_skill_indices.py` if any skill changed.
-3. `python3 plugins/agent-tooling-meta/skills/kilo-claude-sync/scripts/sync.py` if any agent changed.
+3. `python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents` if any agent changed.
 4. If any skill was added/removed/renamed, also regenerate the official-format
    feed: `python3 .../kilo-plugin-manager/scripts/package_and_publish_skills.py .`
    then `.../generate_skill_marketplace.py .` (see the section above).

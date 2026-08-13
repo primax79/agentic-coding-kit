@@ -17,7 +17,7 @@
     },
     {
       "name": "agent-tooling-meta",
-      "description": "Kilo/Claude ecosystem meta-tooling - manage, sync, author and migrate Kilo Code and Claude Code's own configuration (plugin installs, skill/agent authoring, cross-tool sync, Roocode migration, generating a grounded reference skillset for a framework/library from its source/docs/spec via /generate-skillset). Not about delegating work - see ai-architect-executor/kilo-mcp for that.",
+      "description": "Kilo/Claude ecosystem meta-tooling - manage and author Kilo Code and Claude Code's own configuration: installing plugins from git marketplaces, moving items between global and project scope, keeping the two hosts' agents aligned, maintaining Kilo's RAG index, and generating a grounded reference skillset for a framework/library from its source/docs/spec via /generate-skillset. Not about delegating work - see ai-architect-executor/kilo-mcp for that.",
       "author": {
         "name": "Alfredo Oliviero"
       },

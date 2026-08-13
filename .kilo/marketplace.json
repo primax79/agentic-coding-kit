@@ -24,24 +24,9 @@
       "source": "./plugins/agent-tooling-meta/skills/framework-skillset-generator"
     },
     {
-      "name": "kilo-claude-sync",
-      "description": "Keep Kilo Code and Claude Code agent/skill definitions aligned",
-      "source": "./plugins/agent-tooling-meta/skills/kilo-claude-sync"
-    },
-    {
       "name": "kilo-plugin-manager",
       "description": "Install, update, and manage agent/skill plugins from git marketplaces",
       "source": "./plugins/agent-tooling-meta/skills/kilo-plugin-manager"
-    },
-    {
-      "name": "kilo-scope-manager",
-      "description": "Manage Kilo customization scope between global and project levels",
-      "source": "./plugins/agent-tooling-meta/skills/kilo-scope-manager"
-    },
-    {
-      "name": "roocode-migrator",
-      "description": "Migrate skills and mode rules from roocode to kilocode format",
-      "source": "./plugins/agent-tooling-meta/skills/roocode-migrator"
     },
     {
       "name": "agent-md-refactor",
