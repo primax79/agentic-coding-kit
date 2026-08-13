@@ -1,6 +1,6 @@
 ---
 name: angular-library
-description: "Author and package a reusable Angular library (v20+) shipped as an npm package built with ng-packagr. Covers the configuration surface a library exposes (provideX() returning EnvironmentProviders), peerDependencies vs dependencies, what belongs in public-api.ts, secondary entry points, environment-safe code, and the build-from-dist release loop. Use this whenever the code being written lives in a library project rather than an application - creating a library, adding or changing anything consumers can import, deciding whether something should be configurable, resolving an ng-packagr build failure, or preparing a release. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies errors, `make this configurable`, provideX/makeEnvironmentProviders, breaking changes, or publishing to an npm registry. For application-side wiring and CLI usage see the sibling angular-di and angular-tooling skills instead."
+description: "Author and package a reusable Angular library (v20+) shipped as an npm package built with ng-packagr. Covers the configuration surface a library exposes (provideX() returning EnvironmentProviders), peerDependencies vs dependencies, what belongs in public-api.ts, secondary entry points, environment-safe code, the build-from-dist release loop, and how an application develops against a local build of the library (npm link, and why not tsconfig paths). Use this whenever the code being written lives in a library project rather than an application - creating a library, adding or changing anything consumers can import, deciding whether something should be configurable, resolving an ng-packagr build failure, preparing a release - or when an application needs to consume a library that is being developed alongside it. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies errors, `make this configurable`, provideX/makeEnvironmentProviders, breaking changes, publishing to an npm registry, `npm link`, `use the local version of the library`, or a stale/duplicate-Angular error from a linked package. For application-side wiring and CLI usage see the sibling angular-di and angular-tooling skills instead."
 metadata:
   category: development
 ---
@@ -203,6 +203,51 @@ npm publish
   library was compiled in full rather than partial mode - rebuild, don't work
   around it. Partial compilation is what lets one published artifact work across
   Angular versions.
+
+## Developing an application against a local build
+
+While a library and the application consuming it move together, the application
+has to resolve the library's **built output** - the same artifact consumers get,
+not the source project. Link it:
+
+```bash
+# from the application, once per library
+npm link ../../<repo>/<lib>/dist/<lib>
+```
+
+This symlinks `node_modules/<scope>/<name>` at the dist folder. It changes
+nothing tracked: not `package.json`, not `tsconfig.json`. To go back to the
+registry, reinstall the package.
+
+- **`npm install` and `npm ci` wipe the link.** Put the command in a script
+  (`"link:local": "npm link ../..."`) so re-linking is one word, and the workflow
+  is written down instead of remembered.
+- **The link points at `dist`, so the application only sees a change once the
+  library is rebuilt.** Run `ng build <lib> --watch` alongside the app's dev
+  server, or you will spend an afternoon debugging a stale build.
+- **A link does not install peer dependencies.** The application must depend on
+  them itself, and nothing warns you until the first import that actually needs
+  one - which may be long after the link started "working".
+- **Test a release against a packed tarball, not the link.** A link exposes the
+  whole dist folder, so it happily resolves files `npm pack` would never ship: it
+  cannot catch a missing `exports` entry or a file left out of the package.
+
+Do **not** reach for `paths` in the application's `tsconfig.json` instead. It
+looks equivalent and is not:
+
+- `paths` only informs TypeScript and whichever bundler chooses to read it. A
+  link works at module resolution, so every tool agrees.
+- `paths` in a config that `extends` another **replaces the inherited table
+  rather than merging into it**. A local override file therefore has to repeat
+  every alias the application already defines, and goes silently stale the day
+  someone adds one.
+- It puts a machine-local preference in a shared, committed file.
+
+If linking produces `NG0203` or a duplicate-`@angular/core` error, the symlink
+handed the resolver two copies of a peer dependency: set
+`"preserveSymlinks": true` in the application's `angular.json`. A dist folder
+built by ng-packagr carries no `node_modules` of its own, so this is usually
+not needed.
 
 ## Traps worth re-reading before a release
 

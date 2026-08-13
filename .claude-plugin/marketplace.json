@@ -35,7 +35,7 @@
     },
     {
       "name": "angular-dev-kit",
-      "description": "Angular v20+ Development Suite - authoring publishable libraries (own: angular-library), plus 10 vendored application-side references (component, di, directives, forms, http, routing, signals, ssr, testing, tooling) from analogjs/angular-skills (MIT, Brandon Roberts) - see plugin README for which is which",
+      "description": "Angular v20+ Development Suite - own skills for authoring publishable libraries (angular-library) and for Lucide icons (angular-icons-lucide), plus 10 vendored application-side references (component, di, directives, forms, http, routing, signals, ssr, testing, tooling) from analogjs/angular-skills (MIT, Brandon Roberts) - see plugin README for which is which",
       "author": {
         "name": "Alfredo Oliviero"
       },
