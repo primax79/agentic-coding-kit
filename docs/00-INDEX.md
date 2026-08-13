@@ -7,7 +7,7 @@
 | [`01-concepts.md`](01-concepts.md) | **Concepts**: what skills, agents/modes, commands/workflows, and MCP actually are — tool-agnostic first, then what's identical vs. tool-specific between Claude Code and Kilo Code. | Anyone new to either tool |
 | [`02-authoring-and-maintenance.md`](02-authoring-and-maintenance.md) | **Authoring**: how to create a new skill or agent, how to package it as a Claude plugin / Kilo marketplace entry (or both, in one repo), directory conventions, agent sync. | Skill/plugin authors |
 | [`03-compatibility-and-distribution.md`](03-compatibility-and-distribution.md) | **Distribution**: installing and releasing across Claude Code and Kilo Code — native `/plugin` commands, `kilo-plugin-manager`, and Kilo's native Skill URLs/`index.json` mechanism. | Maintainers, users installing this kit |
-| [`04-kilo-setup.md`](04-kilo-setup.md) | **Kilo Code setup**: installing Kilo itself, LLM/model configuration and auth, always-on instruction files, and optional Qdrant-backed codebase semantic indexing. | Anyone setting up Kilo Code from scratch |
+| [`04-kilo-setup.md`](04-kilo-setup.md) | **Kilo Code setup**: installing Kilo itself, LLM/model configuration and auth, always-on instruction files, optional Qdrant-backed codebase semantic indexing, and MCP servers configuration. | Anyone setting up Kilo Code from scratch |
 
 ## Quick navigation
 

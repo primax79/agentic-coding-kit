@@ -161,3 +161,38 @@ A few fields beyond the `kilo.jsonc` snippet above, exposed only in the UI
 
 Status panel at the top ("File watcher started. Index up-to-date.") is the
 quickest way to confirm indexing is actually running, not just enabled.
+
+## Model Context Protocol (MCP) Servers
+
+Kilo Code provides native support for MCP servers, allowing you to seamlessly integrate external tools, databases, and APIs. These are configured directly in your `kilo.jsonc` (globally or locally) within the `"mcp"` block.
+
+### Example: Redmine Issue Tracker
+
+If you need to interact with external tools such as the D4Science Redmine tracker, you can plug in third-party MCP servers like `mcp-redmine`.
+
+```jsonc
+{
+  "mcp": {
+    "redmine": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "mcp-redmine==2026.01.13.152335",
+        "--refresh-package",
+        "mcp-redmine",
+        "mcp-redmine"
+      ],
+      "env": {
+        "REDMINE_URL": "https://support.d4science.org",
+        "REDMINE_API_KEY": "${env.REDMINE_API_KEY}"
+      },
+      "enabled": true
+    }
+  }
+}
+```
+
+Notice that you can inject host environment variables directly into the server's configuration by using the `${env.VAR_NAME}` syntax (e.g. `${env.REDMINE_API_KEY}`).
+
+When the MCP server is configured and enabled, Kilo Code will automatically discover its tools and present them to the LLM. You can confirm the server is running by opening the **MCP** tab in Kilo's Settings UI or running `kilo mcp list`.
