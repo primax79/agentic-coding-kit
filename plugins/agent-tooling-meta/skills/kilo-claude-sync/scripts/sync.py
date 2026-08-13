@@ -171,9 +171,22 @@ def content_hash(parsed):
 
 
 def write_md(path, name_field, description, other_lines, body):
-    # Ensure description is safely quoted for YAML frontmatter compatibility
-    safe_desc = json.dumps(description) if not (description.startswith('"') or description.startswith("'") or description.startswith('>')) else description
-    fm = (['name: ' + name_field] if name_field else []) + [f'description: {safe_desc}'] + other_lines
+    # Ensure description is safely quoted for older Kilo YAML parser compatibility
+    # Kilo 7.4.5 fails on block scalars and escaped double quotes
+    desc_clean = description.strip()
+    # Remove outer quotes if present
+    if desc_clean.startswith('"') and desc_clean.endswith('"'):
+        desc_clean = desc_clean[1:-1]
+    if desc_clean.startswith("'") and desc_clean.endswith("'"):
+        desc_clean = desc_clean[1:-1]
+    
+    # Replace any internal double quotes with backticks to avoid escaping `\"` which breaks Kilo
+    desc_clean = desc_clean.replace('\\"', '`').replace('"', '`')
+    
+    # Force single line
+    desc_clean = ' '.join(line.strip() for line in desc_clean.split('\n') if line.strip())
+    
+    fm = (['name: ' + name_field] if name_field else []) + [f'description: "{desc_clean}"'] + other_lines
     path.write_text('---\n' + '\n'.join(fm) + '\n---\n' + body)
 
 

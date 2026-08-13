@@ -127,10 +127,18 @@ def sanitize_yaml_val(val):
     if not val:
         return '""'
     val = val.strip()
-    if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")) or val in ['>-', '>', '|']:
-        return val
-    escaped = val.replace('"', '\\"')
-    return f'"{escaped}"'
+    # Kilo 7.4.5 YAML parser safety: no block scalars, no multiline, no internal double quotes
+    if val.startswith('"') and val.endswith('"'):
+        val = val[1:-1]
+    elif val.startswith("'") and val.endswith("'"):
+        val = val[1:-1]
+    elif val.startswith('>'):
+        val = val.lstrip('>-\n ')
+    
+    val = val.replace('\\"', '`').replace('"', '`')
+    val = ' '.join(line.strip() for line in val.split('\n') if line.strip())
+    
+    return f'"{val}"'
 
 
 def to_kilo_agent(name, fields, body, mark=True):

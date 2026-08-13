@@ -83,6 +83,7 @@ Based on the user interview, fill in these components:
 skill-name/
 ├── SKILL.md (required)
 │   ├── YAML frontmatter (name, description required)
+│   │   IMPORTANT YAML SYNTAX: The description MUST be on a single line, enclosed in double quotes ("..."). NEVER use YAML block scalars (>-). NEVER use internal double quotes (escaped or not); use backticks (`) instead.
 │   └── Markdown instructions
 └── Bundled Resources (optional)
     ├── scripts/    - Executable code for deterministic/repetitive tasks

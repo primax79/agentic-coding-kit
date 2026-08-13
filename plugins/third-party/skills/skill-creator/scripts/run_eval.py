@@ -55,12 +55,12 @@ def run_single_query(
 
     try:
         project_commands_dir.mkdir(parents=True, exist_ok=True)
-        # Use YAML block scalar to avoid breaking on quotes in description
-        indented_desc = "\n  ".join(skill_description.split("\n"))
+        # Use single line double quotes and replace internal double quotes with backticks to support older Kilo versions
+        safe_desc = skill_description.replace('\\"', '`').replace('"', '`')
+        safe_desc = " ".join(line.strip() for line in safe_desc.split("\n") if line.strip())
         command_content = (
             f"---\n"
-            f"description: |\n"
-            f"  {indented_desc}\n"
+            f"description: \"{safe_desc}\"\n"
             f"---\n\n"
             f"# {skill_name}\n\n"
             f"This skill handles: {skill_description}\n"
