@@ -1,10 +1,6 @@
 ---
 name: file-organizer
-description: >-
-  Intelligently organizes your files and folders across your computer by
-  understanding context, finding duplicates, suggesting better structures, and
-  automating cleanup tasks. Reduces cognitive load and keeps your digital
-  workspace tidy without manual effort.
+description: "Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks. Reduces cognitive load and keeps your digital workspace tidy without manual effort."
 metadata:
   category: productivity-organization
   source:

@@ -1,18 +1,6 @@
 ---
 name: angular-library
-description: >-
-  Author and package a reusable Angular library (v20+) shipped as an npm package
-  built with ng-packagr. Covers the configuration surface a library exposes
-  (provideX() returning EnvironmentProviders), peerDependencies vs dependencies,
-  what belongs in public-api.ts, secondary entry points, environment-safe code,
-  and the build-from-dist release loop. Use this whenever the code being written
-  lives in a library project rather than an application - creating a library,
-  adding or changing anything consumers can import, deciding whether something
-  should be configurable, resolving an ng-packagr build failure, or preparing a
-  release. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies
-  errors, "make this configurable", provideX/makeEnvironmentProviders, breaking
-  changes, or publishing to an npm registry. For application-side wiring and CLI
-  usage see the sibling angular-di and angular-tooling skills instead.
+description: "Author and package a reusable Angular library (v20+) shipped as an npm package built with ng-packagr. Covers the configuration surface a library exposes (provideX() returning EnvironmentProviders), peerDependencies vs dependencies, what belongs in public-api.ts, secondary entry points, environment-safe code, and the build-from-dist release loop. Use this whenever the code being written lives in a library project rather than an application - creating a library, adding or changing anything consumers can import, deciding whether something should be configurable, resolving an ng-packagr build failure, or preparing a release. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies errors, \"make this configurable\", provideX/makeEnvironmentProviders, breaking changes, or publishing to an npm registry. For application-side wiring and CLI usage see the sibling angular-di and angular-tooling skills instead."
 metadata:
   category: development
 ---
