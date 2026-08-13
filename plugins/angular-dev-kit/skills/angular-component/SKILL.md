@@ -21,7 +21,7 @@ metadata:
 
 # Angular Component
 
-Create standalone components for Angular v20+. Components are standalone by default—do NOT set `standalone: true`.
+Create standalone components for Angular v20+. Components are standalone by default-do NOT set `standalone: true`.
 
 ## Component Structure
 
@@ -114,7 +114,7 @@ this.selected.emit(item);
 
 ## Host Bindings
 
-Use the `host` object in `@Component`—do NOT use `@HostBinding` or `@HostListener` decorators.
+Use the `host` object in `@Component`-do NOT use `@HostBinding` or `@HostListener` decorators.
 
 ```typescript
 @Component({
@@ -241,7 +241,7 @@ export class Toggle {
 
 ## Template Syntax
 
-Use native control flow—do NOT use `*ngIf`, `*ngFor`, `*ngSwitch`.
+Use native control flow-do NOT use `*ngIf`, `*ngFor`, `*ngSwitch`.
 
 ```html
 <!-- Conditionals -->

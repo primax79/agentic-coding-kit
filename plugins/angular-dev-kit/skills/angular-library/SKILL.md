@@ -6,7 +6,7 @@ description: >-
   (provideX() returning EnvironmentProviders), peerDependencies vs dependencies,
   what belongs in public-api.ts, secondary entry points, environment-safe code,
   and the build-from-dist release loop. Use this whenever the code being written
-  lives in a library project rather than an application — creating a library,
+  lives in a library project rather than an application - creating a library,
   adding or changing anything consumers can import, deciding whether something
   should be configurable, resolving an ng-packagr build failure, or preparing a
   release. Triggers on ng-packagr, ng-package.json, public-api.ts, peerDependencies
@@ -22,7 +22,7 @@ metadata:
 Everything here follows from one constraint: **the consuming application is
 unknown and out of your control.** It may be on a different Angular minor, use
 a different state library, render on a server, or be built by a team that will
-never read your source — only your types and your README.
+never read your source - only your types and your README.
 
 That single fact is what separates library code from app code. App code can
 reach for a global, hardcode an endpoint, or import a sibling feature, and be
@@ -42,7 +42,7 @@ Before adding anything, ask what happens to a consumer that doesn't want it.
 
 | Signal | What it means |
 |---|---|
-| You're about to import an app's DI token, route, or feature module | Stop — invert it into an injection token or a config field the app fills in |
+| You're about to import an app's DI token, route, or feature module | Stop - invert it into an injection token or a config field the app fills in |
 | A domain-specific type is appearing in a generic interface | The behaviour belongs in the app; the library should take a strategy |
 | The feature is useful to exactly one consumer today | Ship it in that consumer until a second one needs it |
 | It only makes sense with a specific backend/deployment | Make it opt-in configuration, not a default |
@@ -55,17 +55,17 @@ extension points over features.
 The library's own `package.json` (in the library project directory, *not* the
 workspace root) is what consumers install. Three buckets, three meanings:
 
-- **`peerDependencies`** — everything you `import` that the app also uses:
+- **`peerDependencies`** - everything you `import` that the app also uses:
   `@angular/core`, `@angular/common`, and any third-party runtime library.
   Declared as a *range*, so the app resolves one shared copy. Two copies of
   Angular, or of an auth SDK holding a singleton, is a class of bug that only
   reproduces in the consumer's build.
-- **`dependencies`** — only things safe to duplicate, with no shared state and
+- **`dependencies`** - only things safe to duplicate, with no shared state and
   no framework identity. ng-packagr treats this bucket as suspect: any entry
   not in `allowedNonPeerDependencies` **fails the build** with
   `Dependency X must be explicitly allowed using the "allowedNonPeerDependencies" option`.
   `tslib` is the one always-allowed exception.
-- **`devDependencies`** — stripped from the published manifest entirely, so
+- **`devDependencies`** - stripped from the published manifest entirely, so
   it's the right home for anything used only to build or test.
 
 Peer ranges are a compatibility promise, not a version pin. `>=20.3.0 <22.0.0`
@@ -87,7 +87,7 @@ Two consequences worth internalising:
 1. **Publish the built output, never the library source folder or the repo
    root.** The manifest npm reads is the generated one.
 2. **Anything that must reach consumers has to live in the library's
-   `package.json`** — `publishConfig`, `repository`, `license`, `keywords`,
+   `package.json`** - `publishConfig`, `repository`, `license`, `keywords`,
    `exports` additions. Putting `publishConfig.registry` only at the workspace
    root is a common and expensive mistake: the build succeeds, the publish goes
    to the default public registry.
@@ -125,7 +125,7 @@ export function provideDataAccess(config: DataAccessConfig) {
 }
 ```
 
-The app writes one line — `provideDataAccess({ baseUrl: '/api' })` — in its
+The app writes one line - `provideDataAccess({ baseUrl: '/api' })` - in its
 `ApplicationConfig`, and gets a correctly wired subtree it cannot accidentally
 half-configure.
 
@@ -142,7 +142,7 @@ Two habits that keep this honest:
 - **Defaults live in the provider, not at the call site.** Consumers should be
   able to pass the minimum and get something that works.
 - **Every configuration field gets a copy-pasteable snippet in the README.**
-  Configurable but undocumented is functionally the same as hardcoded — nobody
+  Configurable but undocumented is functionally the same as hardcoded - nobody
   finds it.
 
 For optional features (`withInterceptor()`, `withDebugLogging()`), consumer-supplied
@@ -152,7 +152,7 @@ a `provideX()` function, read `references/configuration-api.md`.
 ## Public API surface: what you export is what you owe
 
 `public-api.ts` is the contract. Anything reachable through it is something you
-cannot rename, retype, or remove without a major bump — including types reached
+cannot rename, retype, or remove without a major bump - including types reached
 *indirectly*, e.g. an exported function whose return type is an unexported
 interface.
 
@@ -160,7 +160,7 @@ interface.
   public service classes, strategy interfaces). Keep internals unexported so
   you stay free to refactor them.
 - Prefer `export { Thing } from './lib/thing'` over `export *` once the library
-  grows past a handful of files — `export *` re-exports tomorrow's accidental
+  grows past a handful of files - `export *` re-exports tomorrow's accidental
   additions too.
 - An interface is a safer public type than a class: it lets consumers implement
   or mock without inheriting your constructor.
@@ -191,7 +191,7 @@ export class TokenStore {
 Guard with `isPlatformBrowser`, defer genuinely browser-only initialisation with
 `afterNextRender`, and inject browser globals through tokens so tests can
 substitute them. The sibling `angular-ssr` skill's token patterns apply here even
-when the library will never be server-rendered by *you* — you don't get to decide
+when the library will never be server-rendered by *you* - you don't get to decide
 that. Third-party SDKs that touch `window` on import are the usual culprit and
 need lazy, guarded initialisation.
 
@@ -205,25 +205,25 @@ npm publish
 
 - **Versions are immutable.** Bump before every publish. Unpublishing leaves
   anyone who already installed with a lockfile pointing at a missing tarball.
-- **Verify before publishing** — `npm pack --dry-run` in the dest folder lists
+- **Verify before publishing** - `npm pack --dry-run` in the dest folder lists
   exactly what ships. Check the manifest's `name`, `version`, `peerDependencies`,
   `exports`, and `publishConfig`.
 - **Test against the built package, not the source.** A local install
   (`npm pack` then install the tarball, or `npm link`) is the only way to catch
   a missing export or a wrong peer range before a consumer does.
 - If the build injects a `prepublishOnly` guard that refuses to publish, the
-  library was compiled in full rather than partial mode — rebuild, don't work
+  library was compiled in full rather than partial mode - rebuild, don't work
   around it. Partial compilation is what lets one published artifact work across
   Angular versions.
 
 ## Traps worth re-reading before a release
 
-- A runtime `import` that isn't in `peerDependencies` or `dependencies` — builds
+- A runtime `import` that isn't in `peerDependencies` or `dependencies` - builds
   fine locally because the workspace has it hoisted, explodes for consumers.
 - `publishConfig` at the workspace root instead of the library's `package.json`.
 - Publishing from the source project directory instead of the built output.
 - A type exported indirectly, quietly widening the public API.
-- A new required config field added without a default — a breaking change even
+- A new required config field added without a default - a breaking change even
   though nothing was removed.
 - `providedIn: 'root'` on a service that needs configuration: it becomes
   reachable *before* `provideX()` runs. Provide it from `provideX()` instead.

@@ -28,13 +28,13 @@ same skill directory):
 ```
 
 `MD051` (link-fragments) is disabled because this pipeline always
-regenerates the TOC via `scripts/update-toc.js` before linting — its own
+regenerates the TOC via `scripts/update-toc.js` before linting - its own
 slug algorithm guarantees valid fragments, so MD051 only ever fires as a
 transient false positive on an in-progress edit (heading text changed,
 TOC not yet regenerated), never on a real broken link.
 
 Always invoke `markdownlint-cli` with `--config` pointing at **this
-skill's own** `.markdownlint.json` — never write one into the workspace
+skill's own** `.markdownlint.json` - never write one into the workspace
 being formatted:
 
 ```bash
@@ -43,7 +43,7 @@ npx --yes markdownlint-cli --fix --config /Users/Alfredo/.kilo/skills/markdown-f
 
 ### 2. Delegate Formatting to markdownlint
 - **CRITICAL:** DO NOT perform manual edits or string replacements to fix formatting issues.
-- **CRITICAL:** DO NOT create a `.markdownlint.json` (or any dotfile) inside the target project — always pass `--config` pointing at this skill's own copy (step 1).
+- **CRITICAL:** DO NOT create a `.markdownlint.json` (or any dotfile) inside the target project - always pass `--config` pointing at this skill's own copy (step 1).
 - Let the official CLI handle the rewrite of the files.
 
 ### 3. Format Tables

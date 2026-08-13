@@ -8,12 +8,12 @@ description: "Administers Kilo's own semantic codebase index (Qdrant collections
 Kilo's own semantic indexing feature (Settings > Indexing) keys each workspace's
 Qdrant collection as `ws-<sha256(workspace_path)[:16]>` (see kilo-indexing's
 `qdrant-client.ts`, `QdrantVectorStore` constructor). The hash is taken over the
-*exact* workspace path string Kilo was given, unnormalized — so moving or renaming
+*exact* workspace path string Kilo was given, unnormalized - so moving or renaming
 a project directory changes the hash, and Kilo reports the new path as
 "unindexed" from scratch even though nothing about the code changed. There's no
 Kilo-side migration for this; the old collection is simply orphaned in Qdrant.
 
-This is independent of `kilo-mcp`/orchestration — it applies any time a project
+This is independent of `kilo-mcp`/orchestration - it applies any time a project
 that Kilo indexes gets moved, regardless of whether an orchestrating AI is
 involved at all.
 
@@ -39,7 +39,7 @@ python3 scripts/migrate-qdrant-collection.py migrate --old-collection ws-XXXX \
 
 If the collection names are already known (e.g. from `list`), pass
 `--old-collection`/`--new-collection` instead of `--old-path`/`--new-path` to skip
-re-deriving the hash — safer when there's any doubt about the exact path string
+re-deriving the hash - safer when there's any doubt about the exact path string
 Kilo originally used (trailing slash, symlink vs real path, etc.).
 
 ## How it works
@@ -47,7 +47,7 @@ Kilo originally used (trailing slash, symlink vs real path, etc.).
 Talks to Qdrant's REST API directly (stdlib-only, no `qdrant-client` dependency):
 creates the destination collection with the same vector size/distance/HNSW config
 Kilo itself would use, then scrolls every point (vectors + payload) from the
-source collection and upserts it into the destination — including the
+source collection and upserts it into the destination - including the
 fixed-UUID metadata point that carries the embedding profile and
 schema-complete markers, so Kilo's own compatibility check
 (`openExisting`/`initialize` in `qdrant-client.ts`) accepts the destination as
@@ -61,7 +61,7 @@ itself.
   rather than assuming the path you have in hand matches what Kilo hashed.
 - **Vector dimension in Kilo's Settings UI does not truncate Gemini's output.**
   `GeminiEmbedder` never forwards a `dimensions` override to the embedding API
-  (unlike Ollama/OpenRouter, which do) — leave "Vector dimension" on Auto for
+  (unlike Ollama/OpenRouter, which do) - leave "Vector dimension" on Auto for
   the Gemini provider, or the created collection's expected size won't match
   what Gemini actually returns.
 - **Deletion is opt-in and gated.** `--delete-old` requires `--yes`; without it
