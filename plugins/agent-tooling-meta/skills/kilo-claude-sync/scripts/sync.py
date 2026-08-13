@@ -171,7 +171,9 @@ def content_hash(parsed):
 
 
 def write_md(path, name_field, description, other_lines, body):
-    fm = (['name: ' + name_field] if name_field else []) + [f'description: {description}'] + other_lines
+    # Ensure description is safely quoted for YAML frontmatter compatibility
+    safe_desc = json.dumps(description) if not (description.startswith('"') or description.startswith("'") or description.startswith('>')) else description
+    fm = (['name: ' + name_field] if name_field else []) + [f'description: {safe_desc}'] + other_lines
     path.write_text('---\n' + '\n'.join(fm) + '\n---\n' + body)
 
 
