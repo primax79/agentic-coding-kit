@@ -274,19 +274,14 @@ def target_roots(project):
     }, 'global'
 
 
-def ensure_claude_skills_symlink(roots):
-    """Make .claude/skills point at .kilo/skills (same convention as
-    kilo-claude-sync) so installed skills are visible to Claude Code too."""
-    claude_skills = roots['claude_parent'] / 'skills'
-    kilo_skills = roots['kilo_skills']
-    if claude_skills.exists() or claude_skills.is_symlink():
-        return
-    if not kilo_skills.exists():
-        return
-    roots['claude_parent'].mkdir(parents=True, exist_ok=True)
-    rel = os.path.relpath(kilo_skills, roots['claude_parent'])
-    claude_skills.symlink_to(rel, target_is_directory=True)
-    print(f'[skills] linked {claude_skills} -> {rel}')
+# Skills are deliberately NOT mirrored into .claude/skills, by symlink or copy.
+# Claude Code has its own mechanism for exactly this - a marketplace registered in
+# extraKnownMarketplaces plus the plugin switched on in enabledPlugins, which can
+# live in a project's settings.json and travel with the repo. Bridging the two
+# directories duplicated that mechanism, and the copy always won: a directory
+# nobody's tool declares is one that nothing updates and nothing reports as stale.
+# This script installs for Kilo, which has no equivalent for git-based
+# marketplaces; the Claude side is a one-line declaration the user owns.
 
 
 def place_entry(dest, writer, kind, prev_paths, recorded):
@@ -332,7 +327,6 @@ def install_plugin(state, plugin, mp_name, info, project, copy, include_claude):
                                  target_is_directory=True), 'symlink', prev_paths, recorded)
             if ok:
                 print(f'[skill] {sd.name} -> {dest}')
-        ensure_claude_skills_symlink(roots)
 
     # Per-file fallback, not per-directory: a hand-written Kilo override in
     # agents_kilo/ (or agents/kilo/) is used only for the agents that

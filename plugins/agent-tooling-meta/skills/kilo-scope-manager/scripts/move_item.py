@@ -122,11 +122,15 @@ def main() -> None:
                   "and remove the stale twin.")
 
     if args.kind == "skill":
+        # Nothing to mirror: this moved a skill inside Kilo's own directories.
+        # Claude Code installs skills through its marketplace plus enabledPlugins,
+        # so it is unaffected — and the two must not be bridged.
         for side, claude_dir in [("global", HOME / ".claude" / "skills"),
                                  ("local", repo / ".claude" / "skills")]:
-            if claude_dir.exists() and not claude_dir.is_symlink():
-                print(f"NOTE: {side} .claude/skills is a real directory (not a symlink): "
-                      "run the kilo-claude-sync skill to realign Claude Code.")
+            if claude_dir.is_symlink():
+                print(f"WARNING: {side} {claude_dir} is a symlink into Kilo's skills — a leftover "
+                      "from the old bridge between the two hosts. Remove it, and declare the "
+                      "plugin in .claude/settings.json under enabledPlugins instead.")
     else:
         print("NOTE: agents/commands are mirrored to .claude/ — run the kilo-claude-sync skill "
               "for the affected scope(s).")

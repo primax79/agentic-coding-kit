@@ -1,20 +1,53 @@
 ---
 name: kilo-claude-sync
-description: "Keeps Kilo Code and Claude Code agent/skill definitions aligned, both per-project (.kilo vs .claude) and globally (~/.kilo vs ~/.claude). Use whenever an agent .md file or a SKILL.md is added or edited under .kilo/agent, .kilo/skills, .claude/agents, or .claude/skills, before committing or ending the session."
+description: "Keeps Kilo Code and Claude Code AGENT definitions aligned, both per-project (.kilo/agent vs .claude/agents) and globally (~/.kilo/agent vs ~/.claude/agents), regenerating the shared description and body on each side while preserving each host's own frontmatter shape. Skills are deliberately out of scope: both hosts install those natively, so mirroring them between the two directories only produced copies neither host's tooling declared. Use whenever an agent .md file is added or edited under .kilo/agent or .claude/agents, before committing or ending the session."
 ---
 
-# Kilo Code <-> Claude Code agent/skill sync
+# Kilo Code <-> Claude Code agent sync
 
-Kilo Code and Claude Code both use markdown-based agent and skill definitions, but agents have incompatible frontmatter: Kilo uses `mode`/`model`/`steps`/`color` with arbitrary model providers (e.g. `google/gemini-3.5-flash`); Claude Code uses `name`/`tools` and only its own model tiers. Skills, on the other hand, are structurally compatible (`<name>/SKILL.md` + optional `scripts/`), so their content is kept identical rather than reinterpreted per side.
+Kilo Code and Claude Code both use markdown agent definitions, but their
+frontmatter is incompatible: Kilo uses `mode`/`model`/`steps`/`color` with
+arbitrary model providers (e.g. `google/gemini-3.5-flash`); Claude Code uses
+`name`/`tools` and only its own model tiers. The prompt itself is the same
+prompt, so it is kept identical on both sides while each host keeps its own
+header.
+
+## Skills are not synced, on purpose
+
+Both hosts already install skills themselves:
+
+- **Claude Code** - a marketplace in `extraKnownMarketplaces` plus the plugin
+  switched on in `enabledPlugins`, which can live in a project's own
+  `.claude/settings.json` and travel with the repo.
+- **Kilo Code** - `.kilo/skills/`, populated from a marketplace by the sibling
+  `kilo-plugin-manager` skill.
+
+Mirroring one directory into the other - by symlink or by copy - duplicated
+those mechanisms, and the duplicate always won: a directory nobody's tool
+declares is one that nothing updates and nothing reports as stale. Skills copied
+in by hand sat unnoticed for weeks while `update` reported success, because the
+installer only touches paths it recorded itself. A symlink was worse still: the
+two hosts then shared one directory, so an accidental `rm` on either side took
+out both.
+
+If a skill needs to reach both hosts, declare it on both sides rather than
+bridging them. `sync_skills()` survives in the script only to migrate a repo off
+the old arrangement; nothing calls it.
 
 ## What this maintains
 
-- **Skills**: `.kilo/skills/<name>/` and `.claude/skills/<name>/` (and their `~/.kilo/skills`, `~/.claude/skills` global equivalents) are separate, real directories - no symlink. Each `<name>/` tree is hashed as a whole (every file under it, not just `SKILL.md`) and compared against the last synced state; whichever side changed since the last sync gets copied wholesale onto the other, and a name present on only one side is created on the other. A single symlink was the earlier design here - it kept the content trivially identical but meant one accidental `rm`/move on either side took out both tools at once, and a still-installed symlink shows up as a live example of the failure mode this replaced. Any bare `SKILL.md` missing `name`/`description` frontmatter gets it auto-added (required for Claude Code's skill discovery; inert extra text for Kilo). A legacy singular `.kilo/skill` directory is auto-renamed to `.kilo/skills` if found, and a leftover symlink from the old scheme on either side is auto-migrated to a real directory on the next sync.
-- **Agents**: `.kilo/agent/<name>.md` and `.claude/agents/<name>.md` (and their `~/.kilo/agent`, `~/.claude/agents` global equivalents) stay as separate files, since each side needs its own frontmatter shape. The shared `description` and prompt body are kept identical by content-hash comparison against the last synced state; each side's tool-specific frontmatter (Kilo's `mode`/`model`/`steps`/`color`, Claude's `tools`) is preserved verbatim across regenerations.
+- **Agents**: `.kilo/agent/<name>.md` and `.claude/agents/<name>.md` (and their
+  `~/.kilo/agent`, `~/.claude/agents` global equivalents) stay as separate files,
+  since each side needs its own frontmatter shape. The shared `description` and
+  prompt body are kept identical by content-hash comparison against the last
+  synced state; each side's tool-specific frontmatter (Kilo's
+  `mode`/`model`/`steps`/`color`, Claude's `tools`) is preserved verbatim across
+  regenerations.
 
 ## When to run it
 
-Run after creating or editing any file under `.kilo/agent/`, `.kilo/skills/`, `.claude/agents/`, or `.claude/skills/` - in the current project and/or in the home directory - before committing:
+Run after creating or editing any file under `.kilo/agent/` or `.claude/agents/`
+- in the current project and/or in the home directory - before committing:
 
 ```bash
 python3 ~/.kilo/skills/kilo-claude-sync/scripts/sync.py --scope both --repo <path-to-repo>
@@ -26,6 +59,11 @@ python3 ~/.kilo/skills/kilo-claude-sync/scripts/sync.py --scope both --repo <pat
 
 ## Conflict handling
 
-If an agent's description/body - or a skill's directory tree - changed on **both** sides since the last sync, the script reports a conflict for that name and leaves both sides untouched - resolve by hand (decide which version is correct, or merge), then re-run.
+If an agent's description or body changed on **both** sides since the last sync,
+the script reports a conflict for that name and leaves both sides untouched -
+resolve by hand (decide which version is correct, or merge), then re-run.
 
-Sync state is cached per root in `<root>/.kilo-claude-sync-state.json`, under top-level `skills` and (implicitly, by agent name) `agents` keys. It's just a drift-detection cache (content hashes); if it's missing or deleted, already-identical trees/files are left alone and only genuinely differing ones are reported/synced.
+Sync state is cached per root in `<root>/.kilo-claude-sync-state.json`. It's just
+a drift-detection cache (content hashes); if it's missing or deleted, already
+identical files are left alone and only genuinely differing ones are
+reported/synced.

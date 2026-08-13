@@ -49,5 +49,5 @@ Global agents/skills rot when their project-local counterparts are fixed (or vic
 2. **Diff the twins** (`diff <local> <global>`). Decide which side is authoritative (usually the most recently fixed one), then align the other with `move_item.py ... --copy --force` or by editing the global file directly.
 3. **Fix in place**: global definitions are ordinary markdown - apply the same quality rules as local ones (verified class names/paths, correct frontmatter, English content). Never leave a known-wrong mapping in a global file: it silently poisons every other project.
 4. **Retire superseded globals** into an attic dir (`~/.config/kilo/_attic/`, `~/.kilo/_attic/`) rather than deleting - global dirs are not under version control, an attic is the only undo.
-5. **Re-mirror Claude**: `python3 ~/.kilo/skills/kilo-claude-sync/scripts/sync.py --scope global` after touching global agents/skills.
+5. **Re-mirror Claude agents only**: `python3 ~/.kilo/skills/kilo-claude-sync/scripts/sync.py --scope global` after touching global *agents*. Skills need nothing: Claude Code installs those through its own marketplace plus `enabledPlugins`, and must never be pointed at Kilo's skill directories.
 6. `/reload` in open Kilo sessions.

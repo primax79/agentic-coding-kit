@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
-"""Keep Kilo Code and Claude Code agent/skill definitions aligned.
+"""Keep Kilo Code and Claude Code *agent* definitions aligned.
 
-See ../SKILL.md for the design rationale (why skills are symlinked but
-agents are generated bidirectionally with per-side frontmatter preserved).
+Agents are the only thing that genuinely needs this: each host demands its own
+frontmatter shape (Kilo's `mode`/`model`/`steps`/`color`, Claude's `tools`), so
+the shared description and body have to be regenerated on both sides.
+
+Skills are deliberately no longer synced. Both hosts install them natively -
+Claude Code through a marketplace plus `enabledPlugins`, Kilo through
+`.kilo/skills` - and mirroring one directory into the other produced copies that
+neither host's own tooling declared, so nothing updated them and nothing
+reported them stale. `sync_skills()` below is kept only to migrate a repo away
+from that arrangement; it is no longer called. See ../SKILL.md.
 """
 import argparse
 import hashlib
@@ -268,7 +276,6 @@ def main():
 
     for label, root in roots:
         print(f'== {label}: {root} ==')
-        sync_skills(root)
         sync_agents(root)
 
 

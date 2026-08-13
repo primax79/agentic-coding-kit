@@ -57,8 +57,19 @@ Depending on how `kilo-plugin-manager` was installed on your machine, run the sc
 - **State** lives in `~/.kilo/plugin-manager.json`. The script only ever
   overwrites or deletes paths it recorded there; pre-existing user files are
   warned about and left alone.
-- `.claude/skills` is symlinked to `.kilo/skills` when missing (same
-  convention as the kilo-claude-sync skill).
+- **Skills are never mirrored into `.claude/skills`** - not by symlink, not by
+  copy. Claude Code installs plugins natively: register the marketplace in
+  `extraKnownMarketplaces` and switch the plugin on in `enabledPlugins`, which
+  can live in a project's own `.claude/settings.json` and travel with the repo.
+  This script exists for Kilo, which has no native install path for a
+  git-hosted marketplace. Tell the user to add the one line rather than
+  bridging the two directories: a directory nobody's tool declares is one that
+  nothing updates and nothing reports as stale.
+
+  ```json
+  // <repo>/.claude/settings.json
+  { "enabledPlugins": { "<plugin>@<marketplace>": true } }
+  ```
 
 ## Typical team workflow (d4science/gCube)
 
