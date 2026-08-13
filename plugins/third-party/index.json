@@ -54,6 +54,12 @@
       ]
     },
     {
+      "name": "skills/mcp-redmine",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
       "name": "skills/playwright",
       "files": [
         "SKILL.md"
