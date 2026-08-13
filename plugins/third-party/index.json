@@ -66,6 +66,12 @@
       ]
     },
     {
+      "name": "skills/redmine-rest-helper",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
       "name": "skills/skill-creator",
       "files": [
         "LICENSE",
