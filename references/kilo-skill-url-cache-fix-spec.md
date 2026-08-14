@@ -8,7 +8,7 @@ which parts are worth fixing first. Verified against
 
 ## Priority order
 
-Ranked by severity — P0 is silent data corruption (a skill silently
+Ranked by severity - P0 is silent data corruption (a skill silently
 becomes the wrong one), P3 is a cosmetic edge case:
 
 | # | Problem | Fix |
@@ -16,9 +16,9 @@ becomes the wrong one), P3 is a cosmetic edge case:
 | P0 | Stale cache entry silently overrides a correctly-installed skill of the same name | Collision precedence: don't let a less-trusted match overwrite a more-trusted one |
 | P1 | No supported way to delete a cache-backed skill | Let `skill-remove.ts` actually delete cache directories |
 | P2 | Cache never invalidates even when the source changes | Conditional re-fetch (ETag/Last-Modified), not "exists on disk" |
-| P3 | Cache keyed by name only, not by source | Key by `(url, name)` — lower priority, has UX tradeoffs |
+| P3 | Cache keyed by name only, not by source | Key by `(url, name)` - lower priority, has UX tradeoffs |
 
-## P0 — Collision precedence
+## P0 - Collision precedence
 
 **Current behavior** (`packages/opencode/src/skill/index.ts`): `discoverSkills`
 scans sources in a fixed order (external dirs → config dirs, i.e.
@@ -32,7 +32,7 @@ they're scanned last.
 **Intended behavior**: a skill loaded from a directory-based source
 (built-in, project/global `skills/` directories, explicit `skills.paths`)
 should never be silently replaced by a same-named entry pulled from
-`skills.urls` — the whole point of `skills.urls` is a *lightweight
+`skills.urls` - the whole point of `skills.urls` is a *lightweight
 bootstrap*, not a mechanism that should be able to shadow deliberate,
 tracked installs. Concretely: track which "trust tier" produced each
 loaded skill, and on a name collision, keep the existing entry unless the
@@ -40,19 +40,19 @@ new match is at least as trusted.
 
 **Note on a tempting but wrong shortcut**: `Match` already carries a
 `trusted: boolean`. It's tempting to reuse it for this, but `trusted` means
-something unrelated — whether `{file:}`/`{env:}` substitutions in the
+something unrelated - whether `{file:}`/`{env:}` substitutions in the
 skill's own markdown may read outside its directory. A project's own
 `.kilo/skills/<name>/SKILL.md` is `trusted: false` under that definition,
-exactly like a `skills.urls` cache entry — gating on `trusted` would also
+exactly like a `skills.urls` cache entry - gating on `trusted` would also
 block a legitimate local project skill from overriding a cache entry,
 which is not the bug being fixed here.
 
 **Correct approach**: add a dedicated `fromCache?: boolean` on `Match`,
 set only where `skills.urls` results are scanned, plus a parallel
-`fromCache: Record<string, boolean>` on `State` (internal only — no change
+`fromCache: Record<string, boolean>` on `State` (internal only - no change
 to the public `Info` schema or to `kilo.jsonc`'s config shape). On a name
 collision, only refuse the overwrite when the *existing* entry is
-non-cache and the *new* match *is* cache-sourced — every other
+non-cache and the *new* match *is* cache-sourced - every other
 combination (including two non-cache sources colliding, which is
 unaffected by this bug) keeps today's last-scanned-wins behavior:
 
@@ -107,11 +107,11 @@ This is backward compatible: no config format change, no schema change to
 anything that gets serialized, and every non-cache collision case behaves
 exactly as before. The only observable behavior change is that a
 `skills.urls` entry can no longer clobber an already-loaded non-cache
-skill — exactly the fix needed, nothing more. Implemented and verified
+skill - exactly the fix needed, nothing more. Implemented and verified
 locally against `Kilo-Org/kilocode` @ `1a3c719175`
 (`packages/opencode/src/skill/index.ts`).
 
-## P1 — Real removal for cache-backed skills
+## P1 - Real removal for cache-backed skills
 
 **Current behavior** (`packages/opencode/src/kilocode/skill-remove.ts`):
 `target()` throws `"remove URL-backed skills from configuration"` for any
@@ -122,7 +122,7 @@ that might hold unrelated user files alongside the skill).
 
 **Intended behavior**: a cache-backed skill's entire directory was written
 exclusively by the `skills.urls` downloader (`discovery.ts`'s `download()`
-writes every file the manifest lists into `cache/<name>/`) — there is
+writes every file the manifest lists into `cache/<name>/`) - there is
 nothing else in there to preserve, unlike a hand-authored local skill
 directory. Removal should delete that whole directory, not refuse.
 
@@ -148,15 +148,15 @@ export async function remove(location: string, skills: readonly Info[]) {
 ```
 
 `target()` keeps all its existing validation (builtin check, must be
-absolute, must reference `SKILL.md`) — only the final cache-dir branch
+absolute, must reference `SKILL.md`) - only the final cache-dir branch
 changes, from "throw" to "compute the directory to recursively remove".
 
-## P2 — Cache invalidation (lower priority, more invasive)
+## P2 - Cache invalidation (lower priority, more invasive)
 
 Two options, in order of preference:
 
 1. **Conditional HTTP requests**: on every `pull(url)`, still re-fetch
-   `index.json` (cheap — it's small), and for each listed file, issue the
+   `index.json` (cheap - it's small), and for each listed file, issue the
    download request with `If-None-Match`/`If-Modified-Since` from a
    locally-stored ETag/Last-Modified (recorded alongside the cached file,
    e.g. a sibling `.meta.json`). A `304` means the local copy is current;
@@ -166,7 +166,7 @@ Two options, in order of preference:
 2. **Manifest-declared content hash**: extend `IndexSkill` in
    `discovery.ts` with a per-file hash, and compare against a locally
    stored hash before skipping. More precise, but a breaking-ish schema
-   addition — every `index.json` generator (including this repo's
+   addition - every `index.json` generator (including this repo's
    `scripts/generate_skill_indices.py`) would need updating, and older
    manifests without hashes would need a defined fallback (e.g. treat
    "no hash present" as "always re-fetch", degrading gracefully rather
@@ -176,27 +176,27 @@ Recommend (1): no format break, works with the hosting this mechanism
 already assumes (raw file URLs), and directly fixes the reported
 staleness without asking every downstream manifest generator to change.
 
-## P3 — Cache keying by source (optional, has tradeoffs)
+## P3 - Cache keying by source (optional, has tradeoffs)
 
-Currently `root = path.join(cache, skill.name)` — two different
+Currently `root = path.join(cache, skill.name)` - two different
 `skills.urls` sources publishing a skill under the same name collide in
 the same directory. Keying by `(url, name)` instead
 (`path.join(cache, shortHash(baseUrl), skill.name)`) would fix this, but
-makes the cache path unpredictable from the skill name alone — every
+makes the cache path unpredictable from the skill name alone - every
 existing doc/script in this family that references
 `~/.cache/kilo/skills/kilo-plugin-manager/...` directly would need the
 hash to look it up. Given collisions require two *different* marketplaces
 independently choosing the identical skill name, and P0's trust-precedence
 fix already prevents the dangerous case (an untrusted cache entry
-silently beating a trusted one), this is a nice-to-have, not urgent —
+silently beating a trusted one), this is a nice-to-have, not urgent -
 worth revisiting only if upstream considers the predictable path a
 non-goal anyway.
 
 ## Out of scope for this spec
 
 - Changing `skills.urls` to also support Agents/Commands (a real
-  limitation, but unrelated to the caching/precedence bugs here — see
+  limitation, but unrelated to the caching/precedence bugs here - see
   `kilo-plugin-manager/SKILL.md` §2 for why `kilo-plugin-manager` remains
   necessary regardless of any fix here).
-- Any change to `kilo-plugin-manager`'s own behavior — it already sidesteps
+- Any change to `kilo-plugin-manager`'s own behavior - it already sidesteps
   all of this by installing into `~/.kilo/skills/` with real tracking.

@@ -1,4 +1,4 @@
-# 04 — Installing and Configuring Kilo Code Itself
+# 04 - Installing and Configuring Kilo Code Itself
 
 `docs/02`/`03` assume Kilo Code is already installed and working. This doc
 covers getting there: installing Kilo, picking/authenticating an LLM
@@ -18,7 +18,7 @@ semantic codebase search backed by a local Qdrant.
 
 Official guide: [kilo.ai/install](https://kilo.ai/install) (VS Code
 extension + optional CLI). Config lives at `~/.config/kilo/kilo.jsonc`
-(global) and, per-project, `.kilo/kilo.jsonc` — same Global-vs-Local
+(global) and, per-project, `.kilo/kilo.jsonc` - same Global-vs-Local
 distinction as everywhere else in Kilo (see
 [`docs/03`](03-compatibility-and-distribution.md#bootstrap-kilo-plugin-manager-itself)
 for the gotcha where the Settings UI's graphical fields write Global Config
@@ -37,15 +37,15 @@ Top-level `model` (and optional `small_model` for cheap/fast sub-tasks) in
 ```
 
 Per-agent overrides live under `"agent": { "<agent-name>": { "model": "..." } }`
-— e.g. pin a different/stronger model just for implementation work without
+- e.g. pin a different/stronger model just for implementation work without
 changing the global default. `kilo auth status` (or the `kilo_auth_status`
 MCP tool, if driving Kilo via `kilo-mcp`) shows which providers have valid
 credentials. Run `kilo auth login <provider>` (e.g. `google`) to
-authenticate a new one — API keys are stored under
+authenticate a new one - API keys are stored under
 `~/.local/share/kilo/auth.json`, never in `kilo.jsonc` itself for the
 providers that support the login flow.
 
-**Model choice matters more than it looks** — a cheap/fast model is
+**Model choice matters more than it looks** - a cheap/fast model is
 noticeably more prone to inventing plausible-but-wrong library API calls
 than a stronger one. See
 [`adk-agentic-coding-kit/instructions/`](https://github.com/primax79/adk-agentic-coding-kit/tree/main/instructions)
@@ -55,7 +55,7 @@ that in practice, and the next section for how to wire it in.
 ## Always-on Instruction Files
 
 Skills load on demand; **instruction files load into every session
-unconditionally** — the mechanism for standing rules (git safety,
+unconditionally** - the mechanism for standing rules (git safety,
 API-verification discipline, scope discipline) that should apply no matter
 what task is running. Configured via the `instructions` array in
 `kilo.jsonc`:
@@ -63,17 +63,17 @@ what task is running. Configured via the `instructions` array in
 ```jsonc
 {
   "instructions": [
-    "./AGENTS.md",                        // project-relative — whatever repo Kilo is running in
+    "./AGENTS.md",                        // project-relative - whatever repo Kilo is running in
     "~/.config/kilo/INSTRUCTIONS.md"      // global, every project on the machine
   ]
 }
 ```
 
-The actual content — and the reasoning behind it — is maintained in
+The actual content - and the reasoning behind it - is maintained in
 [`adk-agentic-coding-kit/instructions/`](https://github.com/primax79/adk-agentic-coding-kit/tree/main/instructions),
 not duplicated here; that doc also covers wiring the equivalent mechanism
 into Claude Code (`CLAUDE.md`). *(Open question, not yet decided: since
-that content is fully generic — not ADK-specific — it may belong here in
+that content is fully generic - not ADK-specific - it may belong here in
 `agentic-coding-kit` instead, long-term. Flagging rather than moving it
 unilaterally.)*
 
@@ -81,7 +81,7 @@ unilaterally.)*
 
 Separate from everything above: Kilo's own **codebase search** feature
 (semantic search over *this* repo's source, used internally by Kilo's
-`explore` agent and similar) — not related to any application-level RAG a
+`explore` agent and similar) - not related to any application-level RAG a
 project you're working on might have. Needs a vector store; Qdrant running
 locally via Docker is the straightforward option.
 
@@ -109,7 +109,7 @@ docker compose up -d
 
 Port `16333` on the host (mapped to Qdrant's default `6333` in-container)
 to avoid colliding with any other local Qdrant instance a project you're
-working on might run for its own application RAG — genuinely two different
+working on might run for its own application RAG - genuinely two different
 Qdrant deployments, don't point Kilo's indexing at a project's own RAG
 instance.
 
@@ -136,10 +136,10 @@ instance.
 ```
 
 `indexing.gemini.apiKey` is used specifically for generating the
-embeddings used by the index — separate from whichever provider/key is
+embeddings used by the index - separate from whichever provider/key is
 authenticated for the model doing the actual coding (previous section).
 
-Or the same thing via the Settings UI (**Indexing** in the left sidebar) —
+Or the same thing via the Settings UI (**Indexing** in the left sidebar) -
 this is also where the **Configuration scope** toggle lives (Global vs.
 Local, same distinction as the instruction-files/Skill-URLs gotchas
 elsewhere in this doc set, applied here to indexing specifically):
@@ -153,7 +153,7 @@ A few fields beyond the `kilo.jsonc` snippet above, exposed only in the UI
 | --- | --- | --- |
 | Embedding model | auto (provider default) | Override the embedding model instead of the provider's default. |
 | Vector dimension | `Auto` | Leave on auto-detect unless you know you need a specific dimension. |
-| File Extensions | built-in defaults | Comma-separated allowlist restricting what gets indexed (e.g. `.php, .js, .css`) — leave empty for the built-in default set. |
+| File Extensions | built-in defaults | Comma-separated allowlist restricting what gets indexed (e.g. `.php, .js, .css`) - leave empty for the built-in default set. |
 | Search Min Score | `0.4` | Similarity threshold below which results are discarded. |
 | Search Max Results | `50` | Cap on results returned per search. |
 | Embedding Batch Size | `60` | How many chunks are embedded per API call during indexing. |

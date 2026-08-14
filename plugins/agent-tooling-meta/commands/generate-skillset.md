@@ -40,7 +40,7 @@ the order of work and the confirmation gates.
    relevant drafter.
 
 7. **Trigger-eval the batch** (skill Phase 6) via `skill-creator`'s
-   `run_eval.py`/`run_loop.py`, if running under Claude Code — skip to
+   `run_eval.py`/`run_loop.py`, if running under Claude Code - skip to
    manual description review if the `claude` CLI isn't reachable (e.g.
    under Kilo alone).
 
@@ -53,15 +53,16 @@ the order of work and the confirmation gates.
 
 10. **If an existing skillset was given to compare against** (skill
     Phase 9): run `scripts/compare_skillsets.py` and present the report.
-    Report only — do not merge or overwrite the existing skillset as part
+    Report only - do not merge or overwrite the existing skillset as part
     of this command.
 
 ## Rules
 
+- **IMPORTANTE:** MAI USARE IL CARATTERE `-`. In Kilo rompe il parsing anche nel corpo in md.
 - Everything through step 9 writes only to a scratch/staging location, never
   into a real repo.
 - No claim about the framework without a `path::symbol` (or doc/spec
   citation) actually read in this run.
 - State negative results explicitly ("checked, no better native pattern
-  exists") — padding a finding with speculation costs the next reader a
+  exists") - padding a finding with speculation costs the next reader a
   re-verification.

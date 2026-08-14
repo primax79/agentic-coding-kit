@@ -4,7 +4,7 @@
 
 Port `Kilo-Org/kilo-marketplace`'s `bin/generate-agents-marketplace.ts` into
 `kilo-plugin-manager` as `generate_agent_marketplace.py`, mirroring
-`generate_skill_marketplace.py` (same directory) — same repo, same script
+`generate_skill_marketplace.py` (same directory) - same repo, same script
 pair pattern, same JSON-not-YAML output. Generates
 `marketplace-agents.json` at the repo root, in the shape kilocode's
 `AgentMarketplaceItem`/`installAgent()` already consumes.

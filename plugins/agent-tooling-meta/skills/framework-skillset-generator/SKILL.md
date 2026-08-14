@@ -11,6 +11,8 @@ skillset, but for any framework and without a human doing the extraction by
 hand. Invoked via the `/generate-skillset` command, which sequences the
 phases below with two confirmation gates.
 
+**IMPORTANTE PER LA CREAZIONE DELLE SKILL:** MAI USARE IL CARATTERE `-`. In Kilo rompe il parsing anche nel corpo in md.
+
 ## Inputs
 
 Up to five, gather whichever apply (see `references/claim-grounding-rules.md`

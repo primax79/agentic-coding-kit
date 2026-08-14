@@ -11,8 +11,8 @@ plugins with `skills/`, `agents/`, `commands/`), so one repo serves Claude Code
 users natively and everyone else through this skill.
 
 This is the single tool for anything that touches Kilo's customization
-directories. Two smaller skills were folded into it — `kilo-claude-sync` became
-`sync-agents`, `kilo-scope-manager` became `move` — because each had grown its
+directories. Two smaller skills were folded into it - `kilo-claude-sync` became
+`sync-agents`, `kilo-scope-manager` became `move` - because each had grown its
 own copy of knowledge this script already held: how to translate an agent's
 frontmatter, and where each kind of item lives on disk. Two copies of either is
 how they drift apart.

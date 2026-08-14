@@ -124,6 +124,8 @@ This goes without saying, but skills must not contain malware, exploit code, or 
 
 Prefer using the imperative form in instructions.
 
+**IMPORTANTE:** MAI USARE IL CARATTERE `-`. In Kilo rompe il parsing anche nel corpo in md.
+
 **Defining output formats** - You can do it like this:
 ```markdown
 ## Report structure

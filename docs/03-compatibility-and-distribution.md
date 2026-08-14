@@ -1,12 +1,12 @@
-# 03 — Compatibility, Distribution & Marketplace Setup
+# 03 - Compatibility, Distribution & Marketplace Setup
 
-Read [`01-concepts.md`](01-concepts.md) first — this doc assumes you already
+Read [`01-concepts.md`](01-concepts.md) first - this doc assumes you already
 know the difference between the three "marketplace" mechanisms it describes.
 
 ## Table of Contents
 
 - [Part 1: Claude Code](#part-1-claude-code)
-- [Part 2: Kilo Code — `kilo-plugin-manager`](#part-2-kilo-code--kilo-plugin-manager)
+- [Part 2: Kilo Code - `kilo-plugin-manager`](#part-2-kilo-code--kilo-plugin-manager)
 - [Kilo-native Skill URLs (`index.json`)](#kilo-native-skill-urls-indexjson)
 - [Official `Kilo-Org/kilo-marketplace` (community catalog, not used by this repo)](#official-kilo-orgkilo-marketplace-community-catalog-not-used-by-this-repo)
 - [Self-hosted official-format skill feed (`marketplace-skills.json`)](#self-hosted-official-format-skill-feed-marketplace-skillsjson)
@@ -34,7 +34,7 @@ This repo's root `.claude-plugin/marketplace.json`:
 }
 ```
 
-This one file is enough to make the repo a working Claude Code marketplace —
+This one file is enough to make the repo a working Claude Code marketplace -
 no `kilo-plugin-manager` or any other tooling involved for the Claude side.
 
 ### Install
@@ -43,7 +43,7 @@ no `kilo-plugin-manager` or any other tooling involved for the Claude side.
 claude plugin marketplace add https://github.com/primax79/agentic-coding-kit.git
 ```
 
-Then, **global scope** (every project on the machine — appropriate for
+Then, **global scope** (every project on the machine - appropriate for
 plugins with no stack/version dependency):
 
 ```text
@@ -53,7 +53,7 @@ plugins with no stack/version dependency):
 ```
 
 Or **workspace scope** (this repo checkout only, saved to `.claude/settings.json`
-— required for anything that only applies to, or asserts facts specific to,
+- required for anything that only applies to, or asserts facts specific to,
 one project's stack):
 
 ```text
@@ -64,28 +64,28 @@ one project's stack):
 
 Global scope means "loaded into context on every project this machine
 touches." That's fine for a plugin with no opinion about what stack the
-current project uses — `common-tools`, `agent-tooling-meta`, and most of
+current project uses - `common-tools`, `agent-tooling-meta`, and most of
 `third-party-skills` genuinely don't care. It's the wrong default for a
 plugin that asserts version- or framework-specific facts, because those
 facts are only true some of the time:
 
 - **Framework/language reference skills** (`angular-dev-kit` today; the
-  pattern generalizes to any future `<framework>-dev-kit`) — install
+  pattern generalizes to any future `<framework>-dev-kit`) - install
   **project-scoped**, only in repos that use that framework. Installed
   globally, `angular-di` or `angular-forms` would trigger and offer guidance
   on a Vue or backend repo where it's simply noise, and worse, offer
   version-specific guidance (a skill written against Angular 20 or 21) on
-  an Angular project running a different major — actively wrong rather than
+  an Angular project running a different major - actively wrong rather than
   just irrelevant. See each skill's own `metadata.category`/description for
   what it assumes before treating it as a global default.
 - **Meta-tooling and generic utilities** (`common-tools`,
-  `agent-tooling-meta`, most of `third-party-skills`) — global is the
+  `agent-tooling-meta`, most of `third-party-skills`) - global is the
   sensible default; they operate on the AI tooling itself or on concerns
   (gitignore, markdown formatting, PDF/DOCX handling) that don't vary by
   project stack.
 
 If a plugin's usefulness depends on "is this project built with X", assume
-project scope until told otherwise — asserted facts that are project-specific
+project scope until told otherwise - asserted facts that are project-specific
 still are once the plugin is loaded globally, and there's no runtime check to
 catch a stale one.
 
@@ -104,7 +104,7 @@ catch a stale one.
 
 ---
 
-## Part 2: Kilo Code — `kilo-plugin-manager`
+## Part 2: Kilo Code - `kilo-plugin-manager`
 
 > Prerequisite: [Kilo Code install guide](https://kilo.ai/install).
 
@@ -117,7 +117,7 @@ agent frontmatter on the way in.
 
 ### Bootstrap `kilo-plugin-manager` itself
 
-One-time, per machine — no manual download needed, it bootstraps itself via
+One-time, per machine - no manual download needed, it bootstraps itself via
 Kilo's native Skill URLs mechanism:
 
 1. Open Kilo Settings UI → **Agent Behaviour → Skills** → click **Local
@@ -134,15 +134,15 @@ Kilo's native Skill URLs mechanism:
    }
    ```
 
-3. Save, then `/reload` in Kilo chat — required either way: without it the
+3. Save, then `/reload` in Kilo chat - required either way: without it the
    new URL isn't picked up yet. Global Config (`~/.config/kilo/kilo.jsonc`)
-   works fine for this, same as Local — confirmed live, no scoping
+   works fine for this, same as Local - confirmed live, no scoping
    restriction actually applies (an earlier version of this note claimed
    global-scoped URLs were ignored during prompt sessions; that wasn't
    true, or is no longer true, in current Kilo).
 
 > **Note**: skills fetched via a Skill URL are cached under
-> `~/.cache/kilo/skills/<name>/` — a different location from
+> `~/.cache/kilo/skills/<name>/` - a different location from
 > `~/.kilo/skills/`, where `kilo-plugin-manager`'s own `install` places
 > properly tracked installs. Don't be surprised seeing two different paths
 > for what looks like "the same skill" during the bootstrap step; the
@@ -175,7 +175,7 @@ Kilo's native Skill URLs mechanism:
 ### Ask Kilo directly
 
 Once `kilo-plugin-manager` is bootstrapped, plain-language requests work
-too — Kilo runs the equivalent commands itself:
+too - Kilo runs the equivalent commands itself:
 
 > *"Use kilo-plugin-manager to add marketplace `https://github.com/primax79/agentic-coding-kit.git` with name agentic"*
 > *"Install plugin common-tools"*
@@ -185,12 +185,12 @@ too — Kilo runs the equivalent commands itself:
 ## Kilo-native Skill URLs (`index.json`)
 
 The mechanism from the bootstrap step above, generalized: Kilo can install
-skills (only skills — not agents/commands) directly from any URL serving an
-`index.json` manifest, with **zero** extra tooling — no
+skills (only skills - not agents/commands) directly from any URL serving an
+`index.json` manifest, with **zero** extra tooling - no
 `kilo-plugin-manager`, no marketplace registration.
 
 This repo generates `index.json` at three path depths under every plugin
-(plugin level, `skills/` level, per-skill level — point Kilo's Skill URLs
+(plugin level, `skills/` level, per-skill level - point Kilo's Skill URLs
 field at any of the three, it resolves the same set either way):
 
 ```bash
@@ -204,21 +204,21 @@ https://raw.githubusercontent.com/primax79/agentic-coding-kit/main/plugins/agent
 ```
 
 **Re-run the script and commit the regenerated files** any time a skill is
-added, removed, or renamed under `plugins/*/skills/` — they're generated,
+added, removed, or renamed under `plugins/*/skills/` - they're generated,
 not hand-maintained, and go silently stale otherwise (a renamed/deleted
 skill stays listed; a new one doesn't show up).
 
 ### Why this should only ever be used for the one-time bootstrap above
 
 It's tempting to use Skill URLs as a general lightweight distribution
-channel — no marketplace registration, no `kilo-plugin-manager` — but
+channel - no marketplace registration, no `kilo-plugin-manager` - but
 verified directly against Kilo's source
 (`packages/opencode/src/skill/discovery.ts` and `skill-remove.ts`), the
 mechanism has three properties that make it unsuitable for anything
 recurring:
 
 - **The cache never refreshes.** The downloader skips fetching a file
-  entirely if it already exists at the destination — no ETag, no hash, no
+  entirely if it already exists at the destination - no ETag, no hash, no
   version check. A skill pulled this way is frozen at whatever version was
   live at pull time, forever, even after the source repo changes and the
   same URL is re-added.
@@ -227,18 +227,18 @@ recurring:
   the same `~/.cache/kilo/skills/<name>/` folder.
 - **There is no supported removal.** Kilo's own skill-removal code
   explicitly refuses to delete anything under `~/.cache/kilo/skills/`
-  (it throws "remove URL-backed skills from configuration") — dropping the
+  (it throws "remove URL-backed skills from configuration") - dropping the
   URL from config only stops future loading, it does not clean up or
   invalidate the stale copy already on disk. Skills loaded this way are
   also untrusted by design (`{file:}`/`{env:}` substitutions confined to
   their own folder), appropriate for code of unknown provenance, not for
   routine trusted installs.
 - **A stale cache entry silently wins over a correctly-installed skill of
-  the same name — it doesn't just sit there unused.** `discoverSkills`
+  the same name - it doesn't just sit there unused.** `discoverSkills`
   scans sources in a fixed order (external dirs → config dirs, which is
   where `~/.kilo/skills/` gets picked up → `skills.paths` →
   **`skills.urls` last**), and `loadSkills`/`add()` walks the matches in
-  that same order doing `state.skills[name] = {...}` unconditionally — a
+  that same order doing `state.skills[name] = {...}` unconditionally - a
   name collision only logs a warning, never skips the overwrite. Because
   the cache is scanned last, an old cached copy of a skill you've since
   properly reinstalled via `kilo-plugin-manager` shadows the new one, with
@@ -261,16 +261,16 @@ symlinked so updates propagate).
 Worth naming explicitly so it isn't confused with the mechanism above: Kilo
 also curates its own official community marketplace at
 [`Kilo-Org/kilo-marketplace`](https://github.com/kilocode/marketplace) on
-GitHub — a *separate* repo, contributed to via pull request, using yet a
+GitHub - a *separate* repo, contributed to via pull request, using yet a
 *third* manifest format (one YAML file per category: `skills/marketplace.yaml`,
 `agents/marketplace.yaml`, `mcps/marketplace.yaml`). This repo (and the
-other repos in this family) are **not** listed there — self-hosting via the
+other repos in this family) are **not** listed there - self-hosting via the
 mechanisms above is a fully independent, equally valid distribution path,
 just a different audience (your own team / anyone with the repo URL, vs.
 Kilo's own curated public catalog).
 
 We don't submit to their catalog, but we do generate a feed in the *same
-shape* their client already knows how to consume — see the next section.
+shape* their client already knows how to consume - see the next section.
 
 ---
 
@@ -278,7 +278,7 @@ shape* their client already knows how to consume — see the next section.
 
 Kilo's own Marketplace UI (the standalone panel, and the Settings tab where
 embedded) talks to `api.kilo.ai`, which serves skills as
-`{id, description, category, githubUrl, content}` — where `content` is a
+`{id, description, category, githubUrl, content}` - where `content` is a
 **tarball URL**, fetched and extracted directly by Kilo's installer. That's
 a third, incompatible shape on top of the two above: not raw files +
 `index.json` (Skill URLs), not a git-clone-and-symlink install
@@ -287,21 +287,21 @@ a third, incompatible shape on top of the two above: not raw files +
 Rather than invent this packaging step, `kilo-plugin-manager` ports the
 *exact* toolchain `Kilo-Org/kilo-marketplace` uses to build its own official
 feed (`bin/generate-skill-marketplace.ts` +
-`.github/workflows/package-skills.yml` — tar each skill, publish to a GitHub
+`.github/workflows/package-skills.yml` - tar each skill, publish to a GitHub
 Release, generate the JSON pointing at those release URLs). A second,
 packaging-free mode (`--mode files`) was added alongside it: each item lists
 its files as plain paths instead of a tarball URL, fetched individually from
-`raw.githubusercontent.com` — no `gh release` step, at the cost of N small
+`raw.githubusercontent.com` - no `gh release` step, at the cost of N small
 requests per install instead of one. Both modes are supported by
-`kilocode-dev`'s installer (dispatched on which field the item carries) —
+`kilocode-dev`'s installer (dispatched on which field the item carries) -
 see [`kilo-plugin-manager/SKILL.md` §4](../plugins/agent-tooling-meta/skills/kilo-plugin-manager/SKILL.md)
 for both scripts and the constraints (no per-item version field in either
-mode — no install path has update-in-place logic to read one anyway; Skills
+mode - no install path has update-in-place logic to read one anyway; Skills
 only, Agents/MCPs need a smaller follow-up).
 
 `marketplace-skills.json` is generated and published (in `--mode tarball`)
 for this repo, `ai-architect-executor`, and `kilo-mcp`. As of `kilocode-dev`,
-`fetchMarketplaceData()` does fetch it — every configured source's feed is
+`fetchMarketplaceData()` does fetch it - every configured source's feed is
 pulled via a plain HTTP GET and merged into the Marketplace UI's item list.
 That's only reachable from a `kilocode-dev` build for now, not a released
 Kilo version.
@@ -311,7 +311,7 @@ Kilo version.
 ## Release Workflow
 
 1. Bump versions in the relevant `plugin.json` file(s) and `CHANGELOG.md`
-   (manual for now — see the note in
+   (manual for now - see the note in
    [`02-authoring-and-maintenance.md`](02-authoring-and-maintenance.md#managing-releases--updates)).
 2. `python3 scripts/generate_skill_indices.py` if any skill changed.
 3. `python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents` if any agent changed.

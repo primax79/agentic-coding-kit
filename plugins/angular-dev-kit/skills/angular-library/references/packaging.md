@@ -25,7 +25,7 @@ A library project in an Angular workspace:
 projects/<name>/
 ├── ng-package.json        # build config: where the output goes, what the entry is
 ├── package.json           # the manifest consumers install (name, version, peers)
-├── README.md              # shipped with the package — the configuration docs live here
+├── README.md              # shipped with the package - the configuration docs live here
 ├── tsconfig.lib.json
 ├── tsconfig.lib.prod.json
 └── src/
@@ -77,10 +77,10 @@ Full option set:
 | `allowedNonPeerDependencies` | Regex list of package names permitted in `dependencies`. See below. |
 | `assets` | Files copied verbatim into the package (globs or `{glob, input, output}`). |
 | `inlineStyleLanguage` | `css` \| `less` \| `sass` \| `scss` for inline component styles. |
-| `keepLifecycleScripts` | Keep `scripts` in the published manifest. Off by default as a security measure — leave it off. |
+| `keepLifecycleScripts` | Keep `scripts` in the published manifest. Off by default as a security measure - leave it off. |
 | `lib.entryFile` | Public API entry (default `src/public_api.ts`). |
 | `lib.flatModuleFile` | Name of the generated flat module file; defaults to the package name. |
-| `lib.cssUrl` | `none` \| `inline` — embed assets referenced from CSS as data URIs. |
+| `lib.cssUrl` | `none` \| `inline` - embed assets referenced from CSS as data URIs. |
 | `lib.styleIncludePaths` | Extra resolution paths for style imports. |
 | `lib.sass` | `fatalDeprecations` / `silenceDeprecations` / `futureDeprecations` passed to the Sass compiler. |
 
@@ -90,14 +90,14 @@ The `package.json` inside the output folder is your library's manifest, modified
 
 **Added / overwritten**
 
-- `name` — set from the entry point's module id
-- `module` — path to the fesm2022 bundle
-- `typings` — path to the bundled declarations
-- `exports` — generated per Angular Package Format, merged with any `exports`
+- `name` - set from the entry point's module id
+- `module` - path to the fesm2022 bundle
+- `typings` - path to the bundled declarations
+- `exports` - generated per Angular Package Format, merged with any `exports`
   you declared. Your manually declared conditions win and are placed first;
   declaring a condition that the generator also emits is an **error**, so add
   subpaths rather than redefining generated ones.
-- `sideEffects` — your value if set, otherwise `false`
+- `sideEffects` - your value if set, otherwise `false`
 
 **Removed**
 
@@ -106,14 +106,14 @@ The `package.json` inside the output folder is your library's manifest, modified
 
 **Also written**
 
-- `.npmignore` containing `**/package.json` — the nested manifests in secondary
+- `.npmignore` containing `**/package.json` - the nested manifests in secondary
   entry point folders exist for the dev-time resolver and aren't published.
 - A `prepublishOnly` script that hard-fails, **if** the build ran in full rather
   than partial compilation mode. That guard exists because a fully compiled
   package is bound to one Angular version; if you hit it, fix the tsconfig
   (`"compilationMode": "partial"`) rather than deleting the script.
 
-Everything else you put in the library's `package.json` survives untouched —
+Everything else you put in the library's `package.json` survives untouched -
 which is exactly why `publishConfig`, `license`, `repository`, `author`,
 `keywords`, and `description` belong there and not at the workspace root.
 
@@ -134,7 +134,7 @@ Special handling for `tslib`:
 
 - always allowed, no configuration needed
 - if declared in `peerDependencies` it's **moved** to `dependencies` with a
-  warning — the modern recommendation
+  warning - the modern recommendation
 - if absent entirely it's added automatically, using the version `@angular/compiler`
   depends on
 
@@ -167,7 +167,7 @@ Each secondary gets a minimal `package.json` in the output (just `module`) and a
 subpath entry in the primary's `exports` map.
 
 Worth doing when a slice of the library is optional and would otherwise be dead
-weight — test doubles, an adapter for one backend, a heavy optional feature —
+weight - test doubles, an adapter for one backend, a heavy optional feature -
 because consumers only pull in what they import. Not worth doing to organise
 code: folders already do that, and every entry point is a permanent piece of
 public API.
@@ -186,7 +186,7 @@ through `assets`:
 }
 ```
 
-Component styles are compiled and inlined into the bundles automatically —
+Component styles are compiled and inlined into the bundles automatically -
 `assets` is for files consumers reference themselves, e.g. `@use '@scope/name/styles/theme'`.
 
 ## Publishing
@@ -217,7 +217,7 @@ from a real install, so prefer the tarball for a pre-release check.
 ## Versioning and peer ranges
 
 - Semver applies to the *public API*, which includes types, token identities,
-  DI scope, and observable behaviour — not just function signatures.
+  DI scope, and observable behaviour - not just function signatures.
 - Adding a required config field is breaking; adding an optional one with a
   default is not.
 - Peer ranges should express tested compatibility. Widening the upper bound

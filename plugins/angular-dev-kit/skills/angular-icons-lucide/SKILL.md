@@ -15,7 +15,7 @@ metadata:
 | `lucide-angular` | the older community package | `<lucide-icon name="x">`, `LucideAngularModule`, `LUCIDE_ICONS` + `LucideIconProvider` |
 
 They are not interchangeable, their names differ by one character, and an
-application can end up shipping **both** — a library declaring the old one as a
+application can end up shipping **both** - a library declaring the old one as a
 peer dependency drags it in beside the new one. Check `package.json` before
 writing any icon code, and check the peers of every `@`-scoped library that
 renders icons.
@@ -34,7 +34,7 @@ The rest of this skill is `@lucide/angular` v1.
 ## Applications: register, then render by name
 
 ```ts
-// icons.ts — one place listing what the application uses
+// icons.ts - one place listing what the application uses
 import { LucideStar, LucideChevronRight /* … */ } from '@lucide/angular';
 export const appIcons = [LucideStar, LucideChevronRight /* … */];
 
@@ -71,7 +71,7 @@ import { LucideCopy, LucideX } from '@lucide/angular';
 ```
 
 This is the right shape for a library: self-contained, tree-shakeable, imposing
-nothing on the consumer. `provideLucideIcons()` is the *application's* registry —
+nothing on the consumer. `provideLucideIcons()` is the *application's* registry -
 a library writing into it is a library deciding something that is not its call.
 Use `[lucideIcon]` in a library only when the name is genuinely dynamic, and then
 document that the consumer must register those icons.
@@ -80,7 +80,7 @@ document that the consumer must register those icons.
 
 A Lucide icon renders as an `<svg>` with hard-coded `width`/`height="24"`. It
 does **not** follow `font-size`, so an icon font's sizing classes (`fs-4`,
-`text-lg`, an inline `font-size`) become inert the moment the markup changes —
+`text-lg`, an inline `font-size`) become inert the moment the markup changes -
 every icon renders at 24px regardless.
 
 ```css
@@ -95,7 +95,7 @@ svg.lucide {
 Why `1.2em` and not `1em`: a Lucide glyph is drawn inside **20 of its 24 viewBox
 units**, while a font glyph fills its em square. `24/20 = 1.2` makes the visible
 artwork match the icon it replaced at the same font size. Measure it rather than
-trusting the ratio blindly — `getBBox().width / 24 * renderedWidth` gives the ink
+trusting the ratio blindly - `getBBox().width / 24 * renderedWidth` gives the ink
 actually painted.
 
 Two consequences to know before choosing this:
@@ -104,7 +104,7 @@ Two consequences to know before choosing this:
   over the per-icon `size`/`color`/`strokeWidth` inputs**. Adopting it means
   giving those up application-wide. Check first that nothing binds `[size]`.
 - The alternative, `provideLucideConfig({size, color, strokeWidth})`, keeps the
-  inputs working but takes a fixed number — it cannot make icons scale with their
+  inputs working but takes a fixed number - it cannot make icons scale with their
   surrounding text.
 
 On a 1x display, a 2-unit stroke on a small icon lands under one physical pixel
@@ -126,15 +126,15 @@ svg.lucide.icon-filled { fill: currentColor; }
 
 ## Names from configuration
 
-Names are plain kebab-case strings, so configuration can carry them — but nothing
+Names are plain kebab-case strings, so configuration can carry them - but nothing
 type-checks them, and the package exposes no union of valid names. Two failure
 modes follow: a name the registry never received renders an empty `<svg>`, and
 config and registry drift apart with nothing to catch it.
 
 - Generate the registry from the same configuration at build time, so the two
   cannot disagree, and fail the build on an unknown name.
-- Registering the whole set is possible — `import { icons } from '@lucide/angular'`
-  is a namespace of every icon component — but every icon is a full Angular
+- Registering the whole set is possible - `import { icons } from '@lucide/angular'`
+  is a namespace of every icon component - but every icon is a full Angular
   component, so this pulls the entire package (~500 kB gzipped) into the bundle.
 - Lucide's own guidance advises against the dynamic-import route for the general
   case: the icons are still bundled at build time, the bundler fragments them into
@@ -153,27 +153,27 @@ Work through the classes in this order:
 
 1. **Every reference, not the obvious ones.** A search for `class="bi bi-x"`
    misses `[class.bi-star]="starred"`, `[ngClass]`, `class="bi {{ name }}"`, and
-   `'bi-star'` string literals in TypeScript — decorator arguments, config maps,
+   `'bi-star'` string literals in TypeScript - decorator arguments, config maps,
    functions returning an icon name. Search for the prefix alone.
 2. **Names in configuration and decorators**, together with the components that
    consume them. Converting one without the other yields blank icons wherever the
    value is dynamic.
 3. **Filled/outline pairs collapse.** Both map to the same Lucide name, so a
-   toggle becomes `cond ? 'star' : 'star'` — two identical branches, rendering
+   toggle becomes `cond ? 'star' : 'star'` - two identical branches, rendering
    identically in both states. Sweep for that pattern explicitly; it is the
    signature of a lost distinction. Replace with the `fill` class above.
 4. **CSS written on the `i` selector.** Component stylesheets sizing or colouring
    icons through `i { }` stop applying the moment the element is an `<svg>`, and
    nothing reports it. Retarget them.
-5. **A bare `svg { }` rule** in a component that also draws real SVG — a chart, a
-   graph canvas — now hits every icon in that component too. Scope it to the
+5. **A bare `svg { }` rule** in a component that also draws real SVG - a chart, a
+   graph canvas - now hits every icon in that component too. Scope it to the
    element it was written for.
 6. **Imperative DOM manipulation.** Code doing `element.querySelector('i')` and
    swapping `className` silently stops working: an icon is now a rendered
    component. Drive it from component state instead.
 7. **Directive imports.** Every standalone component using `lucideIcon` needs
    `LucideDynamicIcon` (or the per-icon component) in its `imports`. This is the
-   one that hides best — check every file that renders an icon.
+   one that hides best - check every file that renders an icon.
 
 Then verify in the browser, where the answers are unambiguous:
 

@@ -1,7 +1,7 @@
 # Designing a library's configuration and extension API
 
 How a library lets an application configure it, extend it, and replace parts of
-it — without the library knowing anything about that application.
+it - without the library knowing anything about that application.
 
 ## Contents
 
@@ -55,7 +55,7 @@ bootstrapApplication(App, {
 Design notes:
 
 - **Return `EnvironmentProviders`, not `Provider[]`.** `makeEnvironmentProviders`
-  produces an opaque value accepted only where environment providers are valid —
+  produces an opaque value accepted only where environment providers are valid -
   `bootstrapApplication`, a `Route`'s `providers`, `TestBed.configureTestingModule`.
   A raw array can be spread into a component's `providers`, which quietly turns
   root singletons into per-component instances. Making the mistake unrepresentable
@@ -123,7 +123,7 @@ export const API_TIMEOUT = new InjectionToken<number>('API_TIMEOUT', {
 ```
 
 A token with a `factory` default never fails to inject, which suits genuinely
-optional knobs. A token without one fails loudly when `provideX()` wasn't called —
+optional knobs. A token without one fails loudly when `provideX()` wasn't called -
 the better choice for configuration that has no sensible default, because the
 error arrives at startup rather than as wrong behaviour later.
 
@@ -138,7 +138,7 @@ When behaviour depends on the application's domain, the library defines the
 interface generic.
 
 ```typescript
-// In the library — no domain types anywhere.
+// In the library - no domain types anywhere.
 export interface PermissionChecker<TResource> {
   canAccess(resource: TResource, action: string): boolean;
 }
@@ -156,7 +156,7 @@ providers: [{ provide: PERMISSION_CHECKER, useClass: AppPermissionChecker }]
 The pressure to add a concrete domain type to an interface like this is the
 clearest signal that a change belongs in the app, not the library. If a specific
 consumer's rule is creeping into the library's types, the extension point is
-doing its job by making that visible — take the hint.
+doing its job by making that visible - take the hint.
 
 Decide explicitly whether the token is required or optional:
 
@@ -184,7 +184,7 @@ export function withRequestEnricher(enricher: Type<RequestEnricher>): DataAccess
 
 Inject as an array; note it's absent (not empty) when nothing registered, so
 either provide a `[]` default or inject with `{ optional: true }`. Order follows
-provider registration order — if that matters to your semantics, document it,
+provider registration order - if that matters to your semantics, document it,
 because consumers cannot easily reason about it otherwise.
 
 ## Initialisation that must run at startup
@@ -222,7 +222,7 @@ export const WINDOW = new InjectionToken<Window | null>('WINDOW', {
 
 Consumers rendering on a server get `null` and code that checks; tests provide a
 stub. For work that only makes sense once the DOM exists, `afterNextRender`
-combined with an `isPlatformBrowser` guard is the safest pairing — see the
+combined with an `isPlatformBrowser` guard is the safest pairing - see the
 `angular-ssr` skill for the wider set of patterns.
 
 ## Route- and component-scoped configuration
@@ -241,13 +241,13 @@ export const routes: Routes = [
 ```
 
 If your library is meant to support this, say so in the README and avoid module-level
-mutable state — two configured instances must not interfere. If it isn't meant to,
+mutable state - two configured instances must not interfere. If it isn't meant to,
 say that too; consumers will otherwise assume it works.
 
 ## Testing the configuration API
 
 Test `provideX()` the way a consumer uses it, not by instantiating services by
-hand — that's the only way the wiring itself is covered:
+hand - that's the only way the wiring itself is covered:
 
 ```typescript
 TestBed.configureTestingModule({
@@ -267,14 +267,14 @@ Worth covering explicitly:
 
 ## Evolving the API without breaking consumers
 
-- **Adding an optional config field with a default** — safe.
-- **Adding a required field** — breaking, even though nothing was removed. Add it
+- **Adding an optional config field with a default** - safe.
+- **Adding a required field** - breaking, even though nothing was removed. Add it
   as optional with a default and tighten in the next major.
-- **Renaming a token** — breaking, including when the string description is
+- **Renaming a token** - breaking, including when the string description is
   unchanged: identity is the token object, so a consumer providing the old one
   silently stops taking effect. That silence is why token renames deserve a major
   bump even when they look cosmetic.
-- **Changing a default** — a behaviour change; treat as breaking if consumers
+- **Changing a default** - a behaviour change; treat as breaking if consumers
   could reasonably depend on the old value.
-- **Deprecating** — mark with `@deprecated` naming the replacement, keep both
+- **Deprecating** - mark with `@deprecated` naming the replacement, keep both
   working for at least one minor, remove in the next major.

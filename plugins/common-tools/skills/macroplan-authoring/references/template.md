@@ -1,7 +1,7 @@
-# Templates — `tasks/` pipeline file skeletons
+# Templates - `tasks/` pipeline file skeletons
 
 Copy-paste skeletons for every file kind. Keep the cross-links (`Drives` /
-`Derived from`) current, and apply progressive disclosure — don't repeat
+`Derived from`) current, and apply progressive disclosure - don't repeat
 shared-context content inside a spec or task.
 
 ---
@@ -17,13 +17,13 @@ state and `CONTEXT.md` for project facts.
 
 ---
 
-## `tasks/CONTEXT.md` (shared, project-wide durable context — read first)
+## `tasks/CONTEXT.md` (shared, project-wide durable context - read first)
 
 ```markdown
 # Project context (shared)
 
 Durable, project-wide grounding shared by every initiative. Read before any
-spec or plan. Re-verify anything load-bearing against the real files — this
+spec or plan. Re-verify anything load-bearing against the real files - this
 drifts between sessions.
 
 ## Codebase map
@@ -35,8 +35,8 @@ drifts between sessions.
 - <key services/tokens/endpoints/schemas an initiative will reuse>
 
 ## Cross-cutting locked-in decisions
-- **<decision that spans initiatives>** — *why* (constraint/trade-off).
-- <e.g. "dynamic-viewer stays 100% domain-agnostic — never import @is/*">
+- **<decision that spans initiatives>** - *why* (constraint/trade-off).
+- <e.g. "dynamic-viewer stays 100% domain-agnostic - never import @is/*">
 
 ## Conventions
 - <repo-wide norms: language for code/strings, commit style, verification gate>
@@ -56,11 +56,11 @@ works see [`AGENTS.md`](AGENTS.md); for shared project facts see
 ## Initiatives
 
 `#` is the stable id (folder/task prefix, e.g. `04.2`); it is NOT reading
-order — `Priority` is.
+order - `Priority` is.
 
 | Priority | # | Initiative | Status | Depends on | Size |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 01 | [<name>](01-<slug>/plan.md) | open / partial / ✅ done → `done/` | — | M |
+| 1 | 01 | [<name>](01-<slug>/plan.md) | open / partial / ✅ done → `done/` | - | M |
 
 ## Specs
 
@@ -82,7 +82,7 @@ Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](
 
 ---
 
-## `tasks/specs/<slug>.md` (structured spec — the *what & why*)
+## `tasks/specs/<slug>.md` (structured spec - the *what & why*)
 
 ```markdown
 # <Title> (spec & context)
@@ -90,66 +90,66 @@ Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](
 > **Drives initiative(s):** [NN](../NN-<slug>/plan.md)  ·  raw sources: `../_inbox/`
 
 ## Goal
-<the outcome, grounded in a concrete problem — quote the real offending
+<the outcome, grounded in a concrete problem - quote the real offending
 code/data, don't describe it abstractly>
 
-## Current state (verified <date> — re-check before starting)
+## Current state (verified <date> - re-check before starting)
 <what exists today: files, behaviour, the real symbols involved>
 
 ## Locked-in decisions
-- **<decision>** — *why* (the trade-off/constraint that drove it).
+- **<decision>** - *why* (the trade-off/constraint that drove it).
 - <open forks stay as `[DECISION] …` and name the task that must resolve them>
 
 ## Non-goals
-- <what this explicitly does NOT do, and why — prevents scope creep>
+- <what this explicitly does NOT do, and why - prevents scope creep>
 ```
 
 ---
 
-## `tasks/NN-<slug>/plan.md` — INLINE form (small/medium initiative)
+## `tasks/NN-<slug>/plan.md` - INLINE form (small/medium initiative)
 
 ```markdown
-# <Title> — Implementation plan
+# <Title> - Implementation plan
 
 > **Derived from spec:** [../specs/<slug>.md](../specs/<slug>.md)
 
 ## Tasks
 
-### NN.1 — <task name>
+### NN.1 - <task name>
 **Goal**: <one sentence>.
 Steps:
-1. <real file/function names, real snippets — not "update the parser somehow">
+1. <real file/function names, real snippets - not "update the parser somehow">
 2. ...
 Verification: <runnable check; specific inputs/outputs or command>.
 
-### NN.2 — <task name>
+### NN.2 - <task name>
 ...
 ```
 
 ---
 
-## `tasks/NN-<slug>/plan.md` — EXPANDED form (large / delegated initiative)
+## `tasks/NN-<slug>/plan.md` - EXPANDED form (large / delegated initiative)
 
 `plan.md` becomes the index; each task is its own file.
 
 ```markdown
-# <Title> — Implementation plan
+# <Title> - Implementation plan
 
 > **Derived from spec:** [../specs/<slug>.md](../specs/<slug>.md)
 
 Tasks (each = one commit; hand one file at a time to a delegated agent):
 
-1. [NN.1 — <task name>](NN.1-<name>.md)
-2. [NN.2 — <task name>](NN.2-<name>.md)
+1. [NN.1 - <task name>](NN.1-<name>.md)
+2. [NN.2 - <task name>](NN.2-<name>.md)
 
 Shared decisions for this initiative that every task must honour:
-- <initiative-local locked-in decision — *why*>
+- <initiative-local locked-in decision - *why*>
 ```
 
 ### `tasks/NN-<slug>/NN.T-<name>.md` (one expanded task)
 
 ```markdown
-# NN.T — <task name>
+# NN.T - <task name>
 
 > Part of [<Title>](plan.md) · spec: [../specs/<slug>.md](../specs/<slug>.md)
 
@@ -167,7 +167,7 @@ Verification: <runnable check>.
 ## `tasks/NN-<slug>/summary.md` (completion record)
 
 ```markdown
-# NN — <Title> (completion summary)
+# NN - <Title> (completion summary)
 
 **Status:** ✅ Completed and merged into `<branch>`.
 
