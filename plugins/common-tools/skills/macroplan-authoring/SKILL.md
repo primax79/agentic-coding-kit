@@ -174,10 +174,17 @@ grows. Whichever form, keep each task's **Verification** section with it.
    the project has none yet.
 4. Write/extend the `specs/<slug>.md`, then the initiative's `plan.md`
    (inline or expanded per size), following `references/template.md`.
-5. Register/refresh the initiative row in `00-INDEX.md` (priority, status,
+5. Before treating a non-trivial spec/plan as final, if other independent
+   AI engines are available in the session (other MCP connectors, CLI
+   tools, agents), submit it to them for review and converge on any
+   disagreements rather than finalizing from one engine's judgment alone
+   - a fresh, context-blind subagent instance of yourself counts too,
+   since the bias removed is authorship bias, not model identity - see
+   `task-spec-authoring` for the full rationale.
+6. Register/refresh the initiative row in `00-INDEX.md` (priority, status,
    spec map). Keep Status current - it is the source of truth for "what's left"
    when picking up cold.
-6. When a project first adopts this, drop a `tasks/AGENTS.md` capturing this
+7. When a project first adopts this, drop a `tasks/AGENTS.md` capturing this
    convention so the repo is self-contained for agents/teammates who don't have
    this skill.
 

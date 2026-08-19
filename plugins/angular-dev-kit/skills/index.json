@@ -42,6 +42,12 @@
       ]
     },
     {
+      "name": "angular-icons-lucide",
+      "files": [
+        "SKILL.md"
+      ]
+    },
+    {
       "name": "angular-library",
       "files": [
         "SKILL.md",

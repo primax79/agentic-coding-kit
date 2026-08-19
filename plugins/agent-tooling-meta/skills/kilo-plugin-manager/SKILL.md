@@ -47,6 +47,7 @@ Depending on how `kilo-plugin-manager` was installed on your machine, run the sc
 | Align agents across both hosts              | `sync-agents [--scope local\|global\|both] [--repo P]` |
 | Move a hand-authored item between scopes    | `move <skill\|agent\|command> to-local\|to-global <name> [--repo P] [--copy] [--force]` |
 | Scaffold a new marketplace repo             | `init-marketplace <path> [--name N]`              |
+| Validate & sanitize Kilo assets             | `python3 validate_kilo_assets.py <path> [--fix]`   |
 | Generate an official-format skill feed      | `python3 generate_skill_marketplace.py <repo>`    |
 | Package + publish skill tarballs to GitHub  | `python3 package_and_publish_skills.py <repo>`    |
 
@@ -69,10 +70,13 @@ Depending on how `kilo-plugin-manager` was installed on your machine, run the sc
   copy. Claude Code installs plugins natively: register the marketplace in
   `extraKnownMarketplaces` and switch the plugin on in `enabledPlugins`, which
   can live in a project's own `.claude/settings.json` and travel with the repo.
-  This script exists for Kilo, which has no native install path for a
-  git-hosted marketplace. Tell the user to add the one line rather than
-  bridging the two directories: a directory nobody's tool declares is one that
-  nothing updates and nothing reports as stale.
+  This script exists because Kilo's own native marketplace (the "Kilo
+  Marketplace" panel, section 4) consumes a different, pre-built feed shape
+  (`marketplace-skills.json` / the `api.kilo.ai` tarball catalog) and has
+  no install path that consumes a Claude-shaped git repo directly, without
+  a generate/publish step first. Tell the user to add the one line rather
+  than bridging the two directories: a directory nobody's tool declares is
+  one that nothing updates and nothing reports as stale.
 
   ```json
   // <repo>/.claude/settings.json
