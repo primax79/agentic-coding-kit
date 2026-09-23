@@ -2,7 +2,7 @@
 # Run kcadm.sh inside the dev Keycloak container, already logged in as admin.
 # Example:
 #   scripts/kcadm.sh update realms/test -s 'attributes."my.flag"=true'
-#   scripts/kcadm.sh get realms/test --fields attributes
+#   scripts/kcadm.sh get realms/test      # full JSON; "--fields attributes" returns {} on 26.7
 set -euo pipefail
 here="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$here"

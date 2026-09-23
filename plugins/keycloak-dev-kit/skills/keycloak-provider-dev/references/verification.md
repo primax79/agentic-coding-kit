@@ -22,6 +22,10 @@ A green `mvn package` proves only that the code compiles against the
    own testsuite/`keycloak-test-framework` is heavy - use it only when the
    Docker checks can't reach the behaviour.
 
+`kcadm.sh get realms/<r> --fields attributes` returns `{}` on 26.7 even when
+the realm has attributes (observed 2026-09-24): an "attribute not stored"
+check based on it proves nothing. Read the full representation and filter it.
+
 Fetch an admin token for scripts:
 
 ```sh
