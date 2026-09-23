@@ -1,0 +1,28 @@
+{
+  "skills": [
+    {
+      "name": "keycloak-provider-dev",
+      "files": [
+        "SKILL.md",
+        "references/build-and-packaging.md",
+        "references/dev-environment.md",
+        "references/fork-to-plugin.md",
+        "references/pitfalls.md",
+        "references/spi-catalog.md",
+        "references/verification.md",
+        "scripts/check-spi-surface.sh",
+        "templates/dev-env/docker-compose.yml",
+        "templates/dev-env/import/test-realm.json",
+        "templates/dev-env/nginx/cluster.conf",
+        "templates/dev-env/nginx/default.conf",
+        "templates/dev-env/scripts/build-plugin.sh",
+        "templates/dev-env/scripts/kcadm.sh",
+        "templates/dev-env/scripts/smoke-test.sh",
+        "templates/gitignore.template",
+        "templates/pom.xml",
+        "templates/src/main/java/org/example/keycloak/provider/ExampleWellKnownProviderFactory.java",
+        "templates/src/main/resources/META-INF/services/org.keycloak.wellknown.WellKnownProviderFactory"
+      ]
+    }
+  ]
+}

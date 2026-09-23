@@ -132,6 +132,11 @@
       "name": "angular-tooling",
       "description": "Angular CLI - project setup, code generation, build/test configuration (vendored, analogjs/angular-skills)",
       "source": "./plugins/angular-dev-kit/skills/angular-tooling"
+    },
+    {
+      "name": "keycloak-provider-dev",
+      "description": "Keycloak 26.x provider JAR development - SPI catalog, packaging, Docker dev env, verification, pitfalls, fork-to-plugin",
+      "source": "./plugins/keycloak-dev-kit/skills/keycloak-provider-dev"
     }
   ]
 }

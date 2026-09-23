@@ -22,6 +22,10 @@ repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
 - `plugins/angular-dev-kit/` — Angular v20+ knowledge, **project-scoped by
   design** (version-specific claims aren't true globally). See its own
   README for the authoring/vendoring split.
+- `plugins/keycloak-dev-kit/` - Keycloak 26.x provider (extension JAR)
+  development, **project-scoped** like `angular-dev-kit`. Its claims carry
+  the Keycloak version they were verified on; `templates/` is a buildable
+  project, re-verify it end to end in Docker after changing it.
 - `docs/00-INDEX.md` — the concepts/authoring/distribution reference.
   `docs/01-concepts.md` is duplicated (not linked) into `gcube-ai-toolkit`
   for its own use — if you edit shared concepts, update both copies.

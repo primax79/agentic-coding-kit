@@ -127,6 +127,13 @@
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/markdown-formatter.tar.gz"
     },
     {
+      "id": "keycloak-provider-dev",
+      "description": "Use when writing, building, testing or reviewing a Keycloak (Quarkus distribution, 26.x) extension - a provider JAR implementing Keycloak SPIs (well-known endpoints, realm/admin REST resources, key providers, client registration policies, scheduled tasks, identity providers, authenticators) - or when deciding whether a Keycloak fork/PR can be turned into a plugin. Covers grounding claims in the Keycloak source of the exact target tag, the Maven packaging (provided deps, shading, META-INF/services), a Docker dev environment (start-dev, reverse proxy, two-node cluster), verification that the provider is really loaded, and known pitfalls. Not for configuring Keycloak as a user (realms, clients, themes only).",
+      "category": "keycloak-dev-kit",
+      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/keycloak-dev-kit/skills/keycloak-provider-dev",
+      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/keycloak-provider-dev.tar.gz"
+    },
+    {
       "id": "agent-md-refactor",
       "description": "Refactor bloated AGENTS.md, CLAUDE.md, or similar agent instruction files to follow progressive disclosure principles. Splits monolithic files into organized, linked documentation.",
       "category": "third-party",

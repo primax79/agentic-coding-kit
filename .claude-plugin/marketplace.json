@@ -41,6 +41,15 @@
       },
       "category": "development",
       "source": "./plugins/angular-dev-kit"
+    },
+    {
+      "name": "keycloak-dev-kit",
+      "description": "Keycloak 26.x extension (provider JAR) development - SPIs grounded in the target tag's source, packaging/shading, Docker dev env incl. two-node cluster, verification, pitfalls, fork/PR-to-plugin (keycloak-provider-dev). Version-specific: install per project.",
+      "author": {
+        "name": "Alfredo Oliviero"
+      },
+      "category": "development",
+      "source": "./plugins/keycloak-dev-kit"
     }
   ]
 }

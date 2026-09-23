@@ -1,0 +1,20 @@
+{
+  "realm": "test",
+  "enabled": true,
+  "displayName": "Provider test realm",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "email": "alice@example.org",
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Tester",
+      "credentials": [
+        { "type": "password", "value": "alice", "temporary": false }
+      ]
+    }
+  ]
+}

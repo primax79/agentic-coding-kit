@@ -1,0 +1,8 @@
+{
+  "name": "keycloak-dev-kit",
+  "version": "0.1.0",
+  "description": "Keycloak 26.x extension (provider JAR) development - SPI catalog grounded in the target tag's source, Maven packaging and shading, Docker dev environment (start-dev, reverse proxy, two-node cluster), real verification, pitfalls, and turning a fork/PR into a plugin (keycloak-provider-dev)",
+  "author": {
+    "name": "Alfredo Oliviero"
+  }
+}
