@@ -41,6 +41,11 @@ cp "${jars[0]}" "$here/providers/"
 echo ">> deployed $(basename "${jars[0]}") to dev-env/providers"
 
 if [ "${NO_RESTART:-0}" != "1" ]; then
-  (cd "$here" && docker compose restart keycloak >/dev/null)
-  echo ">> keycloak restarted; wait for readiness with scripts/smoke-test.sh"
+  # "docker compose restart" silently does nothing when the container is not running
+  if [ -n "$(cd "$here" && docker compose ps -q --status running keycloak)" ]; then
+    (cd "$here" && docker compose restart keycloak >/dev/null)
+    echo ">> keycloak restarted; wait for readiness with scripts/smoke-test.sh"
+  else
+    echo ">> keycloak is not running; start it with: (cd dev-env && docker compose up -d)"
+  fi
 fi
