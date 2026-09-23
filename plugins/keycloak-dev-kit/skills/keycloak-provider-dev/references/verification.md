@@ -16,8 +16,10 @@ A green `mvn package` proves only that the code compiles against the
 5. **Negative cases**: feature disabled / realm not configured → the endpoint
    is absent (404), not a 500.
 6. **Cluster** (only for cluster-aware code): with the cluster profile, the
-   task logs on exactly one node per interval; stop that node, the other takes
-   over; restart both, state survives.
+   task never runs on two nodes at the same time (non-overlapping runs on
+   several nodes in one interval are normal: `ClusterAwareScheduledTaskRunner`
+   is mutual exclusion only), running it twice is harmless; stop one node, the
+   other keeps running it; restart both, state survives.
 7. **Unit tests** for pure logic (parsing, validation, policy); Keycloak's
    own testsuite/`keycloak-test-framework` is heavy - use it only when the
    Docker checks can't reach the behaviour.
