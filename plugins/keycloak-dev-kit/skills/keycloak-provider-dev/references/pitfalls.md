@@ -12,11 +12,17 @@ types a `String` result as `application/jwt`, anything else as JSON. So:
   provider runs**.
 
 Observed (no provider deployed): direct, no `Accept` → `404 application/json`;
-direct, strict `Accept` → `406`. Workarounds: a reverse-proxy rule that
-rewrites `Accept` to `application/jwt` and replaces `Content-Type`
+direct, strict `Accept` → `406`. Setting `Content-Type` through
+`session.getContext().getHttpResponse().setHeader(...)` from `getConfig()`
+does not help: RESTEasy Reactive re-applies the JAX-RS response headers
+afterwards. Workarounds: a reverse-proxy rule that rewrites `Accept` to
+`application/jwt` and replaces `Content-Type`
 (`proxy_set_header Accept "application/jwt"; proxy_hide_header Content-Type;
-add_header Content-Type "<type>" always;`), or serve the document from a
-`RealmResourceProvider` path you fully control and redirect. Report upstream.
+add_header Content-Type "<type>" always;`), or a `@PreMatching` request filter
+(with `META-INF/beans.xml`) that rewrites the path to your own
+`RealmResourceProvider` resource with the right `@Produces`. Report upstream.
+Also: the well-known response is `Cache-Control: no-cache, no-store` and
+`getConfig()` runs on every request - any caching is yours.
 
 ## Silent non-loading
 
@@ -38,7 +44,9 @@ add_header Content-Type "<type>" always;`), or serve the document from a
 ## Cluster
 
 - `TimerProvider.scheduleTask` runs on every node; use
-  `schedule(new ClusterAwareScheduledTaskRunner(...))` for once-per-cluster.
+  `schedule(new ClusterAwareScheduledTaskRunner(...))` for mutual exclusion -
+  which is still **not** once-per-interval (see the SPI catalog), and locks on
+  the task's class simple name. Idempotent tasks only.
 - Per-entity timers (one timer per client/session) don't survive restarts and
   need cluster messaging to cancel; prefer one periodic sweep over persisted
   state (expiry timestamps in attributes).
@@ -50,16 +58,23 @@ add_header Content-Type "<type>" always;`), or serve the document from a
 - Signing with `signer()` (no arg) uses the realm's active OIDC key; for a
   key reserved to another purpose use `signer(KeyWrapper)` with the key picked
   by `kid`.
-- A key reserved to another protocol must not appear in the realm JWKS nor
-  be picked as active OIDC key - check `KeyStatus` semantics and
-  `DefaultKeyManager.getProviders` on your tag before designing it.
+- A low priority does **not** keep an active key out of token signing:
+  selection is per `(use, alg)`. Reserve keys with a DISABLED component (see
+  the SPI catalog).
 
 ## Admin REST / JAX-RS
 
 - `RealmResourceProvider` endpoints are public: authenticate/authorise
-  yourself (`AppAuthManager`/bearer token, realm role checks).
-- JAX-RS filters/interceptors in providers are not supported; do checks in the
-  resource.
+  yourself (`AppAuthManager`/bearer token, realm role checks), and enforce the
+  realm's SSL requirement yourself.
+- The request transaction commits after your method returns: a unique
+  constraint violation surfaces as a 500 after you built a 201, unless you
+  `flush()` first.
+- JAX-RS filters/interceptors in providers are not officially supported.
+  `@Provider @PreMatching` request filters do load with an empty
+  `META-INF/beans.xml` in the JAR (Keycloak's own dist test relies on it), but
+  keep them to what cannot be done in a resource (e.g. `Accept` rewriting) and
+  re-test them on every Keycloak upgrade.
 
 ## When you patch Keycloak itself (fork, rebased PR)
 
