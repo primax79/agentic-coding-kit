@@ -20,7 +20,7 @@ docker run --rm \
   -v "$plugin_dir":/src \
   -v "${M2_VOLUME:-kc-provider-m2}":/root/.m2 \
   -w /src "$maven_image" \
-  mvn -B -q ${MVN_ARGS:-} package
+  mvn -B -q ${MVN_ARGS:-} clean package
 
 # Deploy the final JAR only (skip sources, javadoc, tests and shade's original-*).
 shopt -s nullglob
