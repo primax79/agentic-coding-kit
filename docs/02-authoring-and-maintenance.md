@@ -117,9 +117,8 @@ This is the actual mechanics behind every repo in this family
 
 3. **That's the whole Claude Code side.** For Kilo Code, you get it two ways
    simultaneously, no extra manifest format to author:
-   - `kilo-plugin-manager` (this repo's own `agent-tooling-meta` plugin)
-     reads the *same* `.claude-plugin/marketplace.json` and translates
-     agent frontmatter on install - nothing to write twice.
+   - The AI Swissknife VS Code extension (or its CLI) reads the *same*
+     `.claude-plugin/marketplace.json` - nothing to write twice.
    - Kilo's native Skill URLs mechanism needs `index.json` files, which are
      **generated**, not hand-authored - run
      `python3 scripts/generate_skill_indices.py` (see
@@ -222,15 +221,9 @@ permission:
 ---
 ```
 
-Run the sync script whenever an agent changes, so both variants stay
-identical on everything except the frontmatter shape:
-
-```bash
-python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents
-```
-
-It keeps `name:` identical across variants and mirrors files between the
-project-local and global (`~/.kilo/agent/`, `~/.claude/agents/`) locations.
+Whenever an agent changes, update both variants by hand so they stay
+identical on everything except the frontmatter shape, with `name:`
+identical across variants. There is no sync script.
 
 ---
 
@@ -268,13 +261,10 @@ Once installed to `~/.config/kilo/command/<name>.md`, it's available as
    python3 scripts/generate_skill_indices.py
    ```
 
-3. **Sync agents** (if any agent frontmatter changed):
-
-   ```bash
-   python3 plugins/agent-tooling-meta/skills/kilo-plugin-manager/scripts/plugin_manager.py sync-agents
-   ```
+3. **Align agents** by hand (if any agent frontmatter changed): both
+   variants, `name:` identical.
 
 4. **Commit and push.**
 5. **Client update, on the consuming side**: Claude Code users run
-   `/plugin update`; Kilo Code users run
-   `python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py update`.
+   `/plugin update`; Kilo Code users update through the
+   AI Swissknife VS Code extension (or its CLI).

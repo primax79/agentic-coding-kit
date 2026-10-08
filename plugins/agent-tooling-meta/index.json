@@ -13,17 +13,6 @@
       ]
     },
     {
-      "name": "skills/kilo-plugin-manager",
-      "files": [
-        "SKILL.md",
-        "references/kilo-asset-compatibility-guide.md",
-        "scripts/generate_skill_marketplace.py",
-        "scripts/package_and_publish_skills.py",
-        "scripts/plugin_manager.py",
-        "scripts/validate_kilo_assets.py"
-      ]
-    },
-    {
       "name": "skills/kilo-rag-index-manager",
       "files": [
         "SKILL.md",

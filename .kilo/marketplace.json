@@ -24,11 +24,6 @@
       "source": "./plugins/agent-tooling-meta/skills/framework-skillset-generator"
     },
     {
-      "name": "kilo-plugin-manager",
-      "description": "Install, update, and manage agent/skill plugins from git marketplaces",
-      "source": "./plugins/agent-tooling-meta/skills/kilo-plugin-manager"
-    },
-    {
       "name": "agent-md-refactor",
       "description": "Refactor monolithic agent instruction files following progressive disclosure",
       "source": "./plugins/third-party/skills/agent-md-refactor"

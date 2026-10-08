@@ -13,7 +13,7 @@ repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
   `markdown-formatter`, `macroplan-authoring`, `agents-md-generator` skills; `merge-resolver`
   agent). Zero AI-tooling-config coupling.
 - `plugins/agent-tooling-meta/` — tools for configuring Kilo/Claude
-  themselves (`kilo-plugin-manager`, `kilo-rag-index-manager`,
+  themselves (`kilo-rag-index-manager`,
   `framework-skillset-generator`; `kilo-customizer`,
   `framework-topic-drafter` agents; `/generate-skillset` command).
 - `plugins/third-party/` — 10 curated, license-preserved external skills.
@@ -41,8 +41,7 @@ repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
   and commit the updated `index.json` files alongside the change.
 - **Agent sync rule.** Claude Code and Kilo Code agent frontmatter formats
   are not compatible — `agents/` and `agents_kilo/` variants (where both
-  exist, e.g. `agent-tooling-meta`) must be kept in sync via the
-  `kilo-claude-sync` skill (this repo's own `agent-tooling-meta` plugin).
+  exist, e.g. `agent-tooling-meta`) must be kept in sync by hand.
   Internal `name` fields must match exactly between the two.
 - **Scope discipline.** A version-/framework-specific plugin (like
   `angular-dev-kit`) does not belong installed globally — see

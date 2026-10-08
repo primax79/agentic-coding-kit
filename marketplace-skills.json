@@ -8,13 +8,6 @@
       "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/framework-skillset-generator.tar.gz"
     },
     {
-      "id": "kilo-plugin-manager",
-      "description": "Install, update, and share agent/skill plugins from git marketplaces for Kilo Code, emulating Claude Code's native plugin marketplace. Also owns everything else that touches those directories: translating agent definitions between Claude and Kilo frontmatter, keeping the two hosts' agents aligned (`sync-agents`), and moving a hand-authored skill, agent or command between global and project scope (`move`). Use when the user asks to add a marketplace, install/update/uninstall a plugin or shared toolkit, distribute skills to the team, convert or re-align an agent file between Claude Code and Kilo Code, or promote/localise a customization item.",
-      "category": "agent-tooling-meta",
-      "githubUrl": "https://github.com/primax79/agentic-coding-kit/tree/main/plugins/agent-tooling-meta/skills/kilo-plugin-manager",
-      "content": "https://github.com/primax79/agentic-coding-kit/releases/download/skills-latest/kilo-plugin-manager.tar.gz"
-    },
-    {
       "id": "kilo-rag-index-manager",
       "description": "Administers Kilo's own semantic codebase index (Qdrant collections, embedding config) independently of any orchestrator - primarily migrating the index across a workspace move/rename without a full re-embed. Use when a Kilo-indexed project directory is moved/renamed and the index needs to follow it, or when inspecting/cleaning up Qdrant collections created by Kilo's indexing feature.",
       "category": "agent-tooling-meta",

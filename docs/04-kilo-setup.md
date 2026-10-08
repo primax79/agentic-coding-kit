@@ -20,7 +20,7 @@ Official guide: [kilo.ai/install](https://kilo.ai/install) (VS Code
 extension + optional CLI). Config lives at `~/.config/kilo/kilo.jsonc`
 (global) and, per-project, `.kilo/kilo.jsonc` - same Global-vs-Local
 distinction as everywhere else in Kilo (see
-[`docs/03`](03-compatibility-and-distribution.md#bootstrap-kilo-plugin-manager-itself)
+[`docs/03`](03-compatibility-and-distribution.md#global-vs-local-config)
 for the gotcha where the Settings UI's graphical fields write Global Config
 but some things are only honored from Local).
 

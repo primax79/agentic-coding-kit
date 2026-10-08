@@ -21,7 +21,7 @@ domain, it belongs here.
 **Typical use cases**: bootstrap a new project's `.gitignore` correctly for
 its actual stack; keep Markdown docs formatted consistently; plan
 multi-session work as a resumable task tree (`macroplan-authoring`); install
-or move your own Kilo/Claude skills and agents without hand-editing config
+or install your own Kilo/Claude skills and agents without hand-editing config
 files; pull in a curated, vetted third-party skill instead of writing one
 from scratch.
 
@@ -30,7 +30,7 @@ from scratch.
 | Plugin | Contains | Concern | Recommended scope |
 | --- | --- | --- | --- |
 | [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring`, `agents-md-generator` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling | Global |
-| [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-plugin-manager`, `kilo-rag-index-manager`, `framework-skillset-generator` (skills); `kilo-customizer`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves - installing plugins, moving items between scopes, keeping the two hosts' agents aligned, authoring configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation - see relationship section below. | Global |
+| [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-rag-index-manager`, `framework-skillset-generator` (skills); `kilo-customizer`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves - maintaining Kilo's RAG index, authoring configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation - see relationship section below. | Global |
 | [`third-party`](plugins/third-party) | 10 curated external skills (`frontend-design`, `mcp-builder`, `skill-creator`, `theme-factory`, `agent-md-refactor`, `file-organizer`, `changelog-generator`, `grill-me`, `terraform`, `playwright`) | Vetted, license-preserved imports | Global |
 | [`angular-dev-kit`](plugins/angular-dev-kit) | `angular-library` (ours: authoring/packaging a publishable Angular library, `provideX()`/ng-packagr); 10 vendored references - `angular-component`, `-di`, `-directives`, `-forms`, `-http`, `-routing`, `-signals`, `-ssr`, `-testing`, `-tooling` - from [analogjs/angular-skills](https://github.com/analogjs/angular-skills) (MIT, Brandon Roberts) | Angular v20+ knowledge, library-authoring and application-side kept distinct - see the plugin's own README for which is which | **Project** - Angular-only and version-specific; see [scope guidance](docs/03-compatibility-and-distribution.md#choosing-scope-not-just-install-everywhere-for-convenience) |
 | [`keycloak-dev-kit`](plugins/keycloak-dev-kit) | `keycloak-provider-dev` (ours): Keycloak 26.x provider JAR development - SPI catalog grounded in the target tag's source, packaging/shading, Docker dev env template (incl. two-node cluster), verification, pitfalls, fork/PR-to-plugin | Keycloak extension development, verified on 26.7.4 | **Project** - version-specific |
@@ -68,12 +68,8 @@ instead of globally. Full command reference:
 
 Two independent options - pick one, or use both:
 
-- **`kilo-plugin-manager`** (covers skills *and* agents):
-
-  ```bash
-  python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py add https://github.com/primax79/agentic-coding-kit.git --name agentic-coding-kit
-  python3 ~/.kilo/skills/kilo-plugin-manager/scripts/plugin_manager.py install common-tools@agentic-coding-kit
-  ```
+- **AI Swissknife** (skills *and* agents): install with the AI Swissknife
+  VS Code extension (or its CLI), pointing it at this repo.
 
 - **Native Skill URLs** (skills only, zero extra tooling - paste into
   Kilo's Settings UI, **Local Config**, or `.kilo/kilo.jsonc`'s
@@ -86,8 +82,7 @@ Two independent options - pick one, or use both:
   Regenerate `index.json` after any skill change:
   `python3 scripts/generate_skill_indices.py`.
 
-Full walkthrough, including the Global-vs-Local-Config gotcha and the
-scope-management commands: [`docs/03-compatibility-and-distribution.md`](docs/03-compatibility-and-distribution.md#part-2-kilo-code--kilo-plugin-manager).
+Full walkthrough, including the Global-vs-Local-Config gotcha: [`docs/03-compatibility-and-distribution.md`](docs/03-compatibility-and-distribution.md#part-2-kilo-code).
 
 ## Relationship with the other repos in this family
 

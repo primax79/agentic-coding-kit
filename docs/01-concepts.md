@@ -54,7 +54,7 @@ what's a real difference.
 | --- | --- | --- | --- |
 | Skill format | `SKILL.md`, Agent Skills spec | `SKILL.md`, same spec | **Yes** - same file works unmodified in both |
 | Skill loading | On-demand by description match | On-demand by description match | Yes, same model |
-| Agent/mode frontmatter | Flat `tools: Bash, Read, ...` string | Structured `mode:`/`permissions:` map | **No** - incompatible, needs translation (see `kilo-plugin-manager`'s `sync-agents`/`convert` in `agentic-coding-kit`'s own `agent-tooling-meta` plugin) |
+| Agent/mode frontmatter | Flat `tools: Bash, Read, ...` string | Structured `mode:`/`permissions:` map | **No** - incompatible, needs translation (by hand, or via AI Swissknife) |
 | Marketplace manifest | `.claude-plugin/marketplace.json` | No single native format - see below | Partial |
 | Install command | `/plugin install <name>@<marketplace>` | No single equivalent - see below | No |
 | MCP | Native client support (`/plugin`-adjacent MCP config) | Also a full native MCP client - its own Settings UI has a dedicated MCP section, and `kilo.jsonc`'s `mcp: {}` block configures servers it connects to, same as Claude Code | **Yes** - both are full MCP clients. `kilo-mcp` in this family uses Kilo as the *server* side (exposed to an external orchestrator) by deliberate design for the Architect/Executor pattern, not because Kilo lacks client support - see [`ai-architect-executor`](https://github.com/primax79/ai-architect-executor) |
@@ -73,7 +73,7 @@ called that:
    simpler thing: point `skills.urls` (in `kilo.jsonc`, or the Skills tab
    in Kilo's Settings UI) at a URL serving an `index.json` (`{"skills": [{"name":
    ..., "files": [...]}]}`). No `.claude-plugin/` involved at all, no
-   `kilo-plugin-manager` needed - Kilo fetches the manifest and the listed
+   other tooling needed - Kilo fetches the manifest and the listed
    files directly. This repo ships `index.json` at every plugin level for
    exactly this (see `scripts/generate_skill_indices.py`). **Skills only** -
    agents/commands aren't covered by this mechanism.
@@ -85,8 +85,8 @@ called that:
    in Kilo's own official catalog, a separate concern from self-hosting your
    own marketplace.
 
-`kilo-plugin-manager` (this repo's `agent-tooling-meta` plugin) is what
-bridges mechanism 1 into something Kilo can install from, including agents
+The AI Swissknife VS Code extension (and its CLI) is what bridges
+mechanism 1 into something Kilo can install from, including agents
 (which mechanism 2 can't touch) - see
 [`03-compatibility-and-distribution.md`](03-compatibility-and-distribution.md)
 for the full install/distribution walkthrough of all three.

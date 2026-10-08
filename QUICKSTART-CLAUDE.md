@@ -1,15 +1,12 @@
 # Quickstart: Claude Code environment setup
 
 Installation-only guide, Claude Code side, using Claude's own native
-`/plugin` mechanism - fully independent of `kilo-plugin-manager`. See
+`/plugin` mechanism - fully independent of the Kilo side. See
 `QUICKSTART-KILO.md` for the Kilo side.
 
 `/plugin` requires an actual terminal `claude` session - it is not
 available in every embedding of Claude Code (e.g. some IDE-extension
-contexts). If you're setting up Kilo and Claude from the same script
-non-interactively, use `kilo-plugin-manager`'s `install` without
-`--no-claude` instead (see `QUICKSTART-KILO.md`'s note) - it writes both
-sides in one call and doesn't need `/plugin` at all.
+contexts).
 
 ## Topology: what goes where
 
