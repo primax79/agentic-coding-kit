@@ -61,12 +61,13 @@ task/
     NN.T-<name>.md     (only when expanded - see "Task packaging" below)
     summary.md         completion record (added when the initiative ships)
   <category>/        EMERGENT tasks, grouped by kind of work (see "Emergent tasks")
-    README.md          scope, owner session, start prompt, shared notes
+    README.md          goal, scope, owner session, start prompt, shared notes
     notes/             the category's working notes
-    T###-<slug>/       one task: README.md (definition), CONTEXT.md, PROGRESS.md
+    T###-<slug>.md     a small task
+    T###-<slug>/       a task with context: README.md, CONTEXT.md, PROGRESS.md
   done/              COMPLETE on a branch, awaiting merge (moved here unchanged)
     NN-<slug>/
-    <category>/T###-<slug>/   finished emergent tasks
+    <category>/        finished emergent tasks (same names)
   merged/            MERGED into the integration branch (final)
     NN-<slug>/
 ```
@@ -115,75 +116,131 @@ Work rarely arrives only through planning. Mid-conversation, the user asks for
 something aside from the current task, a review turns up a defect out of scope,
 a "next step" comes up, a decision waits on someone, a peer session hands
 something over. If that work lives only in the conversation, it is lost when
-the session ends or is compacted, it cannot be picked up by anyone else, and
-it keeps occupying the session's context while waiting.
+the session ends or is compacted, nobody else can pick it up, and it keeps
+occupying the session's context while it waits.
 
 **Rule: capture first, then continue.** As soon as new work appears and will
-not be finished and verified in the current turn, write it as a task file,
+not be finished and verified in the current turn, write it down as a task,
 then go back to what you were doing. In the reply, cite the task by id and
-path. Do not leave the task only in a "next steps" paragraph of the chat.
+path. A "next steps" paragraph in the chat is not a substitute.
 
-- **Where.** If it belongs to an existing initiative, add it to that plan as a
-  task `NN.T`. Otherwise it is an emergent task:
-  `tasks/<category>/T###-<slug>/`. Categories are kinds of work chosen per
-  project (e.g. `porting/`, `maintenance/`, `release/`, `decisions/`); create a
-  new one only when no existing one fits. Its `README.md` states the scope,
-  the owner session, and a one-line **start prompt** that gives a fresh
-  session the whole category; working notes go in the category's `notes/`. A task that grows into several dependent pieces is
-  promoted to an initiative; its `T###` id stays in the initiative's
-  `Derived from`.
+### Where and how
+
+- **Initiative or emergent task.** If the work belongs to an existing
+  initiative, add it to that plan as a task `NN.T`. Otherwise it is an
+  emergent task in `tasks/<category>/`. A task that grows into several
+  dependent pieces is promoted to an initiative; its `T###` id stays in the
+  initiative's `Derived from`.
 - **Id.** `T###`, unique across the whole tree including `done/`, never reused.
-  Take the highest existing id plus one. Check it again right before
-  creating the folder: parallel sessions may be creating tasks in the same
-  repository at the same time.
-- **Files.** A task is a folder, so that its definition, context and progress
-  live in the task and not in a session:
-  - `README.md`: the definition. The header lists id, title, category,
-    priority with a one-line reason (P0 now / P1 next / P2 later / P3 someday),
-    state, executor, depends-on, decider (who must decide, if a decision is
-    open) and sources (where it emerged: conversation date, file, finding).
-    Then goal, steps, **Verification**, and a **handoff prompt**: the one or
-    two sentences that start a fresh session or agent on this task (which
-    files to read first, what to do, where to report).
+  Take the highest existing id plus one. Reserve it by creating the file at
+  once, and re-check right before creating it: parallel sessions create tasks
+  in the same repository at the same time, and id collisions do happen.
+- **Shape.** A small task is one file, `T###-<slug>.md`. A task with context or
+  progress worth keeping is a folder, `T###-<slug>/`, so that the definition,
+  context and progress live in the task and not in a session:
+  - `README.md`: the definition (header, goal, steps, verification);
   - `CONTEXT.md`: everything needed to resume without the original session:
-    where the work is, how to build and check it, rules the user gave, key
-    facts already established (with the command or file that established
-    each). Write it while the context is still fresh: that is its point.
+    where the work is, how to build and check it, rules the user gave, facts
+    already established (each with the command or file that established it).
+    Write it while the context is still fresh: that is its point;
   - `PROGRESS.md`: a log, newest first, and the checklist of open items.
     Update it in the same change as any work on the task.
-  A small task may start as one file, `T###-<slug>.md`, with the same header;
-  convert it into a folder once it has progress worth keeping.
-- **State.** One of: `open`, `in progress`, `waiting` (on an external party,
-  naming who and what), `blocked` (on an unresolved question, naming it),
-  `delivered` (done by its executor, not yet checked by anyone else),
-  `verified`, `done` (or `done with a caveat`, naming the caveat), `dropped`
-  (saying why).
-- **Executor-agnostic.** The executor is `self` (the session that captured it),
-  a delegated agent, or a person. The lifecycle is the same for all three: a
-  task you do yourself still moves through its states, and is not done until
-  its Verification has been run. Writing it down is what lets it change hands
-  later.
-- **Registry.** Add one line to the task queue in `00-INDEX.md`: id, title,
-  category, priority, state, executor, link to the task's `README.md`. Keep a
-  short next-up list (about five) at the top.
-- **Done.** When verified, update `PROGRESS.md`, `git mv` the folder to
-  `tasks/done/<category>/`, and update its line in `00-INDEX.md`, in one
-  change.
+  A file is promoted to a folder, with the same id, when it gets progress worth
+  keeping.
+- **Header.** One `key: value` line per field, so the headers can be grepped:
+  - `id`, `title`, `category`;
+  - `priority` (P0–P3) and `priority-reason` (one line);
+  - `next-up` (yes/no);
+  - `state`, `executor`;
+  - `depends-on`: task ids, or `-`;
+  - `decider`: who must decide, when a decision is open;
+  - `sources`: where it emerged (conversation date, file, finding, raw row id);
+  - `paths`: the repositories and paths the task touches;
+  - `handoff`: the one-line prompt that starts a fresh session or agent on the
+    task, i.e. what to read, what to do and what to update.
 
-**Keep the context clean.** Capturing a task moves it out of the session's
-working memory. The session keeps only the one-line registry entry, not the
-details. Read a task's folder only when you pick it up; when someone else
-will execute it, the folder is the whole hand-off, so a fresh session or
-agent can start with an empty context and the task files.
+  Then the sections Goal, Steps and **Verification**.
 
-**Several sessions on one repository.**
-- The state of a task is in its folder, never in conversation memory.
-- A session that stops leaves `PROGRESS.md` current.
-- Only a category's owner session edits its task files and `README.md`. Others
-  add notes under "Shared notes" in the category `README.md`, or create new
-  `T###` tasks.
+### States
+
+`open`, `in progress`, `waiting` (on an external party: name who and what),
+`blocked` (on an unresolved question or task: name it), `delivered`,
+`verified`, `done` (or `done with a caveat`: name the caveat), `dropped` (say
+why).
+
+- `delivered` means the executor finished and checked its own work. Nobody else
+  has checked it yet.
+- **Only someone other than the executor sets `verified`**: another session,
+  the orchestrator, or the user, after re-running the Verification. When nobody
+  else is available, the task stays `delivered`, and `PROGRESS.md` records the
+  self-check.
+
+### Executor-agnostic
+
+The executor is the session that captured the task (`self`), a delegated agent,
+a dedicated session, or a person (`user-decision` when the task is a decision).
+The lifecycle is the same for all of them. A task you do yourself still moves
+through its states, and is not done until its Verification has been run.
+Writing it down is what lets it change hands later.
+
+### The registry: `tasks/00-INDEX.md`
+
+The single dashboard of the tree, next to the tasks. Next to the initiatives
+table it holds:
+- **next-up**: at most five tasks, each with its handoff prompt;
+- **one table per category**, sorted by priority then id: id, priority, title
+  (linked to the task file or its `README.md`), state, executor, depends-on;
+- **decisions waiting**: the exact question, who decides, and the task it
+  blocks;
+- **done**: finished tasks, newest first.
+
+**Update the task and the registry in the same change**, every time.
+
+**Done.** When the task is done, update `PROGRESS.md`, move the task with
+`git mv` to `tasks/done/<category>/` (same name), and update the registry, in
+one change. Then check the Markdown links: a move breaks relative links in
+both directions, and every link in `tasks/` must still resolve.
+
+### Categories and priority
+
+Recommended when more than one session works on the queue; optional otherwise.
+
+- **Categories** are kinds of work chosen per project (e.g. `porting/`,
+  `maintenance/`, `release/`, `decisions/`). Create one only when no existing
+  one fits. `tasks/done/<category>/` mirrors them. Each category has:
+  - a `README.md`: the goal and scope of the category, the `owner-session`, the
+    rules, a **start prompt** for a session that takes over the whole category,
+    and "Shared notes";
+  - a `notes/` folder for its working notes.
+- **Priority** always carries a written reason:
+  - **P0**: security exposure, or it blocks a release in progress or many tasks;
+  - **P1**: needed for the project goal;
+  - **P2**: important, off the critical path;
+  - **P3**: nice to have.
+
+### Keep the context clean
+
+Capturing a task moves it out of the session's working memory. The session
+keeps only its one-line registry entry, not the details. Read a task's files
+only when you pick it up. When someone else will execute it, the task is the
+whole hand-off: a fresh session or agent starts with an empty context and the
+task files.
+
+### Several sessions on one repository
+
+- The state of a task is in its file or folder, never in conversation memory.
+  A session that stops leaves its tasks current.
+- Only a category's owner session edits that category's task files and
+  `README.md`. Other sessions add dated notes under "Shared notes", or create
+  new `T###` tasks.
 - Re-check facts with git before acting on a task file: other sessions edit the
   repository too.
+- **Validation round.** When the queue is built in bulk from documents (notes,
+  old hand-offs, a sweep of a repository), its states and dependencies are
+  guesses. Ask each session that holds live knowledge of an area to confirm or
+  correct the tasks of that area before anyone works from the queue. Each
+  session reports the corrections in its own task files. Keep the raw material
+  the queue came from, and cite its row ids in `sources`.
 
 **Never in a task file:** secrets, tokens, personal data, or details of
 undisclosed vulnerabilities. Point to where they are kept instead. A claim

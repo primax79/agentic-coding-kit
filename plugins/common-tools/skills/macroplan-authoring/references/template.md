@@ -69,13 +69,34 @@ order - `Priority` is.
 | --- | --- |
 | [<slug>](specs/<slug>.md) | 01, 03 |
 
-## Task queue (emergent tasks)
+## Next up
 
-Next up: T012, T009, T015.
+| Id | Priority | Task | Executor | Handoff |
+| --- | --- | --- | --- | --- |
+| T012 | P0 | [<title>](<category>/T012-<slug>.md) | self | `Read tasks/<category>/T012-<slug>.md, do it, update the task and this index.` |
 
-| Id | Task | Category | Priority | State | Executor |
+## Tasks by category
+
+### <category>
+
+<goal of the category, one line>. Owner session: <name or unassigned> ([README](<category>/README.md)).
+
+| Id | Priority | Task | State | Executor | Depends on |
 | --- | --- | --- | --- | --- | --- |
-| T012 | [<title>](<category>/T012-<slug>/README.md) | <category> | P1: <reason> | open | self |
+| T012 | P0 | [<title>](<category>/T012-<slug>.md) | open | self | - |
+| T015 | P1 | [<title>](<category>/T015-<slug>/README.md) | blocked | <agent> | T012 |
+
+## Decisions waiting
+
+| Task | Question (exact) | Decider | Blocks |
+| --- | --- | --- | --- |
+| T013 | <the question, as it will be asked> | <who> | T015 |
+
+## Done
+
+| Id | Task | Closed |
+| --- | --- | --- |
+| T009 | [<title>](done/<category>/T009-<slug>.md) | <date> |
 
 ## Dependency graph
 
@@ -96,32 +117,54 @@ Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](
 ```markdown
 # <category>
 
-Scope: <what kind of work belongs here>.
-Owner session: <name, or "none">: the only session that edits these task files.
-Start prompt: "Read tasks/<category>/README.md and tasks/00-INDEX.md, then take
-the highest-priority open task of this category."
+owner-session: <name, or unassigned>
 
-Working notes: [`notes/`](notes/).
+## Goal and scope
+
+<what this category must achieve, and what kind of work belongs here>.
+State and priority of its tasks are in `tasks/00-INDEX.md`; working notes are
+in `notes/` next to this file.
+
+## Start a session on the whole category
+
+> Read tasks/<category>/README.md and its tasks in priority order, set
+> owner-session, work the tasks one at a time (P0 first), and keep the task
+> files, this README and tasks/00-INDEX.md current.
+
+## Rules
+
+- Only the owner session edits the task files and this README; others add
+  notes below or create new T### tasks.
+- A finished task moves with `git mv` to `tasks/done/<category>/`, same name.
 
 ## Shared notes
 
-- <date, session>: <note from a session that is not the owner>
+- <date, session>: <note>
 ```
 
 ---
 
-## `tasks/<category>/T###-<slug>/README.md` (emergent task: definition)
+## `tasks/<category>/T###-<slug>.md` or `T###-<slug>/README.md` (emergent task: definition)
+
+A small task is the single file; a task with context or progress is the folder,
+and this is its `README.md`.
 
 ```markdown
-# T### - <title>
+# T### <title>
 
-- **Category:** <category>
-- **Priority:** P1 - <one-line reason>
-- **State:** open (open | in progress | waiting | blocked | delivered | verified | done | dropped)
-- **Executor:** self | <agent> | <person>
-- **Depends on:** - | T### | NN.T
-- **Decider:** - | <who must decide what>
-- **Sources:** <where it emerged: conversation of <date>, file, finding>
+- id: T###
+- title: <title>
+- category: <category>
+- priority: P1
+- priority-reason: <one line>
+- next-up: no
+- state: open
+- executor: self | <agent> | dedicated-session | user-decision | <person>
+- depends-on: - | T### | NN.T
+- decider: - | <who must decide what>
+- sources: <conversation of <date>, file, finding, raw row id>
+- paths: <repositories and paths the task touches>
+- handoff: Read tasks/<category>/T###-<slug>.md, do the open steps, run the Verification, update the task and tasks/00-INDEX.md.
 
 ## Goal
 
@@ -134,12 +177,10 @@ Working notes: [`notes/`](notes/).
 ## Verification
 
 - <runnable check, with its expected result>
-
-## Handoff prompt
-
-"Read tasks/<category>/T###-<slug>/ (README, CONTEXT, PROGRESS), do the open
-steps, run the Verification, and update PROGRESS.md and the 00-INDEX.md line."
 ```
+
+States: open | in progress | waiting | blocked | delivered | verified | done |
+dropped. Only someone other than the executor sets `verified`.
 
 ---
 
