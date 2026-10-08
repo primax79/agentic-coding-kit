@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "agents-md-generator",
+      "files": [
+        "SKILL.md",
+        "references/agents-md-spec.md",
+        "scripts/analyze_project.py"
+      ]
+    }
+  ]
+}

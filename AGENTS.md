@@ -10,7 +10,7 @@ repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
 ## Layout
 
 - `plugins/common-tools/` — generic dev utilities (`gitignore`,
-  `markdown-formatter`, `macroplan-authoring` skills; `merge-resolver`
+  `markdown-formatter`, `macroplan-authoring`, `agents-md-generator` skills; `merge-resolver`
   agent). Zero AI-tooling-config coupling.
 - `plugins/agent-tooling-meta/` — tools for configuring Kilo/Claude
   themselves (`kilo-plugin-manager`, `kilo-rag-index-manager`,
