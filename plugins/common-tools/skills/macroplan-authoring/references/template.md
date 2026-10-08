@@ -182,7 +182,7 @@ and this is its `README.md`.
 The header set is closed and in this order; empty values are `-`. While
 `delivered`, add a body line right after the header: `verification pending:
 <what is left, by whom>`. States: open | in progress | waiting | blocked | delivered | verified | done |
-dropped. Only someone other than the executor sets `verified`.
+dropped. `verified` is set by someone other than the executor, or by the executor after the user's explicit approval (recorded in PROGRESS.md).
 
 ---
 

@@ -179,14 +179,18 @@ why).
 
 - `delivered` means the executor finished and checked its own work. Nobody else
   has checked it yet.
-- **Only someone other than the executor sets `verified`**: another session,
-  the orchestrator, or the user, after re-running the Verification.
+- **`verified`** is set by someone other than the executor (another session,
+  the orchestrator, or the user) after re-running the Verification, **or by the
+  executor once the user has explicitly approved the result in conversation**:
+  the user's approval counts as verification. Record it in `PROGRESS.md` (date
+  and what was approved). Without one of the two, the executor does not set
+  `verified`.
 - **`done`** is set by whoever closes the task, once the Verification has been
   run. The normal path is `delivered` → `verified` → `done`. When nobody else
   is available to verify, the executor may close it as `done with a caveat:
-  self-verified only` (and `PROGRESS.md` records the self-check); it never sets
-  `verified` itself. A task that waits for someone else's check stays
-  `delivered`.
+  self-verified only` (and `PROGRESS.md` records the self-check); it does not
+  set `verified` on its own authority. A task that waits for someone else's
+  check or for the user's approval stays `delivered`.
 
 ### Executor-agnostic
 

@@ -1,6 +1,6 @@
 {
   "name": "common-tools",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Common Utilities Suite - Cross-platform development tools for Claude & Kilo (gitignore, markdown-formatter, macroplan-authoring, agents-md-generator, merge-resolver)",
   "author": {
     "name": "Alfredo Oliviero"
