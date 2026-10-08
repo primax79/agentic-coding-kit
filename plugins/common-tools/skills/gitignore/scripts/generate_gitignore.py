@@ -112,6 +112,21 @@ def detect_templates(project_dir, include_base=True, include_custom=True):
                     api_templates.add(tpl_name)
                     break
 
+    # Check for org.gcube in pom.xml if gcube not yet added
+    if "gcube" not in custom_templates:
+        pom_path = os.path.join(project_dir, "pom.xml")
+        if os.path.isfile(pom_path):
+            try:
+                with open(pom_path, "r", encoding="utf-8", errors="ignore") as f:
+                    if "org.gcube" in f.read():
+                        custom_templates.add("gcube")
+            except Exception:
+                pass
+
+    # For gCube projects, Eclipse configuration must always be included
+    if "gcube" in custom_templates:
+        api_templates.add("eclipse")
+
     return api_templates, custom_templates
 
 def render_custom_templates(selected_keys):
@@ -279,6 +294,10 @@ def main():
                 custom_detected.add(t)
             else:
                 api_detected.add(t)
+
+    # For gCube projects, Eclipse configuration must always be included
+    if "gcube" in custom_detected:
+        api_detected.add("eclipse")
         
     available = get_available_templates()
     if available:

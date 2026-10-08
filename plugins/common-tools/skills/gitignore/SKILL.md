@@ -32,8 +32,8 @@ The script returns a JSON payload with candidate tags (`base_templates`, `custom
 
 The AI agent executing this skill evaluates the suggested tags alongside project context:
 
-- **gCube Check:** Verify if `gcube-app.xml`, `gcube/` folder, or `org.gcube` POM dependencies exist -> include `gcube`.
-- **Stack Verification:** Confirm or refine detected language and framework tags (e.g. `java`, `python`, `angular`, `node`, `go`, `rust`, `csharp`).
+- **gCube Check:** Verify if `gcube-app.xml`, `gcube/` folder, or `org.gcube` POM dependencies exist -> include `gcube`. **Crucial:** for all gCube projects, **always include `eclipse`** (team colleagues use Eclipse, so Eclipse configs must always be included even if not detected in the local workspace).
+- **Stack Verification:** Confirm or refine detected language and framework tags (e.g. `java`, `python`, `angular`, `node`, `go`, `rust`, `csharp`, `eclipse`).
 - **Base & Custom Tags:** Ensure mandatory base OS/IDE templates (`visualstudiocode`, `emacs`, `macos`, `windows`, `linux`) and AI agent templates (`kilo`, `claude`, `roocode`, `cursor`) are included.
 
 ### 3. Execute Generation with Selected Tags
@@ -41,7 +41,7 @@ The AI agent executing this skill evaluates the suggested tags alongside project
 Run the script passing the final comma-separated list of tags chosen by the Skill:
 
 ```bash
-python3 ~/.kilo/skills/gitignore/scripts/generate_gitignore.py --dir . --templates "visualstudiocode,emacs,macos,windows,linux,kilo,claude,gcube,java,maven"
+python3 ~/.kilo/skills/gitignore/scripts/generate_gitignore.py --dir . --templates "visualstudiocode,emacs,macos,windows,linux,kilo,claude,gcube,java,maven,eclipse"
 ```
 
 ### 4. Extensible Configuration (`config/templates.json`)

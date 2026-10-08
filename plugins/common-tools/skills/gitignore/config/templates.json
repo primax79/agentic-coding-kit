@@ -187,6 +187,11 @@
       "detect_paths": [".idea"],
       "additional_rules": [],
       "removed_rules": []
+    },
+    "eclipse": {
+      "detect_paths": [".project", ".classpath", ".settings"],
+      "additional_rules": [],
+      "removed_rules": []
     }
   }
 }
