@@ -11,8 +11,9 @@ shared-context content inside a spec or task.
 A project-local copy of the task-management convention so the repo is
 self-contained for agents/teammates without this skill. Mirror the
 `macroplan-authoring` SKILL: the structure, the raw→spec→plan→summary pipeline,
-the task-packaging rule (inline vs one-file-per-task by size), the core rules,
-and the delegation rules. Keep it short and point to `00-INDEX.md` for live
+the task-packaging rule (inline vs one-file-per-task by size), the emergent-task
+rules (capture first, ids, the three files, states, several sessions), the core
+rules, and the delegation rules. Keep it short and point to `00-INDEX.md` for live
 state and `CONTEXT.md` for project facts.
 
 ---
@@ -68,6 +69,14 @@ order - `Priority` is.
 | --- | --- |
 | [<slug>](specs/<slug>.md) | 01, 03 |
 
+## Task queue (emergent tasks)
+
+Next up: T012, T009, T015.
+
+| Id | Task | Category | Priority | State | Executor |
+| --- | --- | --- | --- | --- | --- |
+| T012 | [<title>](<category>/T012-<slug>/README.md) | <category> | P1: <reason> | open | self |
+
 ## Dependency graph
 
 ​```text
@@ -78,6 +87,78 @@ order - `Priority` is.
 ---
 
 Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](AGENTS.md).
+```
+
+---
+
+## `tasks/<category>/README.md` (one per category of emergent tasks)
+
+```markdown
+# <category>
+
+Scope: <what kind of work belongs here>.
+Owner session: <name, or "none">: the only session that edits these task files.
+
+## Shared notes
+
+- <date, session>: <note from a session that is not the owner>
+```
+
+---
+
+## `tasks/<category>/T###-<slug>/README.md` (emergent task: definition)
+
+```markdown
+# T### - <title>
+
+- **Category:** <category>
+- **Priority:** P1 - <one-line reason>
+- **State:** open
+- **Executor:** self | <agent> | <person>
+- **Depends on:** - | T### | NN.T
+- **Decider:** - | <who must decide what>
+- **Sources:** <where it emerged: conversation of <date>, file, finding>
+
+## Goal
+
+<the outcome, in one or two sentences>
+
+## Steps
+
+1. <step>
+
+## Verification
+
+- <runnable check, with its expected result>
+```
+
+---
+
+## `tasks/<category>/T###-<slug>/CONTEXT.md` (resume without the original session)
+
+```markdown
+# T### - context
+
+- **Where the work is:** <repo, branch, paths>
+- **Build and check:** `<commands>`
+- **Rules from the user:** <constraints given in conversation>
+- **Established facts:** <fact> (`<command or file that established it>`)
+```
+
+---
+
+## `tasks/<category>/T###-<slug>/PROGRESS.md` (log and open items)
+
+```markdown
+# T### - progress
+
+## Open
+
+- [ ] <item>
+
+## Log (newest first)
+
+- <date>, <session>: <what was done, what was found, the next step>
 ```
 
 ---

@@ -1,6 +1,6 @@
 ---
 name: macroplan-authoring
-description: "Author and maintain a durable, resumable development pipeline as a `tasks/` tree - raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo). Not for a single-session, single-file change - use a normal plan for that."
+description: "Author and maintain a durable, resumable development pipeline as a `tasks/` tree - raw input (`_inbox/`) distilled into structured specs (`specs/`, many-to-many with initiatives), each generating or updating an initiative (`NN-<slug>/plan.md`, tasks sized one-per-commit) that ships with a `summary.md` and moves to `done/`, over a shared `CONTEXT.md` and a live `00-INDEX.md` registry. Also the place where work that EMERGES during a conversation is captured (`<category>/T###-<slug>/` with README/CONTEXT/PROGRESS, unique ids, priority with a reason, any executor: this session, a delegated agent, a person), so it never lives only in a session's context. Use when planning work too large for one sitting, spanning multiple sessions or dependent features, or delegated piecemeal to another agent (e.g. Kilo), and whenever a new to-do, follow-up or finding appears mid-session. Not for a single-session, single-file change - use a normal plan for that."
 ---
 
 # Task pipeline authoring (`tasks/` tree)
@@ -32,6 +32,10 @@ visible at the folder level.
   that must not be re-litigated or silently re-decided later.
 - You have raw material (notes, call transcripts, dumps) to turn into specs and
   tasks.
+- **A new piece of work emerges mid-conversation** (a request aside from the
+  current one, a finding, a follow-up, a decision waiting on someone). Capture
+  it as an emergent task - see "Emergent tasks" below. This applies even when
+  you will do it yourself.
 
 Do not force this onto a single small change one agent finishes and verifies in
 one pass - that's a normal plan. The ceremony pays off only at scale.
@@ -56,8 +60,12 @@ task/
     plan.md            task breakdown; tasks NN.T, each sized for one commit
     NN.T-<name>.md     (only when expanded - see "Task packaging" below)
     summary.md         completion record (added when the initiative ships)
+  <category>/        EMERGENT tasks, grouped by kind of work (see "Emergent tasks")
+    README.md          scope of the category, owner session, shared notes
+    T###-<slug>/       one task: README.md (definition), CONTEXT.md, PROGRESS.md
   done/              COMPLETE on a branch, awaiting merge (moved here unchanged)
     NN-<slug>/
+    <category>/T###-<slug>/   finished emergent tasks
   merged/            MERGED into the integration branch (final)
     NN-<slug>/
 ```
@@ -80,8 +88,9 @@ top-down, stop when you have enough:
   initiatives. Evolves as the codebase does; explicitly marked as needing
   re-verification against the real files, since it drifts between sessions.
 - **`00-INDEX.md`** - *current state*. The registry of initiatives with a
-  Priority column (priority ≠ the stable `NN` id), a Status column, and the
-  spec→initiative map. This is the "what's left / what's done" source of truth.
+  Priority column (priority ≠ the stable `NN` id), a Status column, the
+  spec→initiative map, and the **task queue** (one line per emergent task, the
+  next-up list on top). This is the "what's left / what's done" source of truth.
 
 Copy-paste skeletons for every file kind are in
 [`references/template.md`](references/template.md).
@@ -98,6 +107,81 @@ Copy-paste skeletons for every file kind are in
    existing** ones. `NN-<slug>/plan.md` is the *how*.
 4. **Ship.** On completion add `NN-<slug>/summary.md`, `git mv` the folder into
    `done/`, fix the handful of links the move shifts, and update `00-INDEX.md`.
+
+## Emergent tasks: capture work the moment it appears
+
+Work rarely arrives only through planning. Mid-conversation, the user asks for
+something aside from the current task, a review turns up a defect out of scope,
+a "next step" comes up, a decision waits on someone, a peer session hands
+something over. If that work lives only in the conversation, it is lost when
+the session ends or is compacted, it cannot be picked up by anyone else, and
+it keeps occupying the session's context while waiting.
+
+**Rule: capture first, then continue.** As soon as new work appears and will
+not be finished and verified in the current turn, write it as a task file,
+then go back to what you were doing. In the reply, cite the task by id and
+path. Do not leave the task only in a "next steps" paragraph of the chat.
+
+- **Where.** If it belongs to an existing initiative, add it to that plan as a
+  task `NN.T`. Otherwise it is an emergent task:
+  `tasks/<category>/T###-<slug>/`. Categories are kinds of work chosen per
+  project (e.g. `porting/`, `maintenance/`, `release/`, `decisions/`); create a
+  new one only when no existing one fits, with a `README.md` stating its
+  scope and owner. A task that grows into several dependent pieces is
+  promoted to an initiative; its `T###` id stays in the initiative's
+  `Derived from`.
+- **Id.** `T###`, unique across the whole tree including `done/`, never reused.
+  Take the highest existing id plus one. Check it again right before
+  creating the folder: parallel sessions may be creating tasks in the same
+  repository at the same time.
+- **Files.** A task is a folder, so that its definition, context and progress
+  live in the task and not in a session:
+  - `README.md`: the definition. The header lists id, title, category,
+    priority with a one-line reason (P0 now / P1 next / P2 later / P3 someday),
+    state, executor, depends-on, decider (who must decide, if a decision is
+    open) and sources (where it emerged: conversation date, file, finding).
+    Then goal, steps and **Verification**.
+  - `CONTEXT.md`: everything needed to resume without the original session:
+    where the work is, how to build and check it, rules the user gave, key
+    facts already established (with the command or file that established
+    each). Write it while the context is still fresh: that is its point.
+  - `PROGRESS.md`: a log, newest first, and the checklist of open items.
+    Update it in the same change as any work on the task.
+  A small task may start as one file, `T###-<slug>.md`, with the same header;
+  convert it into a folder once it has progress worth keeping.
+- **State.** One of: `open`, `in progress`, `delivered` (done by its executor,
+  not yet checked by anyone else), `verified`, `done` (or `done with a caveat`,
+  naming the caveat), `blocked` (naming the question), `dropped` (saying why).
+- **Executor-agnostic.** The executor is `self` (the session that captured it),
+  a delegated agent, or a person. The lifecycle is the same for all three: a
+  task you do yourself still moves through its states, and is not done until
+  its Verification has been run. Writing it down is what lets it change hands
+  later.
+- **Registry.** Add one line to the task queue in `00-INDEX.md`: id, title,
+  category, priority, state, executor, link to the task's `README.md`. Keep a
+  short next-up list (about five) at the top.
+- **Done.** When verified, update `PROGRESS.md`, `git mv` the folder to
+  `tasks/done/<category>/`, and update its line in `00-INDEX.md`, in one
+  change.
+
+**Keep the context clean.** Capturing a task moves it out of the session's
+working memory. The session keeps only the one-line registry entry, not the
+details. Read a task's folder only when you pick it up; when someone else
+will execute it, the folder is the whole hand-off, so a fresh session or
+agent can start with an empty context and the task files.
+
+**Several sessions on one repository.**
+- The state of a task is in its folder, never in conversation memory.
+- A session that stops leaves `PROGRESS.md` current.
+- Only a category's owner session edits its task files and `README.md`. Others
+  add notes under "Shared notes" in the category `README.md`, or create new
+  `T###` tasks.
+- Re-check facts with git before acting on a task file: other sessions edit the
+  repository too.
+
+**Never in a task file:** secrets, tokens, personal data, or details of
+undisclosed vulnerabilities. Point to where they are kept instead. A claim
+that something does not exist cites the command that searched for it.
 
 ## Task packaging: one file, or one file per task (by size)
 
