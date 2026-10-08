@@ -73,7 +73,7 @@ order - `Priority` is.
 
 | Id | Priority | Task | Executor | Handoff |
 | --- | --- | --- | --- | --- |
-| T012 | P0 | [<title>](<category>/T012-<slug>.md) | self | `Read tasks/<category>/T012-<slug>.md, do it, update the task and this index.` |
+| T012 | P0 | [<title>](<category>/T012-<slug>.md) | self | `Read tasks/<category>/T012-<slug>.md, do it, update the task and the registry.` |
 
 ## Tasks by category
 
@@ -94,9 +94,9 @@ order - `Priority` is.
 
 ## Done
 
-| Id | Task | Closed |
-| --- | --- | --- |
-| T009 | [<title>](done/<category>/T009-<slug>.md) | <date> |
+| Id | Task | Result | Closed |
+| --- | --- | --- | --- |
+| T009 | [<title>](done/<category>/T009-<slug>.md) | done / done with a caveat / dropped | <date> |
 
 ## Dependency graph
 
@@ -159,12 +159,12 @@ and this is its `README.md`.
 - priority-reason: <one line>
 - next-up: no
 - state: open
-- executor: self | <agent> | dedicated-session | user-decision | <person>
+- executor: self | <agent product> | dedicated-session | user-decision | <person>
 - depends-on: - | T### | NN.T
 - decider: - | <who must decide what>
 - sources: <conversation of <date>, file, finding, raw row id>
 - paths: <repositories and paths the task touches>
-- handoff: Read tasks/<category>/T###-<slug>.md, do the open steps, run the Verification, update the task and tasks/00-INDEX.md.
+- handoff: Read tasks/<category>/T###-<slug>.md (or T###-<slug>/README.md for a folder task), do the open steps, run the Verification, update the task and the registry.
 
 ## Goal
 
@@ -179,7 +179,9 @@ and this is its `README.md`.
 - <runnable check, with its expected result>
 ```
 
-States: open | in progress | waiting | blocked | delivered | verified | done |
+The header set is closed and in this order; empty values are `-`. While
+`delivered`, add a body line right after the header: `verification pending:
+<what is left, by whom>`. States: open | in progress | waiting | blocked | delivered | verified | done |
 dropped. Only someone other than the executor sets `verified`.
 
 ---

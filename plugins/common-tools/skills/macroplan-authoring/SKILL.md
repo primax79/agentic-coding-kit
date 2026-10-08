@@ -147,19 +147,28 @@ path. A "next steps" paragraph in the chat is not a substitute.
     Update it in the same change as any work on the task.
   A file is promoted to a folder, with the same id, when it gets progress worth
   keeping.
-- **Header.** One `key: value` line per field, so the headers can be grepped:
+- **Header.** One `key: value` line per field, so the headers can be grepped.
+  The set is **closed** and the order is the one below, always all fields
+  present; an empty value is `-` (never omit a line):
   - `id`, `title`, `category`;
   - `priority` (P0–P3) and `priority-reason` (one line);
-  - `next-up` (yes/no);
+  - `next-up`: `yes` or `no` (default `no`);
   - `state`, `executor`;
   - `depends-on`: task ids, or `-`;
-  - `decider`: who must decide, when a decision is open;
+  - `decider`: who must decide what, when a decision is open, else `-`;
   - `sources`: where it emerged (conversation date, file, finding, raw row id);
   - `paths`: the repositories and paths the task touches;
   - `handoff`: the one-line prompt that starts a fresh session or agent on the
-    task, i.e. what to read, what to do and what to update.
+    task: what to read, what to do and what to update. Name the task by its own
+    path (`tasks/<category>/T###-<slug>.md`, or `.../T###-<slug>/README.md` for
+    a folder task) and say "the registry" instead of hard-coding the index
+    path, so it survives a move of the index.
 
-  Then the sections Goal, Steps and **Verification**.
+  Extra fields are not allowed in the header: put the information in the body.
+  A project that really needs one lists it in its `tasks/AGENTS.md` and puts it
+  after `handoff`. Then the sections Goal, Steps and **Verification**. While
+  the state is `delivered`, a line `verification pending: <what is left to
+  check, and by whom>` goes right after the header.
 
 ### States
 
@@ -171,14 +180,24 @@ why).
 - `delivered` means the executor finished and checked its own work. Nobody else
   has checked it yet.
 - **Only someone other than the executor sets `verified`**: another session,
-  the orchestrator, or the user, after re-running the Verification. When nobody
-  else is available, the task stays `delivered`, and `PROGRESS.md` records the
-  self-check.
+  the orchestrator, or the user, after re-running the Verification.
+- **`done`** is set by whoever closes the task, once the Verification has been
+  run. The normal path is `delivered` → `verified` → `done`. When nobody else
+  is available to verify, the executor may close it as `done with a caveat:
+  self-verified only` (and `PROGRESS.md` records the self-check); it never sets
+  `verified` itself. A task that waits for someone else's check stays
+  `delivered`.
 
 ### Executor-agnostic
 
-The executor is the session that captured the task (`self`), a delegated agent,
-a dedicated session, or a person (`user-decision` when the task is a decision).
+The `executor` value is one of:
+- `self`: the session that captured the task does it, itself;
+- the agent's product name (`kilo`, `claude`, `codex`, ...) for a delegated
+  agent, including a subagent or an MCP-delegated run started by the capturing
+  session; the model goes in `PROGRESS.md`, not in the header;
+- `dedicated-session`: a session started for this task;
+- a person's name, or `user-decision` when the task is a decision.
+
 The lifecycle is the same for all of them. A task you do yourself still moves
 through its states, and is not done until its Verification has been run.
 Writing it down is what lets it change hands later.
@@ -192,11 +211,20 @@ table it holds:
   (linked to the task file or its `README.md`), state, executor, depends-on;
 - **decisions waiting**: the exact question, who decides, and the task it
   blocks;
-- **done**: finished tasks, newest first.
+- **done**: closed tasks, newest first, with their result (`done`,
+  `done with a caveat`, `dropped`).
 
-**Update the task and the registry in the same change**, every time.
+**Update the task and the registry in the same change**, every time. The task
+header is the source of truth for `state`, `priority`, `executor`, `depends-on`
+and `decider`; the registry rows (and the decisions-waiting table, which
+repeats `decider`) are derived from it. On a mismatch, the header wins and the
+registry is fixed. A registry may add a column for who must act or give access
+(e.g. `Owner`).
 
-**Done.** When the task is done, update `PROGRESS.md`, move the task with
+**Done.** `tasks/done/<category>/` is the final place of an emergent task
+(`done`, `done with a caveat` or `dropped`): there is no `merged/` step for
+emergent tasks (that one belongs to initiatives, see Structure). When the task
+is closed, update `PROGRESS.md`, move the task with
 `git mv` to `tasks/done/<category>/` (same name), and update the registry, in
 one change. Then check the Markdown links: a move breaks relative links in
 both directions, and every link in `tasks/` must still resolve.
