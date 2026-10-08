@@ -61,7 +61,8 @@ task/
     NN.T-<name>.md     (only when expanded - see "Task packaging" below)
     summary.md         completion record (added when the initiative ships)
   <category>/        EMERGENT tasks, grouped by kind of work (see "Emergent tasks")
-    README.md          scope of the category, owner session, shared notes
+    README.md          scope, owner session, start prompt, shared notes
+    notes/             the category's working notes
     T###-<slug>/       one task: README.md (definition), CONTEXT.md, PROGRESS.md
   done/              COMPLETE on a branch, awaiting merge (moved here unchanged)
     NN-<slug>/
@@ -126,8 +127,9 @@ path. Do not leave the task only in a "next steps" paragraph of the chat.
   task `NN.T`. Otherwise it is an emergent task:
   `tasks/<category>/T###-<slug>/`. Categories are kinds of work chosen per
   project (e.g. `porting/`, `maintenance/`, `release/`, `decisions/`); create a
-  new one only when no existing one fits, with a `README.md` stating its
-  scope and owner. A task that grows into several dependent pieces is
+  new one only when no existing one fits. Its `README.md` states the scope,
+  the owner session, and a one-line **start prompt** that gives a fresh
+  session the whole category; working notes go in the category's `notes/`. A task that grows into several dependent pieces is
   promoted to an initiative; its `T###` id stays in the initiative's
   `Derived from`.
 - **Id.** `T###`, unique across the whole tree including `done/`, never reused.
@@ -140,7 +142,9 @@ path. Do not leave the task only in a "next steps" paragraph of the chat.
     priority with a one-line reason (P0 now / P1 next / P2 later / P3 someday),
     state, executor, depends-on, decider (who must decide, if a decision is
     open) and sources (where it emerged: conversation date, file, finding).
-    Then goal, steps and **Verification**.
+    Then goal, steps, **Verification**, and a **handoff prompt**: the one or
+    two sentences that start a fresh session or agent on this task (which
+    files to read first, what to do, where to report).
   - `CONTEXT.md`: everything needed to resume without the original session:
     where the work is, how to build and check it, rules the user gave, key
     facts already established (with the command or file that established
@@ -149,9 +153,11 @@ path. Do not leave the task only in a "next steps" paragraph of the chat.
     Update it in the same change as any work on the task.
   A small task may start as one file, `T###-<slug>.md`, with the same header;
   convert it into a folder once it has progress worth keeping.
-- **State.** One of: `open`, `in progress`, `delivered` (done by its executor,
-  not yet checked by anyone else), `verified`, `done` (or `done with a caveat`,
-  naming the caveat), `blocked` (naming the question), `dropped` (saying why).
+- **State.** One of: `open`, `in progress`, `waiting` (on an external party,
+  naming who and what), `blocked` (on an unresolved question, naming it),
+  `delivered` (done by its executor, not yet checked by anyone else),
+  `verified`, `done` (or `done with a caveat`, naming the caveat), `dropped`
+  (saying why).
 - **Executor-agnostic.** The executor is `self` (the session that captured it),
   a delegated agent, or a person. The lifecycle is the same for all three: a
   task you do yourself still moves through its states, and is not done until

@@ -98,6 +98,10 @@ Delegation rules, the pipeline, and the folder convention live in [`AGENTS.md`](
 
 Scope: <what kind of work belongs here>.
 Owner session: <name, or "none">: the only session that edits these task files.
+Start prompt: "Read tasks/<category>/README.md and tasks/00-INDEX.md, then take
+the highest-priority open task of this category."
+
+Working notes: [`notes/`](notes/).
 
 ## Shared notes
 
@@ -113,7 +117,7 @@ Owner session: <name, or "none">: the only session that edits these task files.
 
 - **Category:** <category>
 - **Priority:** P1 - <one-line reason>
-- **State:** open
+- **State:** open (open | in progress | waiting | blocked | delivered | verified | done | dropped)
 - **Executor:** self | <agent> | <person>
 - **Depends on:** - | T### | NN.T
 - **Decider:** - | <who must decide what>
@@ -130,6 +134,11 @@ Owner session: <name, or "none">: the only session that edits these task files.
 ## Verification
 
 - <runnable check, with its expected result>
+
+## Handoff prompt
+
+"Read tasks/<category>/T###-<slug>/ (README, CONTEXT, PROGRESS), do the open
+steps, run the Verification, and update PROGRESS.md and the 00-INDEX.md line."
 ```
 
 ---
