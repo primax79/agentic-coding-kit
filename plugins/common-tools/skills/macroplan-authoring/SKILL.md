@@ -258,6 +258,40 @@ only when you pick it up. When someone else will execute it, the task is the
 whole hand-off: a fresh session or agent starts with an empty context and the
 task files.
 
+### Project-local tasks inside a workspace
+
+A workspace often contains projects with their own repository, worktree or
+folder (a documentation site, a library, a proposal). Work that is **strictly
+about one project** is kept in that project, not in the workspace tree:
+
+- **Project tree.** The project has its own `tasks/` (`00-INDEX.md`, a shared
+  `CONTEXT.md`, categories, `done/`), with the same conventions as this skill
+  and its own `T###` ids. It travels with the project: when the project is
+  moved, shared or handed to someone else, its tasks, context and progress go
+  with it and nothing load-bearing stays in the workspace.
+- **Pseudo-task in the workspace.** The workspace `tasks/` keeps one task per
+  project (or per significant project task) that only **points** to the project
+  tree and mirrors its state, so that "what do we have to do?" is answered from
+  the workspace registry alone. Its body has: the path of the project tasks
+  folder (relative, or the name of the repository if it will live elsewhere),
+  the current state of the project tasks (ids and states, one line each), who
+  must act, and the next step. It carries no context and no progress log: those
+  live in the project.
+- **Single source of truth.** The project task header owns `state`, `priority`,
+  `executor`, `depends-on` and `decider`. The pseudo-task and its registry row
+  are derived: when a project task changes state, update the pseudo-task in the
+  same change (or, if the project is outside the workspace repository, at the
+  next time the workspace registry is touched, saying so in `PROGRESS.md`).
+- **Paths and ids.** A pseudo-task is a normal workspace task (own `T###`,
+  category, priority with a reason, `paths` = the project tasks folder). Never
+  reuse a project id in the workspace or the reverse; cite project tasks as
+  `<project>:T###`.
+- **Moving a project out.** When a project leaves the workspace, move its tasks
+  with it, update the pseudo-task's pointer, and keep the pseudo-task until the
+  workspace no longer needs to track the project.
+- **Not for cross-cutting work.** Work that touches several projects, or the
+  workspace itself, stays a normal workspace task.
+
 ### Several sessions on one repository
 
 - The state of a task is in its file or folder, never in conversation memory.
