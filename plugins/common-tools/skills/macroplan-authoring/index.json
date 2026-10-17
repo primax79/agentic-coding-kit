@@ -3,8 +3,7 @@
     {
       "name": "macroplan-authoring",
       "files": [
-        "SKILL.md",
-        "references/template.md"
+        "SKILL.md"
       ]
     }
   ]
