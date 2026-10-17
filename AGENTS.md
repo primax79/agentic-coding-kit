@@ -5,12 +5,12 @@ software development (Claude Code, Kilo Code) — not gCube-specific, not
 about agent delegation. Full pitch, plugin table, and install paths:
 [`README.md`](README.md). Part of the `primax79/*` family of AI-coding-tool
 repos — see the workspace root's `AGENTS.md` (one level up) for how this
-repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
+repo relates to `gcube-ai-toolkit`, `ai-orchestration`, and `kilo-mcp`.
 
 ## Layout
 
 - `plugins/common-tools/` — generic dev utilities (`gitignore`,
-  `markdown-formatter`, `macroplan-authoring`, `agents-md-generator` skills; `merge-resolver`
+  `markdown-formatter`, `macroplan-authoring` (initiatives & emergent tasks), `agents-md-generator` skills; `merge-resolver`
   agent). Zero AI-tooling-config coupling.
 - `plugins/agent-tooling-meta/` — tools for configuring Kilo/Claude
   themselves (`kilo-rag-index-manager`,
@@ -50,7 +50,7 @@ repo relates to `gcube-ai-toolkit`, `ai-architect-executor`, and `kilo-mcp`.
 - **Markdown formatting.** Don't hand-format Markdown tables/TOCs — use
   this repo's own `markdown-formatter` skill (`plugins/common-tools/skills/markdown-formatter/`).
 - **No dependency on sibling repos at install time.** This repo, `gcube-ai-toolkit`,
-  `ai-architect-executor`, and `kilo-mcp` are organizationally related but
+  `ai-orchestration`, and `kilo-mcp` are organizationally related but
   none require another to be present — don't introduce a hard runtime
   dependency across repos without flagging it (see the README's
   "Relationship with the other repos in this family" and

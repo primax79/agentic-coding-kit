@@ -14,13 +14,14 @@ copy-pasting files by hand (**plugins + marketplace**). This repo is the
 generic layer of that - the skills, agents, and install mechanics that
 don't assume gCube/D4Science (see [`gcube-ai-toolkit`](https://github.com/primax79/gcube-ai-toolkit)
 for that) and don't assume you're delegating work to another AI (see
-[`ai-architect-executor`](https://github.com/primax79/ai-architect-executor)/[`kilo-mcp`](https://github.com/primax79/kilo-mcp)
+[`ai-orchestration`](https://github.com/primax79/ai-orchestration)/[`kilo-mcp`](https://github.com/primax79/kilo-mcp)
 for that). If a skill or tool is useful on *any* project regardless of
 domain, it belongs here.
 
 **Typical use cases**: bootstrap a new project's `.gitignore` correctly for
 its actual stack; keep Markdown docs formatted consistently; plan
-multi-session work as a resumable task tree (`macroplan-authoring`); install
+multi-session work and capture mid-session findings as a resumable task tree
+(`macroplan-authoring`, covering both planned initiatives and emergent tasks); install
 or install your own Kilo/Claude skills and agents without hand-editing config
 files; pull in a curated, vetted third-party skill instead of writing one
 from scratch.
@@ -29,7 +30,7 @@ from scratch.
 
 | Plugin | Contains | Concern | Recommended scope |
 | --- | --- | --- | --- |
-| [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring`, `agents-md-generator` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling | Global |
+| [`common-tools`](plugins/common-tools) | `gitignore`, `markdown-formatter`, `macroplan-authoring` (initiatives & emergent tasks), `agents-md-generator` (skills), `merge-resolver` (agent) | Generic dev utilities, zero AI-tooling-config coupling | Global |
 | [`agent-tooling-meta`](plugins/agent-tooling-meta) | `kilo-rag-index-manager`, `framework-skillset-generator` (skills); `kilo-customizer`, `framework-topic-drafter` (agents); `/generate-skillset` (command) | Managing Kilo Code/Claude Code themselves - maintaining Kilo's RAG index, authoring configuration, and generating a grounded reference skillset for a framework/library from its source/docs/spec. Not delegation - see relationship section below. | Global |
 | [`third-party`](plugins/third-party) | 10 curated external skills (`frontend-design`, `mcp-builder`, `skill-creator`, `theme-factory`, `agent-md-refactor`, `file-organizer`, `changelog-generator`, `grill-me`, `terraform`, `playwright`) | Vetted, license-preserved imports | Global |
 | [`angular-dev-kit`](plugins/angular-dev-kit) | `angular-library` (ours: authoring/packaging a publishable Angular library, `provideX()`/ng-packagr); 10 vendored references - `angular-component`, `-di`, `-directives`, `-forms`, `-http`, `-routing`, `-signals`, `-ssr`, `-testing`, `-tooling` - from [analogjs/angular-skills](https://github.com/analogjs/angular-skills) (MIT, Brandon Roberts) | Angular v20+ knowledge, library-authoring and application-side kept distinct - see the plugin's own README for which is which | **Project** - Angular-only and version-specific; see [scope guidance](docs/03-compatibility-and-distribution.md#choosing-scope-not-just-install-everywhere-for-convenience) |
