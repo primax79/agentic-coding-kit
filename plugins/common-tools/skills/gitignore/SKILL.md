@@ -12,9 +12,10 @@ Automatically generate or update a project's `.gitignore` file using the officia
 ## Division of Responsibilities
 
 - **Skill (LLM Decision Authority):** Decides which tags/templates to pass to the generator based on project context, user instructions, and workspace inspection.
-- **Script (Auxiliary Helper & Determinisic Generator):**
+- **Script (Auxiliary Helper & Deterministic Generator):**
   - Implements auxiliary helper methods (`--suggest`) that scan workspace files and return candidate tags (base, custom, API) to assist the Skill.
-  - Generates the `.gitignore` content deterministically, fetching API templates, applying custom local sections, and preserving existing custom user rules at the HEAD.
+  - Generates the `.gitignore` content deterministically, fetching API templates, applying custom local sections, and preserving existing custom user rules from anywhere in the file (before, between, or after blocks) at the HEAD without dropping project-specific rules.
+  - Implements rule preservation (`preserve_rules.py`) with duplicate deduplication against generated templates and detailed regeneration reporting.
 
 ## Workflow
 
@@ -63,11 +64,17 @@ To add or edit custom template definitions or default base tags, simply edit `sk
 
 ### 5. Custom User Rule Preservation
 
-If `.gitignore` already exists:
+If `.gitignore` already exists, regeneration guarantees:
 
-- Existing custom entries are preserved at the **HEAD** (top) of `.gitignore` under `# Custom Project Rules`.
-- Local custom templates (`CUSTOM_TEMPLATES`) follow below the head custom rules.
-- Toptal API-generated rules are appended at the bottom.
+- **Nothing is lost:** Every line of the original file that is not part of a generated template block is preserved, wherever it sits (before, between, or after generated blocks), and moved to the custom head of `.gitignore` under `# Custom Project Rules` in its original order.
+- **Comments stay attached:** Comments attached to rules follow them to the custom head; blank-line grouping is kept intact.
+- **Duplicates dropped only when identical:** Rules that are identical to generated template lines are dropped; rules with differences (e.g. `target` vs `target/`, `.settings` vs `.settings/`) are preserved.
+- **Regeneration Report:** Every run prints a report of lines moved to the head and lines dropped as duplicates of the template.
+- **Dry-run mode (`--dry-run`):** Displays the resulting `.gitignore` file and the regeneration report without writing any changes to disk.
+- **Idempotence:** Running regeneration twice in a row produces the identical file with zero lines moved or dropped.
+- **Auxiliary script (`preserve_rules.py`):** The deterministic rule preservation and report engine is implemented in `scripts/preserve_rules.py` and invoked automatically by `generate_gitignore.py`.
+
+Local custom templates (`CUSTOM_TEMPLATES`) follow below the head custom rules, and Toptal API-generated rules are placed at the bottom.
 
 ### 6. API References & Template Listing
 

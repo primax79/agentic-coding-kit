@@ -1,0 +1,19 @@
+# Created by https://www.toptal.com/developers/gitignore/api/java,maven
+### Java ###
+*.class
+*.log
+### Maven ###
+target/
+# End of https://www.toptal.com/developers/gitignore/api/java,maven
+
+# Comment for rule that is duplicate of template
+*.class
+
+# Comment for rules that are kept
+kept_rule_1.txt
+kept_rule_2.txt
+
+# Standalone comment without any rules
+
+# Comment for single kept rule
+kept_rule_3.txt

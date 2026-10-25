@@ -1,0 +1,18 @@
+# Created by https://www.toptal.com/developers/gitignore/api/java
+### Java ###
+*.class
+*.log
+# End of https://www.toptal.com/developers/gitignore/api/java
+
+# Custom rule between blocks
+intermediate_cache.dat
+scratch/
+
+### gCube Ecosystem ###
+token.properties
+local-config.properties
+gcube/extra-resources/local*
+*.war.failed
+
+# Custom rule after all blocks
+trailing_rule.txt

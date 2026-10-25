@@ -1,0 +1,13 @@
+# Created by https://www.toptal.com/developers/gitignore/api/java,maven
+### Java ###
+*.class
+*.log
+### Maven ###
+target/
+# End of https://www.toptal.com/developers/gitignore/api/java,maven
+
+# Project specific rules after generated block
+# Sensitive test keys
+src/test/resources/*.gcubekey
+src/test/resources/secret.properties
+config/local.ini

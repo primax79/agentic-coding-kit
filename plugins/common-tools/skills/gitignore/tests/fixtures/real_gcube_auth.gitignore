@@ -1,0 +1,35 @@
+# 
+ignore_me
+tomcat
+
+target
+.classpath
+.visual
+.project
+.settings
+/**/.DS_Store
+
+# Created by https://www.toptal.com/developers/gitignore/api/java,macos,linux,visualstudiocode,eclipse
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+# End of https://www.toptal.com/developers/gitignore/api/java,macos,linux,visualstudiocode,eclipse
+
+# Ignoring the generated sphinx documentation if invoke from command line instead of by maven
+./documentation/sphinx/_build/
+
+# Ignoring sensitive files in test resources
+# These files are not needed for the tests to run and should not be committed
+# to the repository as they may contain sensitive information.
+src/test/resources/*.gcubekey
+src/test/resources/*.properties*
+src/test/resources/config.ini

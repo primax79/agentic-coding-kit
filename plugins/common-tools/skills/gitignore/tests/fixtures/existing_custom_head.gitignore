@@ -1,0 +1,14 @@
+# Custom Project Rules
+# Existing custom head rule
+head_rule.txt
+
+# Created by https://www.toptal.com/developers/gitignore/api/java,maven
+### Java ###
+*.class
+*.log
+### Maven ###
+target/
+# End of https://www.toptal.com/developers/gitignore/api/java,maven
+
+# Trailing rule moved
+trailing_rule.txt

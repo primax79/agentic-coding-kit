@@ -5,7 +5,15 @@
       "files": [
         "SKILL.md",
         "config/templates.json",
-        "scripts/generate_gitignore.py"
+        "scripts/generate_gitignore.py",
+        "scripts/preserve_rules.py",
+        "tests/__init__.py",
+        "tests/fixtures/after_block.gitignore",
+        "tests/fixtures/between_blocks.gitignore",
+        "tests/fixtures/comments_attached.gitignore",
+        "tests/fixtures/existing_custom_head.gitignore",
+        "tests/fixtures/real_gcube_auth.gitignore",
+        "tests/test_gitignore.py"
       ]
     }
   ]

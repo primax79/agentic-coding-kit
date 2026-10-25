@@ -27,6 +27,10 @@ def get_available_templates():
         return None
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+from preserve_rules import preserve_custom_rules, PreservationReport
+
 CONFIG_FILE = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "config", "templates.json"))
 
 def load_config():
@@ -206,55 +210,32 @@ def patch_api_content(api_content, selected_api_templates, selected_custom_templ
 
     return api_content
 
-def apply_gitignore(project_dir, new_content, force=False):
+def apply_gitignore(project_dir, new_content, force=False, dry_run=False):
     """Write or update .gitignore in project_dir, placing custom existing rules at the top (head)."""
     gitignore_path = os.path.join(project_dir, ".gitignore")
+    existing_content = ""
     
     if os.path.exists(gitignore_path) and not force:
         with open(gitignore_path, "r", encoding="utf-8") as f:
             existing_content = f.read()
-            
-        # Extract custom user rules if the file already contained generated content
-        api_marker = "# Created by https://www.toptal.com/developers/gitignore/api/"
-        first_custom_marker = None
-        for key, tpl in CUSTOM_TEMPLATES.items():
-            marker = f"### {tpl['title']} ###"
-            if marker in existing_content:
-                idx = existing_content.find(marker)
-                if first_custom_marker is None or idx < existing_content.find(first_custom_marker):
-                    first_custom_marker = marker
 
-        custom_rules = ""
-        split_marker = None
-        
-        if first_custom_marker and existing_content.find(first_custom_marker) != -1:
-            split_marker = first_custom_marker
-        elif api_marker in existing_content:
-            split_marker = api_marker
-            
-        if split_marker:
-            parts = existing_content.split(split_marker, 1)
-            custom_part = parts[0].strip()
-            if custom_part.startswith("# Custom Project Rules"):
-                lines = custom_part.splitlines()[1:]
-                custom_part = "\n".join(lines).strip()
-            custom_rules = custom_part
-        else:
-            custom_rules = existing_content.strip()
+    final_content, report = preserve_custom_rules(existing_content, new_content)
 
-        if custom_rules:
-            print("Preserving existing custom .gitignore entries at the head of the file...")
-            final_content = f"# Custom Project Rules\n{custom_rules}\n\n{new_content.strip()}\n"
-        else:
-            final_content = new_content.strip() + "\n"
-            
-        with open(gitignore_path, "w", encoding="utf-8") as f:
-            f.write(final_content)
-    else:
-        with open(gitignore_path, "w", encoding="utf-8") as f:
-            f.write(new_content.strip() + "\n")
+    if dry_run:
+        print("\n--- Resulting .gitignore Content (Dry Run) ---\n")
+        print(final_content)
+        print(report.format_report())
+        return final_content, report
+
+    if existing_content and not force and (report.lines_moved or "# Custom Project Rules" in final_content):
+        print("Preserving existing custom .gitignore entries at the head of the file...")
+
+    with open(gitignore_path, "w", encoding="utf-8") as f:
+        f.write(final_content)
             
     print(f"Successfully saved .gitignore to {gitignore_path}")
+    print("\n" + report.format_report())
+    return final_content, report
 
 def main():
     parser = argparse.ArgumentParser(description="Generate and apply .gitignore using gitignore.io API and generic local custom templates")
@@ -328,10 +309,9 @@ def main():
         new_content = api_content.strip()
 
     if args.dry_run:
-        print("\n--- Generated .gitignore Content (Dry Run) ---\n")
-        print(new_content)
+        apply_gitignore(project_dir, new_content, force=args.force, dry_run=True)
     else:
-        apply_gitignore(project_dir, new_content, force=args.force)
+        apply_gitignore(project_dir, new_content, force=args.force, dry_run=False)
         print("\nTo apply changes and re-index cached files in git, you can run:")
         print("  git rm --cached -r .")
         print("  git add .")
