@@ -11,7 +11,7 @@ Covers:
 - the report content
 - duplicate dropping only when identical
 - dry-run mode
-- real gCube Maven repository fixture
+- Maven repository fixture with rules after the block
 """
 
 import os
@@ -56,21 +56,21 @@ class TestGitignoreRulePreservation(unittest.TestCase):
 
         # Custom rules should be at the head under # Custom Project Rules
         self.assertTrue(final_content.startswith("# Custom Project Rules\n"))
-        self.assertIn("src/test/resources/*.gcubekey", final_content)
+        self.assertIn("src/test/resources/*.localkey", final_content)
         self.assertIn("src/test/resources/secret.properties", final_content)
         self.assertIn("config/local.ini", final_content)
 
         # The rules should appear before the generated block
         head_end = final_content.find("# Created by https://www.toptal.com")
         self.assertGreater(head_end, 0)
-        rule_pos = final_content.find("src/test/resources/*.gcubekey")
+        rule_pos = final_content.find("src/test/resources/*.localkey")
         self.assertLess(rule_pos, head_end)
 
         # Report should list all moved lines
         expected_moved = [
             "# Project specific rules after generated block",
             "# Sensitive test keys",
-            "src/test/resources/*.gcubekey",
+            "src/test/resources/*.localkey",
             "src/test/resources/secret.properties",
             "config/local.ini",
         ]
@@ -282,9 +282,9 @@ class TestGitignoreRulePreservation(unittest.TestCase):
             self.assertIn("my_custom_secret.key", final_content)
             self.assertEqual(report.lines_moved, ["my_custom_secret.key"])
 
-    def test_real_gcube_repo_fixture(self):
-        """Test on fixture modeled from authorization-control-library/.gitignore."""
-        existing = self._read_fixture("real_gcube_auth.gitignore")
+    def test_maven_repo_fixture(self):
+        """Maven-style file with project rules and their comment after the generated block."""
+        existing = self._read_fixture("maven_rules_after_block.gitignore")
         template = (
             "# Created by https://www.toptal.com/developers/gitignore/api/java,macos,linux,visualstudiocode,eclipse\n"
             "### Eclipse ###\n"
@@ -316,18 +316,16 @@ class TestGitignoreRulePreservation(unittest.TestCase):
 
         # All rules from after the block must be preserved in custom head
         self.assertIn("./documentation/sphinx/_build/", final_content)
-        self.assertIn("src/test/resources/*.gcubekey", final_content)
+        self.assertIn("src/test/resources/*.localkey", final_content)
         self.assertIn("src/test/resources/*.properties*", final_content)
         self.assertIn("src/test/resources/config.ini", final_content)
 
         # Comments must remain intact
-        self.assertIn("# Ignoring sensitive files in test resources", final_content)
-        self.assertIn("# These files are not needed for the tests to run and should not be committed", final_content)
-        self.assertIn("# to the repository as they may contain sensitive information.", final_content)
+        self.assertIn("# Local test resources, not committed", final_content)
 
         # Moved lines must contain the rules and comments from after the block
         self.assertIn("./documentation/sphinx/_build/", report.lines_moved)
-        self.assertIn("src/test/resources/*.gcubekey", report.lines_moved)
+        self.assertIn("src/test/resources/*.localkey", report.lines_moved)
         self.assertIn("src/test/resources/*.properties*", report.lines_moved)
         self.assertIn("src/test/resources/config.ini", report.lines_moved)
 

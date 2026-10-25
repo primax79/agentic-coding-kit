@@ -27,9 +27,7 @@ local.properties
 # Ignoring the generated sphinx documentation if invoke from command line instead of by maven
 ./documentation/sphinx/_build/
 
-# Ignoring sensitive files in test resources
-# These files are not needed for the tests to run and should not be committed
-# to the repository as they may contain sensitive information.
-src/test/resources/*.gcubekey
+# Local test resources, not committed
+src/test/resources/*.localkey
 src/test/resources/*.properties*
 src/test/resources/config.ini

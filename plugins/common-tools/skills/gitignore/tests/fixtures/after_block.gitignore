@@ -8,6 +8,6 @@ target/
 
 # Project specific rules after generated block
 # Sensitive test keys
-src/test/resources/*.gcubekey
+src/test/resources/*.localkey
 src/test/resources/secret.properties
 config/local.ini
