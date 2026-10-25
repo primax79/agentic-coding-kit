@@ -18,6 +18,10 @@ import os
 import sys
 import tempfile
 import unittest
+import io
+import subprocess
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 # Ensure scripts directory is on sys.path
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -29,7 +33,7 @@ if SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, SCRIPTS_DIR)
 
 from preserve_rules import preserve_custom_rules, PreservationReport
-from generate_gitignore import apply_gitignore
+from generate_gitignore import apply_gitignore, check_git_reindex, main
 
 
 class TestGitignoreRulePreservation(unittest.TestCase):
@@ -328,6 +332,104 @@ class TestGitignoreRulePreservation(unittest.TestCase):
         self.assertIn("src/test/resources/*.localkey", report.lines_moved)
         self.assertIn("src/test/resources/*.properties*", report.lines_moved)
         self.assertIn("src/test/resources/config.ini", report.lines_moved)
+
+
+class TestGitignoreReindexHint(unittest.TestCase):
+    """Tests for git cache re-index hints based on tracked files matching new rules."""
+
+    def _init_git_repo(self, repo_dir):
+        """Helper to create a git repository with local user config and initial commit."""
+        subprocess.run(["git", "init"], cwd=repo_dir, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo_dir, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo_dir, check=True, capture_output=True)
+        with open(os.path.join(repo_dir, "foo.log"), "w", encoding="utf-8") as f:
+            f.write("foo log\n")
+        with open(os.path.join(repo_dir, "keep.txt"), "w", encoding="utf-8") as f:
+            f.write("keep file\n")
+        subprocess.run(["git", "add", "."], cwd=repo_dir, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "initial commit"], cwd=repo_dir, check=True, capture_output=True)
+
+    def test_tracked_files_ignored_suggests_targeted_hint(self):
+        """When tracked files match new ignore rules, output lists them and provides targeted untrack hint."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self._init_git_repo(tmpdir)
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                apply_gitignore(tmpdir, "*.log\n")
+            output = buf.getvalue()
+
+            self.assertIn("These tracked files are now ignored:", output)
+            self.assertIn("foo.log", output)
+            self.assertIn("git rm --cached -- foo.log", output)
+            self.assertIn("git commit", output)
+            self.assertNotIn("keep.txt", output)
+            self.assertNotIn("Nothing to re-index", output)
+
+    def test_no_tracked_files_match_reports_nothing_to_reindex(self):
+        """When no tracked files match new rules, report 'Nothing to re-index' without git rm hints."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self._init_git_repo(tmpdir)
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                apply_gitignore(tmpdir, "*.tmp\n")
+            output = buf.getvalue()
+
+            self.assertIn("Nothing to re-index: no tracked file matches the new rules.", output)
+            self.assertNotIn("git rm", output)
+            self.assertNotIn("These tracked files are now ignored:", output)
+
+    def test_non_git_dir_no_error_no_hint(self):
+        """In a non-git directory, re-index check skips silently with no error and no hint."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                apply_gitignore(tmpdir, "*.log\n")
+            output = buf.getvalue()
+
+            self.assertNotIn("These tracked files are now ignored:", output)
+            self.assertNotIn("Nothing to re-index", output)
+            self.assertNotIn("git rm", output)
+
+    def test_many_files_capped_at_50_with_xargs_hint(self):
+        """When more than 50 files match, cap listing at 50, show '... and N more', and suggest xargs command."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            subprocess.run(["git", "init"], cwd=tmpdir, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.name", "Test User"], cwd=tmpdir, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmpdir, check=True, capture_output=True)
+
+            for i in range(52):
+                with open(os.path.join(tmpdir, f"file_{i:02d}.log"), "w", encoding="utf-8") as f:
+                    f.write(f"log {i}\n")
+            subprocess.run(["git", "add", "."], cwd=tmpdir, check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", "add 52 logs"], cwd=tmpdir, check=True, capture_output=True)
+
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                apply_gitignore(tmpdir, "*.log\n")
+            output = buf.getvalue()
+
+            self.assertIn("These tracked files are now ignored:", output)
+            self.assertIn("file_00.log", output)
+            self.assertIn("... and 2 more", output)
+            self.assertIn("git ls-files -ci --exclude-standard -z | xargs -0 git rm --cached --", output)
+            self.assertIn("git commit", output)
+
+    @patch("generate_gitignore.fetch_gitignore")
+    @patch("generate_gitignore.get_available_templates")
+    def test_main_cli_pipeline_with_reindex_hint(self, mock_available, mock_fetch):
+        """Running main() in a git repo with matching tracked files emits the targeted hint."""
+        mock_available.return_value = {"java"}
+        mock_fetch.return_value = "### Java ###\n*.log\n"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self._init_git_repo(tmpdir)
+            buf = io.StringIO()
+            with patch("sys.argv", ["generate_gitignore.py", "--dir", tmpdir, "--templates", "java", "--no-base", "--no-custom"]):
+                with redirect_stdout(buf):
+                    main()
+            output = buf.getvalue()
+            self.assertIn("These tracked files are now ignored:", output)
+            self.assertIn("foo.log", output)
+            self.assertIn("git rm --cached -- foo.log", output)
 
 
 if __name__ == "__main__":

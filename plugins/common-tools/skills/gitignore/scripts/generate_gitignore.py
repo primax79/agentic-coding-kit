@@ -11,6 +11,8 @@ import urllib.request
 import urllib.error
 import json
 import platform
+import subprocess
+import shlex
 
 API_BASE_URL = "https://www.toptal.com/developers/gitignore/api"
 
@@ -210,6 +212,54 @@ def patch_api_content(api_content, selected_api_templates, selected_custom_templ
 
     return api_content
 
+def check_git_reindex(project_dir):
+    """Check if any tracked files in project_dir match newly generated .gitignore rules."""
+    target_dir = os.path.abspath(os.path.expanduser(project_dir))
+    try:
+        rev_proc = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=target_dir,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if rev_proc.returncode != 0 or rev_proc.stdout.strip() != "true":
+            return
+    except (FileNotFoundError, OSError):
+        return
+
+    try:
+        proc = subprocess.run(
+            ["git", "ls-files", "-ci", "--exclude-standard"],
+            cwd=target_dir,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if proc.returncode != 0:
+            return
+    except (FileNotFoundError, OSError):
+        return
+
+    files = [line for line in proc.stdout.splitlines() if line]
+    if not files:
+        print("Nothing to re-index: no tracked file matches the new rules.")
+        return
+
+    print("These tracked files are now ignored:")
+    for f in files[:50]:
+        print(f"  {f}")
+    if len(files) > 50:
+        print(f"  ... and {len(files) - 50} more")
+
+    print("\nTo untrack them, run:")
+    if len(files) <= 50:
+        files_arg = " ".join(shlex.quote(f) for f in files)
+        print(f"  git rm --cached -- {files_arg}")
+    else:
+        print("  git ls-files -ci --exclude-standard -z | xargs -0 git rm --cached --")
+    print('  git commit -m "chore(git): untrack now-ignored files"')
+
 def apply_gitignore(project_dir, new_content, force=False, dry_run=False):
     """Write or update .gitignore in project_dir, placing custom existing rules at the top (head)."""
     gitignore_path = os.path.join(project_dir, ".gitignore")
@@ -235,6 +285,7 @@ def apply_gitignore(project_dir, new_content, force=False, dry_run=False):
             
     print(f"Successfully saved .gitignore to {gitignore_path}")
     print("\n" + report.format_report())
+    check_git_reindex(project_dir)
     return final_content, report
 
 def main():
@@ -312,10 +363,6 @@ def main():
         apply_gitignore(project_dir, new_content, force=args.force, dry_run=True)
     else:
         apply_gitignore(project_dir, new_content, force=args.force, dry_run=False)
-        print("\nTo apply changes and re-index cached files in git, you can run:")
-        print("  git rm --cached -r .")
-        print("  git add .")
-        print('  git commit -m "chore(git): generate .gitignore and re-index repository"')
 
 if __name__ == "__main__":
     main()

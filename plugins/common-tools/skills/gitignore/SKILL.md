@@ -86,14 +86,21 @@ The script interacts with the Toptal gitignore.io API:
 
 ### 7. Git Cache Cleanup & Re-indexing (Optional Prompt)
 
-After creating or updating `.gitignore`, check if git tracking cleanup is needed (e.g. if files now ignored were previously tracked).
+After creating or updating `.gitignore`, the script automatically checks whether any tracked files match the new rules (`git ls-files -ci --exclude-standard`).
 
-Ask the user via the `question` tool or prompt whether to execute the re-indexing sequence:
+- **No tracked files affected:** If the script reports `Nothing to re-index: no tracked file matches the new rules.` (or the target directory is not inside a git repository), no cleanup is needed. Do not prompt the user.
+- **Tracked files now ignored:** When the script reports `These tracked files are now ignored:`, ask the user via the `question` tool or prompt whether to untrack only those specific files:
 
 ```bash
-git rm --cached -r .
-git add .
-git commit -m "chore(git): generate .gitignore and re-index repository"
+git rm --cached -- <files>
+git commit -m "chore(git): untrack now-ignored files"
 ```
 
-> **Note on syntax:** `git rm --cached -r .` removes cached index entries without deleting physical local files.
+Or, for many files:
+
+```bash
+git ls-files -ci --exclude-standard -z | xargs -0 git rm --cached --
+git commit -m "chore(git): untrack now-ignored files"
+```
+
+> **Note on syntax:** Targeted untracking removes index entries only for files matching the new ignore rules, avoiding the heavy-handed `git rm --cached -r .` which empties and re-stages the entire git cache.
