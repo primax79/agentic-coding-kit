@@ -2,39 +2,20 @@
 """Migrate a Kilo RAG index to a new collection key after a workspace move/rename.
 
 Kilo keys each workspace's Qdrant collection as `ws-<sha256(workspace_path)[:16]>`
-(see kilo-indexing's qdrant-client.ts, QdrantVectorStore constructor). The hash is
-computed over the *exact* workspace path string Kilo was given (no normalization) -
+and its file-hash cache as `~/.local/state/kilo/indexing/roo-index-cache-<sha256(workspace_path)>.json`.
+The hash is computed over the *exact* workspace path string Kilo was given (no normalization) -
 so moving or renaming a project's directory changes the hash, and Kilo starts
 "unindexed" from scratch even though nothing about the code changed.
 
-This script copies every point (vectors + payload, including the fixed-UUID
-metadata point that carries the embedding profile / schema-complete markers) from
-the collection keyed by the OLD path straight into a new collection keyed by the
-NEW path, via Qdrant's REST API. No re-embedding, no Kilo CLI/extension involved -
-it only talks to Qdrant, so it works regardless of which tool (Kilo IDE extension,
-`kilo run`, an orchestrating AI) originally built the index.
-
-Usage:
-    # 1. Sanity-check what collection name a path hashes to, and see what's
-    #    actually on the Qdrant instance, before touching anything:
-    migrate-qdrant-collection.py hash "/old/path/to/project"
-    migrate-qdrant-collection.py list --qdrant-url http://localhost:16333
-
-    # 2. Copy the index across (old collection is left untouched by default):
-    migrate-qdrant-collection.py migrate \\
-        --old-path "/old/path/to/project" \\
-        --new-path "/new/path/to/project" \\
-        --qdrant-url http://localhost:16333
-
-    # 3. Once Kilo confirms the new path shows "IDX Complete", delete the old
-    #    collection explicitly (not automatic - it's a shared resource):
-    migrate-qdrant-collection.py migrate --old-collection ws-XXXX --delete-old \\
-        --qdrant-url http://localhost:16333 --yes
-
-If you already know the collection names (e.g. from `list`), pass --old-collection/
---new-collection instead of --old-path/--new-path to skip re-deriving the hash.
-
-Depends on nothing outside the Python 3 standard library.
+This script:
+1. Copies every point (vectors + payload, including the fixed-UUID metadata point
+   that carries the embedding profile / schema-complete markers) from the old
+   Qdrant collection into the new one, and creates Kilo's keyword payload indexes
+   (`type`, `pathSegments.0`..`pathSegments.4`).
+2. Migrates `~/.local/state/kilo/indexing/roo-index-cache-<old_sha256>.json` to
+   `roo-index-cache-<new_sha256>.json`, rewriting the absolute file path keys from
+   `old_path` to `new_path` so Kilo's incremental scanner skips all unchanged files
+   instead of re-embedding the entire workspace.
 """
 
 from __future__ import annotations
@@ -42,23 +23,31 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
 from typing import Any, Optional
 
-DEFAULT_QDRANT_URL = "http://localhost:6333"
+DEFAULT_QDRANT_URL = "http://localhost:16333"
 SCROLL_BATCH_SIZE = 200
+DEFAULT_CACHE_DIR = os.path.expanduser("~/.local/state/kilo/indexing")
 
-# Mirrors QdrantVectorStore.createCollection() in kilo-indexing's qdrant-client.ts -
-# any collection this script creates must match what Kilo itself would create, or
-# Kilo's own compatibility check (openExisting / initialize) will reject it.
+# Mirrors QdrantVectorStore.createCollection() in kilo-indexing's qdrant-client.ts
 HNSW_CONFIG = {"m": 64, "ef_construct": 512, "on_disk": True}
+PAYLOAD_INDEX_FIELDS = ["type", "pathSegments.0", "pathSegments.1", "pathSegments.2", "pathSegments.3", "pathSegments.4"]
+
+
+def workspace_sha256(workspace_path: str) -> str:
+    return hashlib.sha256(workspace_path.encode("utf-8")).hexdigest()
 
 
 def collection_name(workspace_path: str) -> str:
-    digest = hashlib.sha256(workspace_path.encode("utf-8")).hexdigest()
-    return f"ws-{digest[:16]}"
+    return f"ws-{workspace_sha256(workspace_path)[:16]}"
+
+
+def cache_file_path(workspace_path: str, cache_dir: str = DEFAULT_CACHE_DIR) -> str:
+    return os.path.join(cache_dir, f"roo-index-cache-{workspace_sha256(workspace_path)}.json")
 
 
 def _request(
@@ -91,6 +80,59 @@ def get_collection(base_url: str, name: str, api_key: Optional[str]) -> Optional
         if "HTTP 404" in str(e):
             return None
         raise
+
+
+def create_payload_indexes(base_url: str, name: str, api_key: Optional[str]) -> None:
+    for field in PAYLOAD_INDEX_FIELDS:
+        try:
+            _request(
+                "PUT",
+                base_url,
+                f"/collections/{name}/index?wait=true",
+                api_key,
+                {"field_name": field, "field_schema": "keyword"},
+            )
+        except RuntimeError as e:
+            print(f"WARNING: failed to create payload index '{field}' on '{name}': {e}", file=sys.stderr)
+
+
+def migrate_cache_file(
+    old_path: str,
+    new_path: str,
+    cache_dir: str = DEFAULT_CACHE_DIR,
+    delete_old: bool = False,
+) -> tuple[bool, int]:
+    old_cache = cache_file_path(old_path, cache_dir)
+    new_cache = cache_file_path(new_path, cache_dir)
+    if not os.path.isfile(old_cache):
+        return False, 0
+
+    with open(old_cache, "r", encoding="utf-8") as fp:
+        raw_hashes: dict[str, str] = json.load(fp)
+
+    old_prefix = old_path.rstrip("/\\")
+    new_prefix = new_path.rstrip("/\\")
+    rewritten: dict[str, str] = {}
+    for file_key, file_hash in raw_hashes.items():
+        if file_key == old_prefix:
+            rewritten[new_prefix] = file_hash
+        elif file_key.startswith(old_prefix + "/"):
+            rewritten[new_prefix + file_key[len(old_prefix) :]] = file_hash
+        elif file_key.startswith(old_prefix + "\\"):
+            rewritten[new_prefix + file_key[len(old_prefix) :]] = file_hash
+        else:
+            rewritten[file_key] = file_hash
+
+    os.makedirs(cache_dir, exist_ok=True)
+    tmp_cache = f"{new_cache}.tmp"
+    with open(tmp_cache, "w", encoding="utf-8") as fp:
+        json.dump(rewritten, fp)
+    os.replace(tmp_cache, new_cache)
+
+    if delete_old and os.path.isfile(old_cache):
+        os.remove(old_cache)
+
+    return True, len(rewritten)
 
 
 def cmd_hash(args: argparse.Namespace) -> None:
@@ -176,6 +218,7 @@ def cmd_migrate(args: argparse.Namespace) -> None:
             args.api_key,
             {"vectors": create_vectors, "hnsw_config": HNSW_CONFIG},
         )
+        create_payload_indexes(args.qdrant_url, new_name, args.api_key)
 
     copied = 0
     for batch, total in _scroll_all_points(args.qdrant_url, old_name, args.api_key):
@@ -191,6 +234,18 @@ def cmd_migrate(args: argparse.Namespace) -> None:
         print(f"  copied {copied}/{old_points_count} points...", end="\r")
 
     print(f"\nDone: {copied} points copied from '{old_name}' to '{new_name}'.")
+
+    if args.old_path and args.new_path:
+        migrated_cache, entries = migrate_cache_file(
+            args.old_path,
+            args.new_path,
+            args.cache_dir,
+            delete_old=bool(args.delete_old and args.yes),
+        )
+        if migrated_cache:
+            print(f"Migrated cache file ({entries} file hashes rewritten from '{args.old_path}' to '{args.new_path}').")
+        else:
+            print(f"Note: no local cache file found for '{args.old_path}' in {args.cache_dir}.")
 
     new_final = get_collection(args.qdrant_url, new_name, args.api_key) or {}
     final_count = new_final.get("points_count", 0)
@@ -208,7 +263,10 @@ def cmd_migrate(args: argparse.Namespace) -> None:
         _request("DELETE", args.qdrant_url, f"/collections/{old_name}", args.api_key)
         print(f"Deleted source collection '{old_name}'.")
     else:
-        print(f"Source collection '{old_name}' left untouched. Delete it manually once you've verified Kilo picks up '{new_name}' correctly.")
+        print(
+            f"Source collection '{old_name}' left untouched. "
+            f"Delete it manually once you've verified Kilo picks up '{new_name}' correctly."
+        )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -224,9 +282,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_list.add_argument("--api-key", default=None)
     p_list.set_defaults(func=cmd_list)
 
-    p_migrate = sub.add_parser("migrate", help="copy all points from the old workspace's collection to the new one")
+    p_migrate = sub.add_parser("migrate", help="copy all points and cache hashes from the old workspace to the new one")
     p_migrate.add_argument("--qdrant-url", default=DEFAULT_QDRANT_URL)
     p_migrate.add_argument("--api-key", default=None)
+    p_migrate.add_argument("--cache-dir", default=DEFAULT_CACHE_DIR, help="Kilo indexing cache directory")
     p_migrate.add_argument("--old-path", help="old workspace path (mutually exclusive with --old-collection)")
     p_migrate.add_argument("--new-path", help="new workspace path (mutually exclusive with --new-collection)")
     p_migrate.add_argument("--old-collection", help="old collection name, if already known")

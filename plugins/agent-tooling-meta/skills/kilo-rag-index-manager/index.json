@@ -4,6 +4,7 @@
       "name": "kilo-rag-index-manager",
       "files": [
         "SKILL.md",
+        "scripts/clean-qdrant-collections.py",
         "scripts/migrate-qdrant-collection.py"
       ]
     }
